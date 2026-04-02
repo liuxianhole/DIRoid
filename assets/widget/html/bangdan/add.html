@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2.1.css">
+    <style>
+    	body{
+    		
+    	}
+    </style>
+</head>
+<body>
+	<div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        产品名称
+                    </div>
+                    <div class="aui-list-item-input">
+                        <span class="aui-btn aui-btn-outlined selectproducts">请选择产品名称</span>
+                        <input type="hidden" id="proselfid" value="">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        供应商
+                    </div>
+                    <div class="aui-list-item-input">
+                        <select class="suppliers_selfid">
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        毛重
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="gw" placeholder="请输入毛重">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        皮重
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="tare" placeholder="请输入皮重">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        扣杂
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="clasp" placeholder="" value="0">
+                    </div>
+                </div>
+            </li>
+            
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        是否0皮重
+                    </div>
+                    <div class="aui-list-item-input">
+                        <label><input class="aui-radio tare_check" type="radio" name="demo1" value="1" > 是</label>
+                        <label><input class="aui-radio tare_check" type="radio" name="demo1" value="0" checked=""> 否</label>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        单价
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="price" placeholder="输入单价">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        实际支付
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="total" placeholder="请输入实际付款">
+                    </div>
+                </div>
+            </li>
+            
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                    <div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">提交</div>
+                    <div class="aui-btn aui-btn-danger aui-margin-l-15 close-pop">取消</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var tare_check=0;
+	apiready = function(){
+		changeserverurl();
+		ajaxinfo();
+		//选择地区
+		$(".selectproducts").on("click", function() {
+			openwindows("selectproduct", 'selectproduct.html')
+		})
+		$(".close-pop").on("click",function(){
+			api.closeWin({
+            });;
+		})
+		$(".tare_check").on("click", function() {
+			if ($(this).val()=="1"){
+				$(".tare").val(0);
+				tare_check=1;
+			}else{
+				tare_check=0
+			}
+		})
+		
+		var canbtn = true;
+		var tare_check=0;
+		//确定提交
+		$(".j_btn").on("click",function(){
+			if(!canbtn){
+				return;
+			}
+			if ($("#proselfid").val()==""){
+				layer.msg("请选择产品名称！");
+				return false;
+			}
+			if ($(".suppliers_selfid").val()==""){
+				layer.msg("请选择供应商！");
+				return false;
+			}
+			if ($(".gw").val()==""){
+				layer.msg("请输入毛重！");
+				$(".gw").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".gw").val());
+				if (isnumflag){
+					layer.msg("毛重必须是数字！")
+					return false;
+				}
+			}
+			if ($(".tare").val()==""){
+				layer.msg("请输入皮重！");
+				$(".tare").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".tare").val());
+				if (isnumflag){
+					layer.msg("皮重必须是数字！")
+					return false;
+				}
+			}
+			if ($(".clasp").val()==""){
+				$(".clasp").val(0)
+			}else{
+				var isnumflag=isNaN($(".clasp").val());
+				if (isnumflag){
+					layer.msg("扣杂必须是数字！")
+					return false;
+				}
+			}
+			if ($(".price").val()==""){
+				layer.msg("请输入价格！");
+				$(".price").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".price").val());
+				if (isnumflag){
+					layer.msg("价格必须是数字！")
+					return false;
+				}
+			}
+			if ($(".total").val()==""){
+				layer.msg("请输入实际支付！");
+				$(".total").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".total").val());
+				if (isnumflag){
+					layer.msg("支付价格必须是数字！")
+					return false;
+				}
+			}
+			var data = {
+				products_selfid:$("#proselfid").val(),
+				suppliers_selfid:$(".suppliers_selfid").val(),
+				gw:$(".gw").val(),
+				tare:$(".tare").val(),
+				clasp:$(".clasp").val(),
+				price:$(".price").val(),
+				total:$(".total").val(),
+				tare_check:tare_check,
+			}
+			canbtn = false;
+			api.showProgress({
+				title : '',
+				modal : false
+			});
+			zzappajax("post",hosturl+"app/storage_save.html",data,function(ret){
+				if(ret.err == "false"){
+					api.execScript({
+						name : "bangdan",
+						frameName:"frame1",
+						script : "page = 1;getinfo()"
+					});
+					api.execScript({
+						name : "bangdan",
+						frameName:"frame3",
+						script : "page = 1;getinfo()"
+					});
+					api.execScript({
+						name : "bangdan",
+						frameName:"frame4",
+						script : "page = 1;getinfo()"
+					});
+					api.execScript({
+						name : "root",
+						frameName:"main",
+						script : "getinfo()"
+					});
+					api.closeWin({});
+				}
+				api.hideProgress();
+				canbtn = true;
+			},function(err){
+				if(err){
+					saveerrlog(err.body);
+				}
+				canbtn = true;
+				api.hideProgress();
+				return false;
+			})
+		})
+	};
+	function selectpro(selfid,name){
+		$(".selectproducts").html(name);
+		$("#proselfid").val(selfid);
+	}
+	function ajaxinfo(){
+		var data={}
+		zzappajax("post",hosturl+"app/product_select.html",data,function(ret){
+			//alert(JSON.stringify(ret));
+			api.pageParam['prolist']=ret.products;
+			var htmls="";
+			$.each(ret.supplier_list, function(index, item) {
+				htmls+="<option value='"+item.selfid+"'>"+item.name+"</option>"
+			})
+			$(".suppliers_selfid").html(htmls)
+			loadinghide();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+			return false;
+		})
+	}
+</script>
+</html>

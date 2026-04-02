@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+    <style>
+    	.db-gy-title{
+			width: 80px;
+			text-align: right;
+			color: #2ecc71
+		}
+		.save-pwd{
+			margin:0
+		}
+    </style>
+</head>
+<body>
+	<div class="db-bg-white">
+		<div class="aui-padded-15  zz-div-box">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">用户级别</div>
+			<div class="zz-div-td1">
+				<div class="db-select-box">
+					<select name="utype" id="utype" class="db-select utype">
+						<option value="">请选择...</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">分站</div>
+			<div class="zz-div-td1">
+				<div class="db-select-box">
+					<select name="ucompany_id" id="ucompany_id" class="db-select comlist">
+			      		<option value="">请选择...</option>
+			      	</select>
+				</div>
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">用户名</div>
+			<div class="zz-div-td1">
+				<input type="text" class="aui-margin-b-0 mustipt db-input username"  >
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">密码</div>
+			<div class="zz-div-td1">
+				<input type="text" class="aui-margin-b-0 mustipt db-input pwd"  >
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0 save-pwd-box aui-hide">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right"></div>
+			<div class="zz-div-td1">
+				 <input class="aui-checkbox aui-checkbox-success save-pwd" type="checkbox">
+				 &nbsp;&nbsp;是否修改密码
+			</div>
+			
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">姓名</div>
+			<div class="zz-div-td1">
+				<input type="text" class="aui-margin-b-0 mustipt db-input contact" >
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">性别</div>
+			<div class="zz-div-td1 sex">
+				<input class="aui-radio aui-radio-success" type="radio" value="男" name="demo1" checked><div class="aui-radio-name">男</div>
+        		<input class="aui-radio aui-radio-success" type="radio" value="女" name="demo1"><div class="aui-radio-name">女</div>
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">手机</div>
+			<div class="zz-div-td1">
+				<input type="text" class="aui-margin-b-0 mustipt db-input mobile" >
+			</div>
+		</div>
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="aui-padded-r-10 aui-font-size-18 db-gy-title row-right">备注</div>
+			<div class="zz-div-td1">
+				<textarea class="bz"></textarea>
+			</div>
+		</div>
+
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title"></div>
+			<div class="zz-div-td1">
+				<div class="aui-btn aui-btn-success j_btn">&nbsp;保存&nbsp;</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		changeserverurl();
+		getinfo();
+		domEvent();
+	};
+	var getinfo=function(){
+		var data = {
+		}
+		loadingshow();
+		//alert(api.pageParam.bdinfo.company_id)
+		zzappajax("post",hosturl+"app/get_authlist.html",data,function(ret){
+			var optionList  = "";
+			$.each(ret.company_list,function(i,item){
+				optionList +='<option value="'+ item.id +'">'+ item.name +'</option>'
+			})
+			
+			$(".comlist").html('<option value="">请选择用户级别</option>')
+			$(".comlist").append(optionList);
+			
+			var optionList  = "";
+			$.each(ret.utypelist,function(i,item){
+				optionList +='<option value="'+ item.code +'">'+ item.name +'</option>'
+			})
+			
+			$(".utype").html('<option value="">请选择分站</option>')
+			$(".utype").append(optionList);
+			
+			id=api.pageParam.id;
+			var data={
+				id:id
+			}
+			if (id){
+				zzappajax("post",hosturl+"app/user_mod.html",data,function(ret){
+					api.hideProgress();
+					if (ret.err=="false"){
+						$(".save-pwd-box").removeClass("aui-hide")
+						var utype = ret.result.utype
+						$(".utype").val(utype);
+						$(".comlist").val(ret.result.ucompany_id);
+						$(".username").val(ret.result.username);
+						$(".contact").val(ret.result.contact);
+						$(".mobile").val(ret.result.mobile);
+						$(".bz").val(ret.result.bz);
+						var sex = ret.result.sex
+						if(sex=="男"){
+							$('.sex input:radio:first').attr('checked', 'checked');
+						}else{
+							$('.sex input:radio:last').attr('checked', 'checked');
+						}
+						api.hideProgress();
+					}else{
+						layer.msg(ret.errtext)
+					}
+				},function(err){
+					if(err){
+						saveerrlog(err.body);
+					}
+					api.hideProgress();
+					return false;
+				})
+			}
+			
+			api.hideProgress();
+		},function(err){
+			api.hideProgress();	
+		})
+	}
+	var canAjax = true;
+	var domEvent = function(){
+		$(".j_btn").on("click",function(){
+			if(!canAjax){
+				return;
+			}
+			var utype = $(".utype").val();
+			var username = $(".username").val();
+			var contact = $(".contact").val();
+			var mobile = $(".mobile").val();
+			var pwd = $(".pwd").val();
+			var bz = $(".bz").val();
+			var sex = $(".sex input[type='radio']:checked").val();
+			var ucompany_id=$(".comlist").val();
+			if (utype.length == 0) {
+				hint("用户级别不能为空！");
+				api.hideProgress();
+				return;
+			}
+			if (ucompany_id.length == 0) {
+				hint("分站不能为空！");
+				api.hideProgress();
+				return;
+			}
+			if (username.length == 0) {
+				hint("用户名不能为空！");
+				api.hideProgress();
+				return;
+			}
+			
+			if (!id){
+				if($(".save-pwd[type='checkbox']").is(':checked')&&pwd.length == 0){
+					hint("密码不能为空！");
+					api.hideProgress();
+					return;
+				}
+			}
+			
+			var data = {
+				utype:utype,
+				username:username,
+				ucompany_id:ucompany_id,
+				contact:contact,
+				mobile:mobile,
+				bz:bz,
+				pwd:pwd,
+				sex:sex,
+				id:id
+			}
+			if($(".save-pwd[type='checkbox']").is(':checked')&&pwd.length > 0){
+				data.ischange_pwd = 1;
+			}
+			
+			loadingshow()
+			canAjax = false;
+			zzappajax("post",hosturl+"app/user_save.html",data,function(ret){
+					if(ret.err=="false"){
+						api.alert({
+							title : '',
+							msg : '保存成功！',
+							buttons : ['确定']
+						}, function(ret, err) {
+							api.execScript({
+								name : "renyuan",
+								frameName:"renyuan_",
+								script : "getinfo();"
+							});
+							api.closeWin({
+				            });
+							api.hideProgress();
+							canseve = true;
+						});
+					}else{
+						layer.msg(ret.errtext);
+						api.hideProgress();
+					}
+					canAjax = true;
+					canseve = true;
+					api.hideProgress();
+				},function(err){
+					if(err){
+						saveerrlog(err.body);
+					}
+					canAjax = true;
+					canseve = true;
+					api.hideProgress();
+					return false;
+			})
+		})
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

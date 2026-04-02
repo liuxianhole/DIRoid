@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>91智能机</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/aui-flex.css"/>	
+	<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <style>
+    	.aui-list-view i.aui-iconfont3{
+		    padding: 5px;
+		    border-radius: 4px;
+		    margin-right: 10px;
+		    font-size: 1.125em;
+		}
+    </style>
+</head>
+<body>
+	<div class="aui-card aui-margin-t-15">       
+	    <div class="aui-form">
+	        <div class="aui-input-row">
+	        	<i class="aui-input-addon  aui-iconfont3 icon-zhanghao aui-font-size-24 aui-text-info"></i>
+	            <input type="text" class="aui-input username" placeholder="请输入用户名"/>
+	        </div>
+	        <div class="aui-input-row">
+	        	<i class="aui-input-addon  aui-iconfont3 icon-suo aui-font-size-24 aui-text-warning"></i>
+	            <input type="password" class="aui-input pwd" placeholder="请输入密码"/>
+	        </div>
+	        <div class="aui-btn-row j_myhome">
+	            <div class="aui-btn aui-block aui-btn-success ">确认</div>
+	        </div>
+	    </div>
+	</div>
+	<div class="aui-text-center aui-padded-t-15 aui-font-size-18">
+		91再生技术支持
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript" src="../script/jQuery.md5.js"></script>
+<script type="text/javascript" src="../script/layer/layer.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		changeserverurl();
+		
+		$(".j_myhome").on("click",function(){
+		
+			var username = $(".username").val();
+			var pwd = $(".pwd").val();
+			if (username.length == 0) {
+				hint("帐号不能为空！");
+				api.hideProgress();
+				return;
+			}
+			if (pwd.length == 0) {
+				hint("密码不能为空！");
+				api.hideProgress();
+				return;
+			}
+			
+   			api.showProgress({
+				title : '登录中',
+				modal : false
+			});
+			
+			var data = {
+				username : username,
+				passwdjm : UserInfo.get_pwd_hash(pwd),
+				appid : api.deviceId,
+				appsystem : api.systemType,
+				loginflag : 1,
+			}
+			postAjax(data)
+   			
+   		})
+	};
+	
+	var canAjax = true;
+	function postAjax(data){
+		if(!canAjax){
+			return;
+		}
+		canAjax = false;
+		zzappajax("post",hosturl+"app/logincheck.html",data,function(ret){
+			if(ret.err=="false"){
+				//密码加密
+				//var pwd_hash = UserInfo.get_pwd_hash(ret.passwd);
+				var pwd_hash = ret.md5pwd;
+				//登入获取的token
+				var token = ret.token;
+				//登录获取的mid
+				var memberID = ret.memberID;
+				
+				var selfid = ret.selfid;
+				
+				//登录获取的group_id集团id
+				var group_id = ret.group_id;
+				var username = ret.username.toString()
+				//保存信息到本地
+				UserInfo.onSuccess(token, username, pwd_hash, memberID,group_id,selfid);
+				//alert(UserInfo.username())
+				api.alert({
+					title : '登录帐号',
+					msg : '登录成功！',
+					buttons : ['确定']
+				}, function(ret, err) {
+					api.execScript({
+						name : "root",
+						script : "reloadapp();"
+					});
+					api.hideProgress();
+					canAjax = true;
+				});
+			}
+			else{
+				api.hideProgress();
+				hint(ret.errtext);
+				canAjax = true;
+			}
+				
+			
+			
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			canAjax = true;
+			api.hideProgress();
+			return false;
+		})
+		
+	}
+</script>
+<script type="text/javascript" src="../script/servercomm.js"></script>
+</html>

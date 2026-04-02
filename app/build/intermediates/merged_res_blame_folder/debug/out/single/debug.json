@@ -1,0 +1,70 @@
+[
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_mo_download_mgr_pause.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/mo_download_mgr_pause.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_mo_download_mgr_line.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/mo_download_mgr_line.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-mdpi_uz_splash_bg.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-mdpi/uz_splash_bg.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_uz_copyright.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/uz_copyright.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_mo_download_mgr_dele.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/mo_download_mgr_dele.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_uz_icon.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/uz_icon.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-xhdpi_uz_icon.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-xhdpi/uz_icon.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-xhdpi_uz_splash_bg.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-xhdpi/uz_splash_bg.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_uz_splash_bg.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/uz_splash_bg.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_uz_pull_down_refresh_arrow.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/uz_pull_down_refresh_arrow.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_mo_download_mgr_loading.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/mo_download_mgr_loading.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-xxhdpi_uz_icon.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-xxhdpi/uz_icon.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_mo_download_mgr_more.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/mo_download_mgr_more.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-xxhdpi_uz_splash_bg.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-xxhdpi/uz_splash_bg.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-hdpi_mo_download_mgr_back.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-hdpi/mo_download_mgr_back.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/drawable-mdpi_uz_icon.png.flat",
+        "source": "com.zz91.dibang.app-main-37:/drawable-mdpi/uz_icon.png"
+    },
+    {
+        "merged": "com.zz91.dibang.app-merged_res-35:/layout_activity_main.xml.flat",
+        "source": "com.zz91.dibang.app-main-37:/layout/activity_main.xml"
+    }
+]

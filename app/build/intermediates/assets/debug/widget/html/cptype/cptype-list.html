@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>	
+    <style>
+    	.qj-center-title {
+		    width: 95px;
+		    padding-right: 10px;
+		    text-align: right;
+		}
+    </style>
+</head>
+<body>
+	<div class="search-box">
+		<div class="aui-padded-15 search-fix">
+			<div class="zz-div-box">
+				<div class="zz-div-td1">
+					<input type="text" class="aui-input db-input ipt-search" placeholder="请输入类别名称"/>
+				</div>
+				<div class="aui-margin-l-10">
+					<div class="aui-btn aui-btn-success j_btn_search">搜索</div>
+				</div>
+				<div class="aui-margin-l-10">
+					<a class="aui-btn aui-btn-bigred j_cptypeadd">添加类别</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="bdlist-box"></div>
+	
+	<script id="bdlist" type="text/html">
+		<div class="db-bg-white aui-padded-15 aui-content">
+			<div class="zz-div-box">
+				<div class="zz-div-td1">
+					<div class="zz-div-box">
+						<div class="qj-center-title aui-text-success">类别名称</div>
+						<div class="zz-div-td1">{{d.name}}</div>
+					</div>
+				</div>
+				
+				<div class="aui-text-center column-cnt">
+					<span class="aui-btn aui-btn-success j_cptypesave">&nbsp;编辑&nbsp;</span>
+				</div>
+			</div>
+		</div>
+	</script>
+	
+	<div class="nodata">暂无相关数据</div>
+	<div class='la_more'>上拉获取更多信息</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var page = 1;
+	var pagecount=0;
+	var name ="";
+	var bdinfo = [];
+	apiready = function(){
+		changeserverurl();
+		domEvent();
+		getinfo()
+		//底部加载
+		api.addEventListener({
+			name : 'scrolltobottom'
+		}, function(ret, err) {
+			if (page>=pagecount){
+				$(".la_more").html("全部加载完毕");
+				return false;
+			}
+			$(".la_more").html("加载更多中...");
+			setTimeout(function() {
+				page +=1;
+				getinfo();
+			}, 10)
+		});
+		
+		//页面刷新
+		api.setRefreshHeaderInfo({
+			visible : true,
+			// bgColor: '#F2F2F2',
+			bgColor : '#E6E6E6',
+			textColor : '#000000',
+			textDown : '下拉刷新',
+			textUp : '释放刷新',
+		}, function(ret, err) {
+			
+			$(".ipt-search").val("");//搜索框置空
+			name = "";
+			page = 1;
+			getinfo();
+			api.toast({
+				msg : '数据已是最新！',
+				duration : 3000,
+				location : 'bottom'
+			});
+		});
+		
+	};
+	var domEvent = function(){
+		$(".bdlist-box").on("click",".j_cptypesave",function(){
+			var pageParam = {
+				wintitle : "编辑类别",
+				type : "cptypeadd",
+				bounces : false,
+				bdinfo :bdinfo[$(this).parents(".aui-content").index()]
+			};
+   			openWin("cptypeadd", "../cptype/cptype-add.html", pageParam);
+		})
+		
+		$(".j_cptypeadd").on("click",function(){
+			var pageParam = {
+				wintitle : "添加类别",
+				type : "cptypeadd",
+				bounces : false
+			};
+   			openWin("cptypeadd", "../cptype/cptype-add.html", pageParam);
+		})
+		
+		//搜索
+		$(".j_btn_search").on("click",function(){		
+			name = $(".ipt-search").val();
+			if(name.length == 0){
+				hint("请输入类别名称！");
+				api.hideProgress();
+				return;
+			}
+			page = 1;
+			getinfo();
+			api.pageUp({
+				'top' : true
+			});
+		})
+	}
+	
+	var getinfo = function(){
+		var data = {
+			page:page,
+			name:name
+		}
+		
+		if (page==1){
+			loadingshow();
+		}
+		zzappajax("post",hosturl+"app/category.html",data,function(ret){
+			var pageHtml_dj='';
+			$.each(ret.listall, function(index, item) {
+				var getTpl = $api.html($api.byId("bdlist"));
+				laytpl(getTpl).render(item, function(html) {
+					pageHtml_dj = pageHtml_dj + html;
+				});
+			})
+			
+			if (page == 1) {
+				bdinfo = [];
+				pagecount=ret.page_listcount;
+				if (pageHtml_dj==""){
+            		$(".nodata").show();
+            		$(".la_more").hide();
+            	}else{
+            		$(".nodata").hide();
+            		$(".la_more").show();
+                }
+				$(".bdlist-box").html(pageHtml_dj);
+			} else {
+				$(".bdlist-box").append(pageHtml_dj);
+			}
+			
+			$.each(ret.listall, function(index, item) {
+				var bdinfo_mo = {};
+				bdinfo_mo.name =  item.name;
+				bdinfo_mo.id =  item.id;
+				bdinfo.push(bdinfo_mo);
+			})
+			//显示页码
+			api.toast({
+				msg : page+"/"+pagecount+"页",
+				duration : 2000,
+				location : 'bottom'
+			});
+			loadinghide();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			canAjax = true;
+			api.hideProgress();
+			return false;
+		})
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

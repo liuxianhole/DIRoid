@@ -1,0 +1,430 @@
+Manifest-Version: 1.0
+Built-By: Generated-by-ADT
+Created-By: Android Gradle 2.3.0
+
+Name: assets/widget/image/loading_more.gif
+SHA1-Digest: PIlQlh6xZqn6B6Q71vAxzh/8bTQ=
+
+Name: assets/widget/script/qrcode.js
+SHA1-Digest: 5SkFWU+JjUcPX+vqsehHEG2hIao=
+
+Name: assets/widget/script/layer/layer.js
+SHA1-Digest: NYIbSXNWMYxOGjl4S+e2rLkB9a8=
+
+Name: res/drawable-mdpi-v4/uz_icon.png
+SHA1-Digest: tdoloZPc7ZXAWCbbMIzzkE7nyA4=
+
+Name: assets/widget/widget/html/bangdan/bandangdel.html
+SHA1-Digest: FS72KjjHerkrSAWPA7BHvKav3Rw=
+
+Name: res/drawable-hdpi-v4/uz_splash_bg.png
+SHA1-Digest: WAMkALFNSUcGjTKEVJZensY2HoY=
+
+Name: assets/widget/css/iconfont3.ttf
+SHA1-Digest: KAJHdp75cZX2HCMaVDiAuvCO+18=
+
+Name: assets/widget/script/aui-pull-refresh.js
+SHA1-Digest: 8IfnUhs16yi25+W/IPtxcuqzfIY=
+
+Name: assets/widget/html/comm/win-blank.html
+SHA1-Digest: Xgbd6y14MXYTrZ1eAz/uFyi2zvM=
+
+Name: assets/widget/html/new/pic.html
+SHA1-Digest: vD5mKCFWf4xKc+gvZZckCRjnvHc=
+
+Name: assets/widget/html/new/renyuan.html
+SHA1-Digest: tJpOhD+wFF4sxvlyTpulF9VHa+w=
+
+Name: assets/widget/css/aui-pull-refresh-2.css
+SHA1-Digest: jf6yoJHFg4b0oOBAr4ZT+gcffK4=
+
+Name: res/drawable-hdpi-v4/mo_download_mgr_loading.png
+SHA1-Digest: g41uZKulury4BelUTrwiwCKh1fI=
+
+Name: assets/widget/html/bangdan/bangdan-index.html
+SHA1-Digest: BioteVE7VGGW8ip78iW2NuZGMwM=
+
+Name: assets/widget/html/renyuan/renyuan-list.html
+SHA1-Digest: mnYE+Q+FIcUQdqpNllnraM5LHTI=
+
+Name: assets/widget/html/new/ruku.html
+SHA1-Digest: LRUtLayLKJlMDYptwCuuIHgVFjY=
+
+Name: assets/widget/html/bangdan/yiding.html
+SHA1-Digest: BlIzoiUbOkeINPL4ovGlBBesXCU=
+
+Name: assets/widget/image/edit.png
+SHA1-Digest: xjA65vjG8ctcaw4+oRuGm42qajw=
+
+Name: assets/widget/html/bangdan/check_pay.html
+SHA1-Digest: hbScg/zhS0aDLn9v51P+us8L9jM=
+
+Name: assets/widget/script/aui-slide.js
+SHA1-Digest: +ozh4YHbiFCdichKKTLMU1WpmD4=
+
+Name: assets/widget/css/aui-win.css
+SHA1-Digest: 0vJHTUnLys1OpGs8eJAJmerNS3A=
+
+Name: assets/widget/html/myrc/myinfo.html
+SHA1-Digest: X3SRzOTZ7aThga/l9e2HoEy7USM=
+
+Name: assets/widget/script/aui-scroll.js
+SHA1-Digest: M9lm7ztUPVaWs0KVWv7DuFFmpQc=
+
+Name: assets/widget/script/aui-toast.js
+SHA1-Digest: H8BfA5yAWFAiIieKsDh2VQP58B4=
+
+Name: assets/widget/css/aui.css
+SHA1-Digest: D/4zH98YuSpaA/GKJnpaGhcTjXc=
+
+Name: assets/widget/html/chanping/chanping-list.html
+SHA1-Digest: 7B8J5jc8ejCvJLvcR82kgfu9hcc=
+
+Name: assets/widget/script/layer/skin/default/icon-ext.png
+SHA1-Digest: 3fKjCtNLrE6aElDynEasCCPWKhI=
+
+Name: assets/widget/html/new/fengzhan.html
+SHA1-Digest: Ow3E6I3/vKQ1k+gNxFvwV9PK1NM=
+
+Name: assets/widget/html/mingxi/all.html
+SHA1-Digest: laedpOx0TJVDmgoUeZhlR64UsUo=
+
+Name: resources.arsc
+SHA1-Digest: bPX03cPymZj3TLEyWbgkJkCwi6c=
+
+Name: assets/widget/html/mingxi/mingxi.html
+SHA1-Digest: 6TM+hZk48mrptY7QSyD9M/k6ix4=
+
+Name: assets/widget/html/bangdan/bangdan-daiding.html
+SHA1-Digest: WEhQVAnRflTfNHa81gWC7uA1Ri8=
+
+Name: assets/widget/script/aui-alert.js
+SHA1-Digest: eFO+qTUwvY90tfcmH/abU/+ySpE=
+
+Name: assets/widget/script/laytpl.js
+SHA1-Digest: J6kzXPZNDY9ytRwWH7du7VOfgHU=
+
+Name: assets/widget/css/common.css
+SHA1-Digest: Eu26mTIkyEgAKYNUFjHvs8qUH1g=
+
+Name: res/layout/mo_download_mgr_list_item.xml
+SHA1-Digest: E5vM2SZvpKoPHXx4s3SoQxcF+S4=
+
+Name: res/drawable-xxhdpi-v4/uz_icon.png
+SHA1-Digest: aRhfeGI32554kO+5S3AAIX4yoB0=
+
+Name: assets/widget/html/login.html
+SHA1-Digest: xpGIRYuQ5GsRJUFlN+CdzBruqsM=
+
+Name: AndroidManifest.xml
+SHA1-Digest: rHBYOsbj2oRTQD8IZf/90r9rnqc=
+
+Name: lib/armeabi/liblbs.so
+SHA1-Digest: 7F6bOstuvEhi/Egd2z/TukHqoPw=
+
+Name: assets/widget/script/jquery.js
+SHA1-Digest: PGPbrAVE1Cok9jI2hlwlcq95GJs=
+
+Name: assets/widget/html/index.html
+SHA1-Digest: DYy6MjK7Jxk6V3tDPlRWDnjukyo=
+
+Name: assets/widget/html/bangdan/bangdan-pop.html
+SHA1-Digest: olRlS4Hsg0chHbL2sJ20eCcGOfQ=
+
+Name: assets/widget/html/bangdan/daiding.html
+SHA1-Digest: EZOBDRSgptnUJ6jQ5IsHk3pSXsY=
+
+Name: assets/widget/css/aui-slider-full.css
+SHA1-Digest: RlowoAdEk1pZtrBZGDD5XY1B5bQ=
+
+Name: res/layout/mo_download_mgr_list.xml
+SHA1-Digest: +3/rx+OjV9aO8moOljZOLRnOCY0=
+
+Name: assets/widget/script/layer/skin/default/loading-1.gif
+SHA1-Digest: SeVKy/VnQhIZXlgYSOwNSQKCRI8=
+
+Name: assets/widget/html/renyuan/renyuan-add.html
+SHA1-Digest: X74hqgTWvY11hqQuW6tuAGHR+ls=
+
+Name: assets/widget/script/layer/skin/default/icon.png
+SHA1-Digest: /kfsYXUH6c5fbOesmxeaPJIxiCs=
+
+Name: assets/widget/css/choice.css
+SHA1-Digest: xaPDRCDU67DSKj0PrA+OsblGKSs=
+
+Name: assets/widget/html/bangdan/selectproduct.html
+SHA1-Digest: KUmGtKewxwq8lK5i54Kg8uXXZ9I=
+
+Name: assets/widget/css/aui.2.0.css
+SHA1-Digest: h6uzLBDAQyZAgBEA2oL9ukV2IVE=
+
+Name: assets/widget/html/new/bangdan.html
+SHA1-Digest: bBMFj+gPAaO4Qc6y1lum7gEt+1U=
+
+Name: res/drawable-xhdpi-v4/uz_splash_bg.png
+SHA1-Digest: vGRItilZtB2kAoiMjE5KRuDVWNQ=
+
+Name: res/drawable-hdpi-v4/mo_download_mgr_dele.png
+SHA1-Digest: 5iaTUHtS2uxqtkPixSgPdq585hE=
+
+Name: assets/widget/image/logo.png
+SHA1-Digest: +ulu+d9IIuN6H1DLh5HWYA4i7mk=
+
+Name: assets/widget/css/aui-slider-up.css
+SHA1-Digest: y9ngePxLN0ymXz+FIsw7GIaR00s=
+
+Name: assets/widget/css/aui-flex.css
+SHA1-Digest: xxvWXcHR6r3J8rYt3FekxTw7xN8=
+
+Name: assets/widget/html/mingxi/piclist.html
+SHA1-Digest: qAQT3EFiYiTL1SLlN0T2XhRzpw4=
+
+Name: assets/widget/html/bangdan/check_show.html
+SHA1-Digest: AVufmZ4/fkJ22igvX8j3c/3GlMw=
+
+Name: lib/armeabi/libsec.so
+SHA1-Digest: LlQN2fEGj4rWarv9NUlazcqb1u8=
+
+Name: assets/widget/script/layer/skin/layer.css
+SHA1-Digest: SOpkSg0RZG0P6yY0NqzM2KCd8jc=
+
+Name: assets/widget/html/huizong/frm_win.html
+SHA1-Digest: VsVEqq4BcJBtPggDj/TVO8ph2mA=
+
+Name: assets/widget/html/bangdan/bandangdel.html
+SHA1-Digest: w1CNE5rPSxzljXl4ulRCk88D+ag=
+
+Name: assets/widget/css/font_413881_73lt3vtjoh7low29.ttf
+SHA1-Digest: hem+jSIFaOzRcYGBnlHPCqN1Hc8=
+
+Name: assets/widget/script/aui-range.js
+SHA1-Digest: Yyc0TG/ICXu8UQ3jkGmXy9ajA60=
+
+Name: assets/widget/widget/html/mingxi/all.html
+SHA1-Digest: laedpOx0TJVDmgoUeZhlR64UsUo=
+
+Name: assets/widget/html/new/baojia.html
+SHA1-Digest: svpcomeXy2Hn3Sgas9jn8eM/uXI=
+
+Name: assets/widget/html/new/canping.html
+SHA1-Digest: bVAuYGmGTNjfyRF+IU2xueSIsJw=
+
+Name: assets/widget/html/bangdan/check_nopay.html
+SHA1-Digest: xc80xmLfNPc+oBUXDxrBO5JUqsM=
+
+Name: assets/widget/css/idangerous.swiper.css
+SHA1-Digest: nEZ/52VvDSV4WP8ElAmxSyb/+uY=
+
+Name: assets/widget/script/group.js
+SHA1-Digest: 8npCQloUkg3E9D0y0WZLsHCvfYg=
+
+Name: assets/widget/css/iconfont2.ttf
+SHA1-Digest: tFvpAY1asI9zicqxAKiIM9A9m3g=
+
+Name: res/drawable-xhdpi-v4/uz_icon.png
+SHA1-Digest: 2QpPoi4T9xWM3pWsVSIBOrD8Uu8=
+
+Name: assets/widget/script/aui-pull-refresh-2.js
+SHA1-Digest: WVHz+O0IgIqtzFjG9IHzBggHtTs=
+
+Name: assets/widget/html/bangdan/bangdan-today.html
+SHA1-Digest: HSTu/ruavHVI2EFppBlv78BVkag=
+
+Name: assets/widget/script/aui-waterfall.js
+SHA1-Digest: hVl9bOClXAHmNUncnnQD/DXXhZ8=
+
+Name: res/drawable-hdpi-v4/uz_icon.png
+SHA1-Digest: rqOEsJyrc7atBijqG2I4KEIGa4Q=
+
+Name: assets/widget/html/new/shuju.html
+SHA1-Digest: hy9vRoqY0T3W9pOzbTydkbHcgbg=
+
+Name: assets/widget/widget/html/bangdan/check_show.html
+SHA1-Digest: gfLaUGtGsz5KPC+n6mpeAz+jnfw=
+
+Name: assets/widget/script/jquery.qrcode.min.js
+SHA1-Digest: 9CS9M5hwUQ0RYNHF2l1piu27RS4=
+
+Name: assets/widget/html/gongying/gongying-add.html
+SHA1-Digest: 5q+/CrYqsZfojBPvTuXOvocCANs=
+
+Name: assets/widget/script/aui-dialog.js
+SHA1-Digest: wkPj5AO9pILMs1RT7zjAOKRll4M=
+
+Name: assets/widget/html/bangdan/check_win.html
+SHA1-Digest: U5SI7bhwhpXqV5UKW2a2zdOE7TY=
+
+Name: assets/widget/html/renyuan/user_qx.html
+SHA1-Digest: QP2G3ioktZWwo8NbTmTtVx/ZW4w=
+
+Name: assets/widget/html/gongying/gongying.html
+SHA1-Digest: LMmlCc5xDJ5WZcDbZmuNsowBna0=
+
+Name: assets/widget/script/servercomm.js
+SHA1-Digest: aAYzOJHJSYuZegSAAjd863/0bYw=
+
+Name: assets/widget/html/main.html
+SHA1-Digest: krpYTWaHLFudmZO57IOSiv+jeCw=
+
+Name: assets/widget/html/new/index.html
+SHA1-Digest: ZntIisANQRViFJocn/PhL27G3bE=
+
+Name: res/drawable-hdpi-v4/uz_pull_down_refresh_arrow.png
+SHA1-Digest: iJXrswyfQ1P1huhp5Kj80u5F624=
+
+Name: assets/widget/css/aui-slide.css
+SHA1-Digest: PO63iYBJhc0SZJ2vbnUUtddEOYc=
+
+Name: assets/uzmap/module.json
+SHA1-Digest: VcB12K/HBL9yXXs9YahhR4lJ4DM=
+
+Name: assets/widget/html/comm/err.html
+SHA1-Digest: WWuhIjXtSFieSTk5Hr6tFwlGzvU=
+
+Name: assets/widget/css/api.css
+SHA1-Digest: YRZ3MSv+O0X0E1Xvkxznn8ZyD4k=
+
+Name: assets/widget/launch/launch1080x1920.png
+SHA1-Digest: fQzZHXfkHM32iYB9XwlYaF53Kag=
+
+Name: res/drawable-xxhdpi-v4/uz_splash_bg.png
+SHA1-Digest: Vs4YbseLrobN6GcjMruChDya1BY=
+
+Name: res/drawable-mdpi-v4/uz_splash_bg.png
+SHA1-Digest: WAMkALFNSUcGjTKEVJZensY2HoY=
+
+Name: assets/widget/css/aui-pull-refresh.css
+SHA1-Digest: taS07uN+6C/Z3V/zcfnVcrxUSjg=
+
+Name: res/drawable-hdpi-v4/mo_download_mgr_line.png
+SHA1-Digest: oWIq6mlM8qhDIrBOf6RfozFaKZs=
+
+Name: assets/widget/script/jquery.qrcode.js
+SHA1-Digest: 9zMkQZTuaRyfIrLrYGyAV5SiX0k=
+
+Name: assets/widget/html/bangdan/check_main.html
+SHA1-Digest: dAtpiocnws7FcrpAQjzCgBC2QQ4=
+
+Name: assets/widget/css/index.css
+SHA1-Digest: TBQv56f6cNhY/FugLsFtz4W9rL0=
+
+Name: res/drawable-hdpi-v4/mo_download_mgr_back.png
+SHA1-Digest: MfGNC37+VtQ5PaFUVLWmM9D12CM=
+
+Name: assets/widget/html/bangdan/check.html
+SHA1-Digest: yCyQ+wtGsM0UlmaS0Fmmu7veH1g=
+
+Name: res/drawable-hdpi-v4/mo_download_mgr_more.png
+SHA1-Digest: gpjFCOLUwaMv04p40NB9n4X9PLg=
+
+Name: assets/widget/html/new/myiss.html
+SHA1-Digest: KY7OvNwkpgOSLsrjahKtR+ReH2A=
+
+Name: assets/widget/html/huizong/huizong.html
+SHA1-Digest: wKmAzcakOKNhafBHfJE37B/YFqM=
+
+Name: assets/widget/script/aui-slider-up.js
+SHA1-Digest: d+JILefYH3GNyHm3ooctdgOG3/0=
+
+Name: assets/widget/css/aui_iconfont.ttf
+SHA1-Digest: HFBSP4P4W4nfy+9SwLZOouDo7F4=
+
+Name: assets/widget/script/aui-tab.js
+SHA1-Digest: D9KTddViayJQ1e+U5i1Ak+nBRE8=
+
+Name: assets/widget/script/iscroll.js
+SHA1-Digest: zmIJQRtMdsZHuPuHvHEe8K1HC7w=
+
+Name: assets/widget/script/aui-slider-full.js
+SHA1-Digest: 4Y62Ju1E9MnJb6zEaEZ4Qmq7DXY=
+
+Name: assets/widget/html/mingxi/frm_win.html
+SHA1-Digest: HHIQYeehbZjenzzKCx4s0o+A6u0=
+
+Name: assets/widget/html/fenzhan/fenzhan-add.html
+SHA1-Digest: 5Dzs8iM1VIVyggcuKkGfvK2Anp0=
+
+Name: assets/widget/script/layer/skin/default/loading-2.gif
+SHA1-Digest: xkFhXoUSVBEeJo2kLXKuaEs86Wc=
+
+Name: assets/widget/script/jQuery.md5.js
+SHA1-Digest: AajFJAqKG5WXXwV8nr1vy0hubDM=
+
+Name: assets/widget/html/bangdan/add.html
+SHA1-Digest: zvCDgnaUoTJTkDYl2RV7+UbuxaM=
+
+Name: assets/widget/index.html
+SHA1-Digest: /eq8wyDMjzLUv9mzrZOfHwAI7Is=
+
+Name: assets/widget/html/myrc/myhome.html
+SHA1-Digest: Do11bE2n/mjOznuH/qCtVCnhhzg=
+
+Name: assets/widget/html/chanping/chanping-add.html
+SHA1-Digest: 49ySFdMIWGyBAyZ9H8Uad3KKC90=
+
+Name: assets/widget/config.xml
+SHA1-Digest: szlHjeoZGc642TV12GsthY1PXYs=
+
+Name: assets/widget/html/cptype/cptype-list.html
+SHA1-Digest: ESZQGGTRZNeizAWFolaU9rqqN2k=
+
+Name: assets/widget/script/common.js
+SHA1-Digest: nc6IQlf5w+rsdYyqwukmk/RE9y0=
+
+Name: assets/widget/script/layer/skin/default/loading-0.gif
+SHA1-Digest: uoE4i7rFvCI/lEibl6laE/PHjkc=
+
+Name: assets/widget/widget/html/bangdan/bangdan-pop.html
+SHA1-Digest: olRlS4Hsg0chHbL2sJ20eCcGOfQ=
+
+Name: lib/armeabi/libtpnsSecurity.so
+SHA1-Digest: TKIo3YpvrosNYu7tEyMiJ8v0WhI=
+
+Name: assets/widget/script/DBapi.js
+SHA1-Digest: Y3RL9/GDlFt5cMj89Ygq/ElSQ78=
+
+Name: assets/widget/html/fenzhan/fenzhan-list.html
+SHA1-Digest: 6Jee8vE5I7RMCHq7PPRKr1gOFE0=
+
+Name: assets/widget/icon/icon150x150.png
+SHA1-Digest: IJsp5oPi/tiUqs6Vl1yBifn1Fyk=
+
+Name: assets/widget/css/aui-iconfont.2.0.ttf
+SHA1-Digest: bgBa9eNE+SIBMMSGsOaLdlkaqCo=
+
+Name: assets/widget/html/cptype/cptype-add.html
+SHA1-Digest: EjRIOmZpPIJy6YndjxosRCVwMrs=
+
+Name: assets/widget/html/new/gongying.html
+SHA1-Digest: AcFQ0DeWLQpWqBf5Xt4OOBQBrZs=
+
+Name: res/drawable-hdpi-v4/uz_copyright.png
+SHA1-Digest: MeCVhc1z+NHG6X8cbR7t4nqj/QM=
+
+Name: res/drawable-hdpi-v4/mo_download_mgr_pause.png
+SHA1-Digest: ILIB/vaBTAFv/LMJ7LN3++ECYsU=
+
+Name: assets/widget/widget.zip
+SHA1-Digest: vZHgOhtd9ZLFHma+BNsGQ4608No=
+
+Name: assets/widget/script/api.js
+SHA1-Digest: yPebVUuYMgWeiysubUXQsXdFw0w=
+
+Name: assets/widget/html/bangdan/bangdan-jiesuan.html
+SHA1-Digest: n833ugCkD+ol9WFibH6shG7oJTE=
+
+Name: assets/widget/html/new/login.html
+SHA1-Digest: QlpD6FCCY1/0Q6pyR316qCc97pI=
+
+Name: assets/widget/css/aui2.1.css
+SHA1-Digest: mi1e1DgtqHsvgUZLBgUHyeBS+0E=
+
+Name: assets/widget/script/zepto.min.js
+SHA1-Digest: C8vI/7yIWI5ZOaifcw+8yDNzJDU=
+
+Name: classes.dex
+SHA1-Digest: xb6nuQEJzXTz5nz3K8T2JYP1q6s=
+
+Name: assets/widget/css/comm/win_blank.css
+SHA1-Digest: eC2fe7w8y3UxMEnmgsBQp5618Zw=
+

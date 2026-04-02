@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/mobiscroll.custom-2.6.2.min.css"/>	
+    <style>
+		.hz-table{
+			border-top:1px solid #ccc
+		}
+		.hz-table .hz-table-row>div:first-child {
+		    border-left: 0;
+		}
+		.hz-table .hz-table-row>div {
+		    border-left: 1px solid #ccc;
+		    border-bottom: 1px solid #ccc;
+		    font-size: 0.8rem !important;
+		    text-align: center;
+		    height: 35px;
+		    line-height: 35px;
+		}
+		.db-input{
+			padding-left:0!important;
+			padding-right:0!important;
+			text-align: center;
+		}
+		.ctitle{
+			padding:5px;
+			color:#fff
+		}
+    </style>
+</head>
+<body>
+	<div class="aui-padded-10">
+		<div class="zz-div-box">
+			<div class="column-cnt aui-padded-r-10">时间</div>
+			<div class="zz-div-td1"><input type="text" class="aui-margin-b-0 mustipt db-input ipt-search" ></div>
+			<div class="column-cnt aui-padded-l-10 aui-padded-r-10">至</div>
+			<div class="zz-div-td1"><input type="text" class="aui-margin-b-0 mustipt db-input ipt-search" ></div>
+			<div class="aui-padded-l-10">
+				<div class="aui-btn aui-btn-success j_btn_search">搜索</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="hz-table db-bg-white aui-margin-t-10">
+		<div class="hz-table-row aui-flex-col hz-bg-main">
+			<div class="aui-flex-item-3">品名</div>
+			<div class="aui-flex-item-3">入库量（kg）</div>
+			<div class="aui-flex-item-3">入库总额</div>
+			<div class="aui-flex-item-3">均价</div>
+		</div>
+		<div class="bdlist-box"></div>
+	
+		<script id="bdlist" type="text/html">
+			<div class="hz-table-row  aui-flex-col">
+				<div class="aui-flex-item-3">{{d.name}}</div>
+				<div class="aui-flex-item-3">{{d.total_gw}}</div>
+				<div class="aui-flex-item-3">{{d.total_price}}</div>
+				<div class="aui-flex-item-3">{{d.average}}</div>
+			</div>
+		</script>
+		
+		<div class="hz-table-row  aui-flex-col">
+			<div class="aui-flex-item-3">合计</div>
+			<div class="aui-flex-item-3 total_weight"></div>
+			<div class="aui-flex-item-3 total_price"></div>
+			<div class="aui-flex-item-3"></div>
+		</div>
+	</div>
+	
+	<div class="nodata">暂无相关数据</div>
+	<div class='la_more'>上拉获取更多信息</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/mobiscroll.custom-2.6.2.min.js"></script>
+<script type="text/javascript">
+	var iccode ="";
+	apiready = function(){
+		changeserverurl();
+		domEvent();
+		getinfo()
+		
+		//alert(api.pageParam.ucompany_id)
+		//页面刷新
+		api.setRefreshHeaderInfo({
+			visible : true,
+			// bgColor: '#F2F2F2',
+			bgColor : '#E6E6E6',
+			textColor : '#000000',
+			textDown : '下拉刷新',
+			textUp : '释放刷新',
+		}, function(ret, err) {
+			$(".ipt-search").val("");//搜索框置空
+			iccode = "";
+			getinfo();
+			api.toast({
+				msg : '数据已是最新！',
+				duration : 3000,
+				location : 'bottom'
+			});
+		});
+			
+	};
+
+	var domEvent = function(){
+		//开始时间
+		$(".ipt-search").on("focus",function(){
+			var iptThis = $(this)
+			iptThis.blur();
+			api.openPicker({
+			    type: 'date',
+			    date: getdata(iptThis.val()),
+			    title: '选择时间'
+			}, function(ret, err) {
+			    if (ret) {
+					var now=ret.year+'-'+p(ret.month)+"-"+p(ret.day);
+			        iptThis.val(now)
+			    } else {
+			        //alert(JSON.stringify(err));
+			    }
+			});
+		})
+		
+		//搜索
+		$(".j_btn_search").on("click",function(){		
+			var time_min = $(".ipt-search").eq(0).val();
+			var time_max = $(".ipt-search").eq(1).val();
+			if(time_min.length == 0&&time_max.length == 0){
+				hint("您还没有选择搜索时间段！");
+				api.hideProgress();
+				return;
+			}
+			if(time_min.length > 0&&time_max.length > 0){
+				var startTime = parseInt($(".ipt-search").eq(0).val().split("-").join(""));
+				var endtTime = parseInt($(".ipt-search").eq(1).val().split("-").join(""));
+				if(startTime>endtTime){
+					hint("结束时间必须大于等于开始时间！");
+						api.hideProgress();
+					return;
+				}
+			}
+			page = 1;
+			getinfo();
+			api.showProgress({
+				title : '',
+				modal : false
+			});
+		})
+	}
+	function p(s) {
+	    return s < 10 ? '0' + s: s;
+	}
+	function getdata(da){
+		if (da){
+			return da;
+		}
+		var myDate = new Date();
+		//获取当前年
+		var year=myDate.getFullYear();
+		//获取当前月
+		var month=myDate.getMonth()+1;
+		//获取当前日
+		var date=myDate.getDate(); 
+		
+		var now=year+'-'+p(month)+"-"+p(date);
+		return now;
+	}
+	var getinfo = function(){
+		var data = {
+			ucompany_id:api.pageParam.ucompany_id,
+			iccode:iccode
+		}
+		var time_min = $(".ipt-search").eq(0).val();
+		var time_max = $(".ipt-search").eq(1).val();
+		if(time_min.length>0){
+			data.time_min = time_min;
+		}
+		if(time_max.length>0){
+			data.time_max = time_max;
+		}
+		loadingshow();
+		zzappajax("post",hosturl+"app/alldata.html",data,function(ret){
+			if (ret.hasOwnProperty("err")){
+				if (ret.err=="true"){
+					layer.msg(ret.errtext);
+					api.hideProgress();
+					api.refreshHeaderLoadDone();
+					loadinghide();
+					api.closeWin({
+                    });
+					return false;
+				}
+			}
+			var pageHtml_dj='';
+			$.each(ret.listall, function(index, item) {
+				var getTpl = $api.html($api.byId("bdlist"));
+				laytpl(getTpl).render(item, function(html) {
+					pageHtml_dj = pageHtml_dj + html;
+				});
+			})
+			
+			$(".total_weight").html(ret.total_weight);	 //入库量
+			$(".total_price").html(ret.total_price); //金额
+			
+			$(".bdlist-box").html(pageHtml_dj);
+			loadinghide();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			canAjax = true;
+			api.hideProgress();
+			return false;
+		})
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

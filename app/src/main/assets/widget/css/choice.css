@@ -1,0 +1,66 @@
+.type-small span{
+	width: 33.333%;
+	height: 41px;
+	line-height: 41px;
+	font-size: 14px;
+	float: left;
+	border-bottom: 1px solid #e1e1e1;
+	border-right: 1px solid #e1e1e1;
+	border-collapse: collapse;
+	position: relative;
+}
+.type-small .two-span{
+	width: 66.666%;
+}
+.type-small{
+	border-top: 1px solid #e1e1e1;
+}
+.type-small span:last-child{
+	border-right: 0;
+}
+.type-small span i{
+	display: block;
+	position: absolute;
+	width: 13px;
+	height: 13px;
+	background:url(../../image/imageslist.png);
+	background-size: 250px;
+	background-position: -125px -64px;
+	top: 50%;
+	margin-top: -6px;
+	left: 10px;
+	display: none;
+}
+.type-small .take-now-span{
+	color: #01ba2e;
+}
+.type-small .take-now-span i{
+	display: block;
+}
+.type-small li{
+	overflow: hidden;
+	text-align: center;
+}
+.price-type {
+	position: relative;
+	height: 38px;
+	line-height: 38px;
+	background-color: #f2f2f2;
+	padding-left: 39px;
+}
+.price-type i{
+	display: block;
+	height: 20px;
+	width: 20px;
+	position: absolute;
+	background: url(../../image/imageslist.png);
+	background-size: 250px;
+	left: 12px;
+	top: 10px;
+}
+.price-type .type-img1{
+	background-position: -112px -22px;
+}
+.price-type .type-img2{
+	background-position: -110px 0;
+}

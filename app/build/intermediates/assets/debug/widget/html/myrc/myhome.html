@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>	
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+    <style>
+    	html,body{
+    		background-color: #f2f2f2
+    	}
+    	.aui-iconfont3{
+		    font-size: 30px;
+		    line-height:35px;
+		}
+		.aui-iconfont{
+			font-size:40px;
+			line-height:31px;
+		}
+		.bd_num{
+			position: absolute;
+			
+		}
+    </style>
+</head>
+<body>
+	<div class="aui-content">
+        <ul class="aui-grid-nine">
+            <li class="aui-col-xs-6 aui-text-center j_bangdan">
+            	<span class="aui-badge aui-badge-danger bd_num" style="right:10px;left:auto;top:15px;display: none;z-index: 999">0</span>
+                <span class="aui-iconfont3 icon-dingjiatianxiejiage aui-text-success"></span>
+                <p>待定价</p>
+            </li>
+            <li class="aui-col-xs-6 aui-text-center j_check">
+                <span class="aui-iconfont aui-icon-check aui-text-danger"></span>
+                <p>付款审核</p>
+            </li>
+            <li class="aui-col-xs-6 aui-text-center j_bangdandel">
+                <span class="aui-iconfont aui-icon-deletefill aui-text-danger"></span>
+                <p>磅单作废</p>
+            </li>
+            <li class="aui-col-xs-6 aui-text-center j_add">
+                <span class="aui-iconfont aui-icon-add1 aui-text-danger"></span>
+                <p>补单</p>
+            </li>
+            <li class="aui-col-xs-6 aui-text-center j_huizong">
+                <span class="aui-iconfont3 icon-huizong aui-text-warning"></span>
+                <p>收货汇总</p>
+            </li>
+            <li class="aui-col-xs-6 aui-text-center j_mingxi">
+                <span class="aui-iconfont3 icon-caigourukumingxi aui-text-success"></span>
+                <p>收货明细</p>
+            </li>
+        </ul>
+    </div>
+	<div class="aui-content">
+        <ul class="aui-grid-nine">
+            <li class="aui-col-xs-3 aui-text-center j_gongying">
+                <span class="aui-iconfont3 icon-supplier-mgr-copy aui-text-success"></span>
+                <p>供货商管理</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center j_fenzhan">
+                <span class="aui-iconfont aui-icon-homefill aui-text-success"></span>
+                <p>分站管理</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center j_chanping">
+                <span class="aui-iconfont3 icon-icon aui-text-success"></span>
+                <p>产品管理</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center j_renyuan">
+                <span class="aui-iconfont3 icon-renyuanguanli aui-text-success"></span>
+                <p>人员管理</p>
+            </li>
+        </ul>
+    </div>
+    
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		changeserverurl()
+		//页面刷新
+		api.setRefreshHeaderInfo({
+			visible : true,
+			// bgColor: '#F2F2F2',
+			bgColor : '#E6E6E6',
+			textColor : '#000000',
+			textDown : '下拉刷新',
+			textUp : '释放刷新',
+		}, function(ret, err) {
+			getinfo();
+			getuserqx();
+			api.toast({
+				msg : '数据已是最新！',
+				duration : 3000,
+				location : 'bottom'
+			});
+		});
+		//人员管理
+		$(".j_renyuan").on("click",function(){
+			var pageParam = {
+				wintitle : "人员管理",
+				type : "renyuan",
+				bounces : false
+			};
+   			openWin("renyuan", "../renyuan/renyuan-list.html", pageParam);
+		})
+		
+		//补单
+		$(".j_add").on("click",function(){
+			var pageParam = {
+				wintitle : "补单",
+				type : "j_add",
+				bounces : false
+			};
+   			openWin("j_add", "../bangdan/add.html", pageParam);
+		})
+		//审核
+		$(".j_check").on("click",function(){
+			var pageParam = {
+				wintitle : "磅单审核",
+				type : "j_check",
+				bounces : false
+			};
+   			openWin("j_check", "../bangdan/check_main.html", pageParam);
+		})
+		//产品管理
+		$(".j_chanping").on("click",function(){
+			var pageParam = {
+				wintitle : "产品管理",
+				type : "chanping",
+				bounces : false
+			};
+   			openWin("chanping", "../chanping/chanping-list.html", pageParam);
+		})
+		
+		//产品类别管理
+		$(".j_bangdandel").on("click",function(){
+			var pageParam = {
+				wintitle : "磅单作废",
+				type : "bangdandel",
+				bounces : false
+			};
+   			openWin("bangdandel", "../bangdan/bandangdel.html", pageParam);
+		})
+		
+		//分站管理
+		$(".j_fenzhan").on("click",function(){
+			var pageParam = {
+				wintitle : "分站管理",
+				type : "fenzhan",
+				bounces : false
+			};
+   			openWin("fenzhan", "../fenzhan/fenzhan-list.html", pageParam);
+		})
+		
+		//入库明细
+		$(".j_mingxi").on("click",function(){
+			var pageParam = {
+				wintitle : "收货明细",
+				type : "mingxi",
+				bounces : false
+			};
+   			openWin("mingxi", "../mingxi/frm_win.html", pageParam);
+		})
+		
+		//数据汇总
+		$(".j_huizong").on("click",function(){
+			var pageParam = {
+				wintitle : "汇总",
+				type : "huizong",
+				bounces : false
+			};
+   			openWin("huizong", "../huizong/frm_win.html", pageParam);
+		})
+		
+		//供应商管理
+		$(".j_gongying").on("click",function(){
+			var pageParam = {
+				wintitle : "供应商管理",
+				type : "gongying_",
+				bounces : false
+			};
+   			openWin("gongying", "../gongying/gongying.html", pageParam);
+		})
+		
+		//带定价榜单
+		$(".j_bangdan").on("click",function(){
+			var pageParam = {
+				wintitle : "磅单定价",
+				type : "bangdan",
+				bounces : false
+			};
+   			openWin("bangdan", "../bangdan/bangdan-index.html", pageParam);
+		})
+		
+		getinfo();
+		getuserqx();
+		getsocketbandang()
+	};
+	function getuserqx(){
+		zzappajax("post",hosturl+"app/getuser_qx.html",'',function(ret){
+			$(".j_bangdan").show();
+			$(".j_bangdandel").show();
+			$(".j_huizong").show();
+			$(".j_mingxi").show();
+			$(".j_gongying").show();
+			$(".j_fenzhan").show();
+			$(".j_chanping").show();
+			$(".j_renyuan").show();
+			$(".j_check").show();
+			
+			if (ret.hasOwnProperty("tokenerr")){
+				return false
+			}
+			if (ret){
+				if (ret.indexOf("price")<0){
+					$(".j_bangdan").hide();
+				}
+				if (ret.indexOf("price_zf")<0){
+					$(".j_bangdandel").hide();
+				}
+				if (ret.indexOf("price_bd")<0){
+					$(".j_add").hide();
+				}
+				if (ret.indexOf("price_sh")<0){
+					$(".j_check").hide();
+				}
+				if (ret.indexOf("tongji_all")<0){
+					$(".j_huizong").hide();
+				}
+				if (ret.indexOf("tongji_mingxi")<0){
+					$(".j_mingxi").hide();
+				}
+				if (ret.indexOf("gongyinshang")<0){
+					$(".j_gongying").hide();
+				}
+				if (ret.indexOf("fengzhan")<0){
+					$(".j_fenzhan").hide();
+				}
+				if (ret.indexOf("products")<0){
+					$(".j_chanping").hide();
+				}
+				if (ret.indexOf("users")<0){
+					$(".j_renyuan").hide();
+				}
+			}
+			api.refreshHeaderLoadDone();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+			api.refreshHeaderLoadDone();
+			return false;
+		})
+	}
+	var getinfo = function(){
+		var utype="";
+		zzappajax("post",hosturl+"app/get_num.html",'',function(ret){
+			var utype=ret.utype
+			if(parseInt(ret.count)>0){
+				$(".bd_num").html(ret.count);
+				$(".bd_num").show();
+			}else{
+				$(".bd_num").hide();
+			}
+			if (utype=="1"){
+				$(".j_fenzhan").show();
+			}
+			if (utype=="1" || utype=="4"){
+				$(".j_renyuan").show();
+			}
+			api.refreshHeaderLoadDone();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+			api.refreshHeaderLoadDone();
+			return false;
+		})
+	}
+	function getsocketbandang(){
+		var socketManager = api.require('socketManager');
+		socketManager.createSocket({
+		    host: '101.37.14.79',
+		    port: 6969
+		}, function(ret, err) {
+		    if (ret) {
+		    	sid=ret.sid;
+		        //alert(JSON.stringify(ret));
+		        if (ret.state==103 && ret.data=="storageinsert"){
+		        	getinfo();
+		        }
+		        if (ret.state==102){
+		        	writesocketbandang()
+		        }
+				if (ret.state==204){
+		        	getsocketbandang()
+		        }
+		        
+		    } else {
+		        //alert(JSON.stringify(err));
+		        getsocketbandang()
+		    }
+		});
+	}
+	function writesocketbandang(){
+		var socketManager = api.require('socketManager');
+		socketManager.write({
+		    sid: sid,
+		    data: '{"sendvalue":"updatestorage","company_id":'+UserInfo.memberID()+'}|'
+		}, function(ret, err) {
+		    
+		});
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

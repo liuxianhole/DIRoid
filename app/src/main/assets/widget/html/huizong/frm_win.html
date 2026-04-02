@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<style>
+			body {
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-tab aui-tab-success aui-border-b">
+			<ul class="aui-tab-nav j_type">
+				
+			</ul>
+		</div>
+		<div id="main"></div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/jquery.js"></script>
+	<script type="text/javascript" src="../../script/layer/layer.js"></script>
+	<script type="text/javascript" src="../../script/common.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			ajaxinfo();
+			$(".j_type").on("click","li", function() {
+				var index = $(this).index();
+				$(".active").removeClass("active")
+				$(this).addClass("active")
+				api.setFrameGroupIndex({
+					name : 'group1',
+					index : index,
+					scroll : true,
+					showProgress : true
+				});
+			})
+		}
+		function opencompanylist(frames){
+			var $body = $api.dom('body');
+			var iosstatusheight=getisostatusheight();
+			var header_h = $(".aui-tab").height() + 46+iosstatusheight;
+			api.openFrameGroup({
+				preload :1 ,
+				name : 'group1',
+				rect : {
+					x : 0,
+					y : header_h,
+					w : 'auto',
+					h : 'auto'
+				},
+				frames : frames
+			}, function(ret, err) {
+				var index = ret.index;
+				$(".active").removeClass("active")
+				$(".j_type li").eq(index).addClass("active")
+			});
+		}
+		function ajaxinfo(){
+			var data={}
+			zzappajax("post",hosturl+"app/product_select.html",data,function(ret){
+				//alert(JSON.stringify(ret));
+				var htmls=""
+				var frames=[];
+				$.each(ret.company, function(index, item) {
+					htmls+="<li>"+item.name+"</li>";
+					frames.push({
+						name : 'frame'+index,
+						url : 'huizong.html',
+						bgColor : '#f2f2f2',
+						pageParam:{'ucompany_id':item.id}
+					})
+				})
+				$(".j_type").html(htmls);
+				opencompanylist(frames)
+				loadinghide();
+			},function(err){
+				if(err){
+					saveerrlog(err.body);
+				}
+				api.hideProgress();
+				return false;
+			})
+		}
+	</script>
+	<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

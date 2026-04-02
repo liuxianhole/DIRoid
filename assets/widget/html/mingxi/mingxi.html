@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>	
+    <style>
+    	.db-mgst {
+		    width: 90px;
+		    margin-right: 10px;
+		}
+		.hz-table{
+			border-top:1px solid #ccc
+		}
+		.hz-table .hz-table-row>div:first-child {
+		    border-left: 0;
+		}
+		.hz-table-mx .hz-table-row>div:nth-child(1){
+			width: 55px;
+		}
+		.hz-table-mx .hz-table-row>div:nth-child(3){
+			width: 45px;
+		}
+		.hz-table .hz-table-row>div{
+			border-left:1px solid #ccc;
+			border-bottom:1px solid #ccc;
+			font-size: 0.8rem !important;
+			line-height:0.9rem!important;
+			text-align: center;
+			display: box;
+			display: -webkit-box;
+			display: -moz-box; 
+			-webkit-box-pack:center;
+			-moz-box-pack:center;
+			-webkit-box-align:center;
+			-moz-box-align:center;
+			padding: 8px 0;
+		}
+		.mg-heji {
+		    position: fixed;
+		    padding: 10px 0;
+		    bottom: 0px;
+		    background: #fff;
+		    width: 100%;
+		    border-top: 1px solid #c0c0c0;
+		}
+    </style>
+</head>
+<body>
+	<div class="aui-padded-10">
+		<div class="zz-div-box">
+			<div class="db-mgst">
+				<div class="db-select-box">
+					<select name="" id="" class="db-select slt-search">
+						<option value="iccode">供应编号</option>
+						<option value="supplier">供货人</option>
+						<option value="gw">毛重</option>
+						<option value="gmt_created">入场时间</option>
+						<option value="price">单价</option>
+					</select>
+				</div>
+			</div>
+			<div class="zz-div-td1"><input type="text" class="aui-margin-b-0 mustipt db-input ipt-search" ></div>
+			<div class="aui-padded-l-10">
+				<div class="aui-btn aui-btn-success j_btn_search">搜索</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="bdlist-box"></div>
+	
+	<script id="bdlist" type="text/html">
+		<div class="hz-table db-bg-white aui-margin-t-10 aui-contront hz-table-mx">
+			<div class="hz-table-row aui-flex-col ">
+				<div class="aui-flex-auto aui-text-success">供货人</div>
+				<div class="aui-flex-item-4">{{d.contact}}</div>
+				<div class="aui-flex-auto aui-text-success">品名</div>
+				<div class="aui-flex-item-3">{{d.product_name}}</div>
+			</div>
+			<div class="hz-table-row aui-flex-col ">
+				<div class="aui-flex-auto aui-text-success">毛重</div>
+				<div class="aui-flex-item-4">{{d.gw}}</div>
+				<div class="aui-flex-auto aui-text-success">皮重</div>
+				<div class="aui-flex-item-3">{{d.tare}}</div>
+			</div>
+			<div class="hz-table-row aui-flex-col ">
+				<div class="aui-flex-auto aui-text-success">净重</div>
+				<div class="aui-flex-item-4">{{d.nw}}</div>
+				<div class="aui-flex-auto aui-text-success">单价</div>
+				<div class="aui-flex-item-3">{{d.price}}</div>
+			</div>
+			<div class="hz-table-row aui-flex-col ">
+				<div class="aui-flex-auto aui-text-success">进场时间</div>
+				<div class="aui-flex-item-4">{{d.gmt_created}}</div>
+				<div class="aui-flex-auto aui-text-success">总额</div>
+				<div class="aui-flex-item-3">{{d.total}}</div>
+			</div>
+		</div>
+	</script>
+	
+	<div class="nodata">暂无相关数据</div>
+	<div class='la_more'>上拉获取更多信息</div>
+	
+	
+	<div style="height: 54px;">
+		<div class="aui-flex-col mg-heji">
+			<div class="aui-flex-item-2 aui-text-center">合计</div>
+			<div class="aui-flex-item-5">入库量：<span class="aui-text-danger listcount">31321</span></div>
+			<div class="aui-flex-item-5">金额：<span class="aui-text-success total_price">43423.90</span></div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var page = 1;
+	var pagecount=0;
+	var searchtype ="";
+	var searchinfo ="";
+	
+	apiready = function(){
+		changeserverurl();
+		domEvent();
+		getinfo()
+		//底部加载
+		api.addEventListener({
+			name : 'scrolltobottom'
+		}, function(ret, err) {
+			if (page>=pagecount){
+				$(".la_more").html("全部加载完毕");
+				return false;
+			}
+			$(".la_more").html("加载更多中...");
+			setTimeout(function() {
+				page+=1;
+				getinfo();
+			}, 10)
+		});
+		
+		//页面刷新
+		api.setRefreshHeaderInfo({
+			visible : true,
+			// bgColor: '#F2F2F2',
+			bgColor : '#E6E6E6',
+			textColor : '#000000',
+			textDown : '下拉刷新',
+			textUp : '释放刷新',
+		}, function(ret, err) {
+			
+			$(".ipt-search").val("");//搜索框置空
+			searchtype = "";
+			searchinfo = "";
+			page = 1;
+			getinfo();
+			api.toast({
+				msg : '数据已是最新！',
+				duration : 3000,
+				location : 'bottom'
+			});
+		});
+		
+	};
+	var domEvent = function(){
+		//搜索
+		$(".j_btn_search").on("click",function(){		
+			searchtype = $(".slt-search").val();
+			searchinfo = $(".ipt-search").val();
+			if(searchinfo.length == 0){
+				hint("请输入搜索内容！");
+				api.hideProgress();
+				return;
+			}
+			page = 1;
+			getinfo();
+			api.pageUp({
+				'top' : true
+			});
+		})
+		
+		//入场时间
+		$(".ipt-search").on("focus",function(){
+			var iptThis = $(this)
+			if($(".slt-search").val()=="gmt_created"){
+				$(".ipt-search").blur();
+				api.openPicker({
+				    type: 'date',
+				    date: getdata(iptThis.val()),
+				    title: '选择时间'
+				}, function(ret, err) {
+				    if (ret) {
+				    				
+						var now=ret.year+'-'+p(ret.month)+"-"+p(ret.day);
+						
+				        iptThis.val(now)
+				    } else {
+				        //alert(JSON.stringify(err));
+				    }
+				});
+			}
+		})
+	}
+	
+	var getinfo = function(){
+		var data = {
+			company_id:UserInfo.memberID(),
+			page:page,
+			searchtype:searchtype,
+			searchinfo:searchinfo
+		}
+		if($(".slt-search").val()=="gmt_created"){	//如果是搜索出场时间添加搜索字段
+			delete data.searchinfo;
+			data.searchinfo_date = searchinfo;
+		}else{
+			delete data.searchinfo_date;
+			data.searchinfo = searchinfo;
+		}
+		if (page==1){
+			loadingshow();
+		}
+		zzappajax("post",hosturl+"app/storage.html",data,function(ret){
+			if (ret.hasOwnProperty("err")){
+				if (ret.err=="true"){
+					layer.msg(ret.errtext);
+					api.hideProgress();
+					api.refreshHeaderLoadDone();
+					loadinghide();
+					api.closeWin({
+                    });
+					return false;
+				}
+			}
+			var pageHtml_dj='';
+			$.each(ret.listall, function(index, item) {
+				var getTpl = $api.html($api.byId("bdlist"));
+				laytpl(getTpl).render(item, function(html) {
+					pageHtml_dj = pageHtml_dj + html;
+				});
+			})
+			
+			$(".listcount").html(ret.listcount);	 //入库量
+			$(".total_price").html(ret.total_price); //金额
+			
+			if (page == 1) {
+				pagecount=ret.page_listcount;
+				if (pageHtml_dj==""){
+            		$(".nodata").show();
+            		$(".la_more").hide();
+            	}else{
+            		$(".nodata").hide();
+            		$(".la_more").show();
+                }
+				$(".bdlist-box").html(pageHtml_dj);
+			} else {
+				$(".bdlist-box").append(pageHtml_dj);
+			}
+			//显示页码
+			api.toast({
+				msg : page+"/"+pagecount+"页",
+				duration : 2000,
+				location : 'bottom'
+			});
+			loadinghide();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			canAjax = true;
+			api.hideProgress();
+			return false;
+		})
+	}
+	
+	
+	function p(s) {
+	    return s < 10 ? '0' + s: s;
+	}
+	function getdata(da){
+		if (da){
+			return da
+		}
+		var myDate = new Date();
+		//获取当前年
+		var year=myDate.getFullYear();
+		//获取当前月
+		var month=myDate.getMonth()+1;
+		//获取当前日
+		var date=myDate.getDate(); 
+		
+		var now=year+'-'+p(month)+"-"+p(date);
+		return now;
+	}
+	
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

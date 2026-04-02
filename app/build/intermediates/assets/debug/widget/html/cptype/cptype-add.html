@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+    <style>
+    	.db-gy-title{
+			width: 80px;
+			text-align: right;
+			color: #2ecc71
+		}
+    </style>
+</head>
+<body>
+	<div class="db-bg-white">
+		<div class="aui-padded-15  zz-div-box">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title row-right">类别名称</div>
+			<div class="zz-div-td1">
+				<input type="text" class="aui-margin-b-0 mustipt db-input name" >
+			</div>
+		</div>
+
+		<div class="aui-padded-15  zz-div-box aui-padded-t-0">
+			<div class="column-cnt aui-padded-r-10 aui-font-size-18 db-gy-title"></div>
+			<div class="zz-div-td1">
+				<div class="aui-btn aui-btn-success j_btn">&nbsp;保存&nbsp;</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		changeserverurl();
+		
+		if(api.pageParam.bdinfo){
+			$(".name").val(api.pageParam.bdinfo.name);
+		}
+		
+		domEvent();
+	};
+	
+	var canAjax = true;
+	var domEvent = function(){
+		$(".j_btn").on("click",function(){
+			if(!canAjax){
+				return;
+			}
+			var name = $(".name").val();
+			
+			
+			if (name.length == 0) {
+				hint("类别名称不能为空！");
+				api.hideProgress();
+				return;
+			}		
+			
+			var data = {
+				name:name,
+			}
+			if(api.pageParam.bdinfo){	//判断是否是修改
+				data.id = api.pageParam.bdinfo.id;
+			}
+			loadingshow()
+			canAjax = false;
+			zzappajax("post",hosturl+"app/category_save.html",data,function(ret){
+					if(ret.err=="false"){
+						api.alert({
+							title : '类别管理',
+							msg : '保存成功！',
+							buttons : ['确定']
+						}, function(ret, err) {
+							api.execScript({
+								name : "cptype",
+								frameName:"cptype_",
+								script : "page = 1;getinfo();"
+							});
+							api.closeWin({
+				            });
+							api.hideProgress();
+							canseve = true;
+						});
+					}
+					canAjax = true;
+					canseve = true;
+					api.hideProgress();
+				},function(err){
+					if(err){
+						saveerrlog(err.body);
+					}
+					canAjax = true;
+					canseve = true;
+					api.hideProgress();
+					return false;
+			})
+		})
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

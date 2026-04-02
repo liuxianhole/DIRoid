@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>待定价</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>	
+    <style>
+    	.qj-center-title {
+		    width: 95px;
+		    padding-right: 10px;
+		    text-align: right;
+		}
+		.aui-content{
+			position:relative
+		}
+		.bddel{
+			position: absolute;
+			right:10px;
+			top:20px;
+			
+		}
+    </style>
+</head>
+<body>
+
+
+<div class="bdlist-box"></div>
+<script id="bdlist" type="text/html">
+	<div class="db-bg-white aui-padded-15 aui-content">
+		<div class="zz-div-box">
+			<div class="qj-center-title aui-text-success">供应商</div>
+			<div class="zz-div-td1">{{d.supplier_name}}</div>
+		</div>
+		<div class="zz-div-box">
+			<div class="qj-center-title aui-text-success">进场时间</div>
+			<div class="zz-div-td1">{{d.gmt_created}}</div>
+		</div>
+		<div class="zz-div-box">
+			<div class="qj-center-title aui-text-success">毛重</div>
+			<div class="zz-div-td1">{{d.gw}}</div>
+		</div>
+		{{#  if(d.tare_check === 1){ }}
+		<div>
+			
+			<div class="zz-div-box">
+				<div class="qj-center-title aui-text-success">皮重</div>
+				<div class="zz-div-td1">{{d.tare}}</div>
+			</div>
+			<div class="zz-div-box">
+				<div class="qj-center-title aui-text-success">净重</div>
+				<div class="zz-div-td1">{{d.nw}}</div>
+			</div>
+		</div>
+		{{#  }else{ }}
+		<div class="zz-div-box">
+			<div class="qj-center-title aui-text-success">皮重</div>
+			<div class="zz-div-td1">{{d.tare}}</div>
+		</div>
+		<div class="zz-div-box">
+			<div class="qj-center-title aui-text-success">净重</div>
+			<div class="zz-div-td1">{{d.nw}}</div>
+		</div>
+		{{#  } }}
+		<div class="aui-text-center" style="margin-top: 10px">
+			<span class="aui-btn aui-btn-info btn-dj" storage_selfid="{{d.selfid}}">立即定价</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{# if (d.piclist!=""){ }}<span class="aui-btn aui-btn-default pic" sid="{{d.id}}" storage_selfid="{{d.selfid}}">查看照片</span>{{#  } }}
+		</div>
+		<div class="aui-btn aui-btn-danger bddel">作废</div>
+	</div>
+</script>
+
+<div class="nodata">暂无待定价磅单</div>
+<div class='la_more'>上拉获取更多信息</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var page = 1;
+	var pagecount=0;
+	var bdinfo =[]; //保存数据页面传值
+	var iccode ="";
+	var sid=0;
+	apiready = function(){
+		changeserverurl()
+		domEvent();
+		getinfo();
+		api.addEventListener({
+			name : 'scrolltobottom'
+		}, function(ret, err) {
+			if (page>=pagecount){
+				$(".la_more").html("全部加载完毕");
+				return false;
+			}
+			$(".la_more").html("加载更多中...");
+			setTimeout(function() {
+				page +=1;
+				getinfo();
+			}, 10)
+		});
+		
+		//页面刷新
+		api.setRefreshHeaderInfo({
+			visible : true,
+			// bgColor: '#F2F2F2',
+			bgColor : '#E6E6E6',
+			textColor : '#000000',
+			textDown : '下拉刷新',
+			textUp : '释放刷新',
+		}, function(ret, err) {
+		
+			$(".ipt-search").val("");//搜索框置空
+			iccode = "";
+			page = 1;
+			getinfo();
+			api.toast({
+				msg : '数据已是最新！',
+				duration : 3000,
+				location : 'bottom'
+			});
+		});
+		getsocketbandang()
+	};
+	var X5broser;
+	var domEvent = function(){	
+		//立即定价
+		$(".bdlist-box").on("click",".btn-dj",function(){
+			//api.pageParam.bdinfo = bdinfo[$(this).parents(".aui-content").index()];
+			//openwindows("bangdan-pop", "../bangdan/bangdan-pop.html");
+			var pageParam = {
+				wintitle : "定价",
+				type : "dingjia",
+				bounces : false,
+				storage_selfid:$(this).attr("storage_selfid")
+			};
+			openWin("dingjia", "../bangdan/bangdan-pop.html", pageParam);
+		})
+		$(".bdlist-box").on("click",".pic",function(){
+			var sid=$(this).attr("sid");
+			var storage_selfid=$(this).attr("storage_selfid");
+			X5broser = api.require('webBrowser');
+			var url="http://dibang.zz91.com/mobile/piclist.html?sid="+sid+"&storage_selfid="+storage_selfid+"";
+			X5broser.open({
+				url: url,
+			}, function(ret){
+				//console.log(JSON.stringify(ret));
+			});
+		})
+		
+		//搜索
+		$(".j_btn_search").on("click",function(){		
+			iccode = $(".ipt-search").val();
+			if(iccode.length == 0){
+				hint("请输入磅单编号！");
+				api.hideProgress();
+				return;
+			}
+			page = 1;
+			getinfo();
+			api.pageUp({
+				'top' : true
+			});
+		})
+		$(".statorereload").on("click",function(){
+			page = 1;
+			getinfo();
+			api.pageUp({
+				'top' : true
+			});
+		})
+		
+		
+	}
+	function getsocketbandang(){
+		var socketManager = api.require('socketManager');
+		socketManager.createSocket({
+		    host: '101.37.14.79',
+		    port: 6969
+		}, function(ret, err) {
+		    if (ret) {
+		    	sid=ret.sid;
+		        //alert(JSON.stringify(ret));
+		        if (ret.state==103 && ret.data=="storageinsert"){
+		        	page=1;
+		        	getinfo();
+		        }
+		        if (ret.state==102){
+		        	writesocketbandang()
+		        }
+				if (ret.state==204){
+		        	getsocketbandang()
+		        }
+		        
+		    } else {
+		        //alert(JSON.stringify(err));
+		        getsocketbandang()
+		    }
+		});
+	}
+	function writesocketbandang(){
+		var socketManager = api.require('socketManager');
+		socketManager.write({
+		    sid: sid,
+		    data: '{"sendvalue":"updatestorage","company_id":'+UserInfo.memberID()+'}|'
+		}, function(ret, err) {
+		    
+		});
+	}
+	var getinfo = function(){
+		var data = {
+			pricing:1,
+			page:page,
+		}
+		if (page==1){
+			loadingshow();
+		}
+		zzappajax("get",hosturl+"app/pricing.html",data,function(ret){
+			var pageHtml_dj='';
+			$.each(ret.listall, function(index, item) {
+				var getTpl = $api.html($api.byId("bdlist"));
+				laytpl(getTpl).render(item, function(html) {
+					pageHtml_dj = pageHtml_dj + html;
+				});
+			})
+			
+			if (page == 1) {
+				bdinfo = [];
+				pagecount=ret.page_listcount;
+				if (pageHtml_dj==""){
+            		$(".nodata").show();
+            		$(".la_more").hide();
+            	}else{
+            		$(".nodata").hide();
+            		$(".la_more").show();
+                }
+				$(".bdlist-box").html(pageHtml_dj);
+			} else {
+				$(".bdlist-box").append(pageHtml_dj);
+			}
+			
+			$.each(ret.listall, function(index, item) {
+				var bdinfo_mo = {};
+				bdinfo_mo.supplier_name =  item.supplier_name;
+				bdinfo_mo.gw =  item.gw;
+				bdinfo_mo.price =  item.price;
+				bdinfo_mo.id =  item.id;
+				bdinfo.push(bdinfo_mo);
+			})
+			//显示页码
+			api.toast({
+				msg : page+"/"+pagecount+"页",
+				duration : 2000,
+				location : 'bottom'
+			});
+			loadinghide();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			canAjax = true;
+			api.hideProgress();
+			api.refreshHeaderLoadDone();
+			return false;
+		})
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+</html>

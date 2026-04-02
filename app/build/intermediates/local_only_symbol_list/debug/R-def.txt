@@ -1,0 +1,20 @@
+R_DEF: Internal format may change without notice
+local
+color colorBackground
+color colorOnPrimary
+color colorPrimary
+color colorPrimaryDark
+drawable mo_download_mgr_back
+drawable mo_download_mgr_dele
+drawable mo_download_mgr_line
+drawable mo_download_mgr_loading
+drawable mo_download_mgr_more
+drawable mo_download_mgr_pause
+drawable uz_copyright
+drawable uz_icon
+drawable uz_pull_down_refresh_arrow
+drawable uz_splash_bg
+id webView
+layout activity_main
+string app_name
+style Theme.DiBangWebView
