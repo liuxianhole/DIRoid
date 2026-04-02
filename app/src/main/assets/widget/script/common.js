@@ -1,10 +1,5 @@
 function changeserverurl(){
-	var appName=api.appName;
-	if (appName=="AppLoader"){
-		hosturl="http://dibang.zz91.com/";
-	}else{
-		hosturl="http://dibang.zz91.com/";
-	}
+	hosturl = APP_BASE_URL;
 }
 //动态加载js
 function loadjavascript(url, d, t) {

@@ -2,7 +2,8 @@
  * APICloud JavaScript Library
  * Copyright (c) 2014 apicloud.com
  */
-var hosturl="http://dibang.zz91.com/";
+var APP_BASE_URL = "http://192.168.0.110:8000/";
+var hosturl = APP_BASE_URL;
 var appVersion="1.0.0";
 (function(window){
     var u = {};
@@ -1037,6 +1038,9 @@ var appVersion="1.0.0";
         execScript: function(opts) {
             opts = opts || {};
             var targetWindowName = opts.name || compatApi.winName;
+            if (targetWindowName === 'root') {
+                targetWindowName = '__root__';
+            }
             var target;
             if (opts.frameName) {
                 var frameItem = getHost().frames[findFrameKey(targetWindowName, opts.frameName)];

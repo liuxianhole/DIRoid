@@ -146,7 +146,7 @@
 			var sid=$(this).attr("sid");
 			var storage_selfid=$(this).attr("storage_selfid");
 			X5broser = api.require('webBrowser');
-			var url="http://dibang.zz91.com/mobile/piclist.html?sid="+sid+"&storage_selfid="+storage_selfid+"";
+			var url=APP_BASE_URL+"mobile/piclist.html?sid="+sid+"&storage_selfid="+storage_selfid+"";
 			X5broser.open({
 				url: url,
 			}, function(ret){
