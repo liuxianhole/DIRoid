@@ -203,9 +203,10 @@ function havelogin() {
 	if (!login_sn) {
 		var pageParam = {
 			wintitle : "登录",
-			type : "frm-login"
+			type : "login",
+			bounces : false
 		};
-		openWin("frm-login", "../myrc/frm-login.html", pageParam);
+		openWin("login", "../login.html", pageParam);
 		return false;
 	} else {
 		return true;

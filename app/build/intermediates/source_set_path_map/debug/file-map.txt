@@ -29,10 +29,10 @@ com.zz91.dibang.app-lifecycle-process-2.6.1-27 /home/quanjunlin/.gradle/caches/9
 com.zz91.dibang.app-lifecycle-viewmodel-savedstate-2.6.1-28 /home/quanjunlin/.gradle/caches/9.0-milestone-1/transforms/e9f83529130279aaf1ad9d662873a778/transformed/lifecycle-viewmodel-savedstate-2.6.1/res
 com.zz91.dibang.app-appcompat-1.6.1-29 /home/quanjunlin/.gradle/caches/9.0-milestone-1/transforms/ef383254d7ed336647320bff66369b36/transformed/appcompat-1.6.1/res
 com.zz91.dibang.app-constraintlayout-2.0.1-30 /home/quanjunlin/.gradle/caches/9.0-milestone-1/transforms/ff0667a5ff5a0a793991a96d2fdf63b5/transformed/constraintlayout-2.0.1/res
-com.zz91.dibang.app-pngs-31 /home/quanjunlin/ai/mobile/app/build/generated/res/pngs/debug
-com.zz91.dibang.app-resValues-32 /home/quanjunlin/ai/mobile/app/build/generated/res/resValues/debug
-com.zz91.dibang.app-packageDebugResources-33 /home/quanjunlin/ai/mobile/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
-com.zz91.dibang.app-packageDebugResources-34 /home/quanjunlin/ai/mobile/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
-com.zz91.dibang.app-merged_res-35 /home/quanjunlin/ai/mobile/app/build/intermediates/merged_res/debug
-com.zz91.dibang.app-debug-36 /home/quanjunlin/ai/mobile/app/src/debug/res
-com.zz91.dibang.app-main-37 /home/quanjunlin/ai/mobile/app/src/main/res
+com.zz91.dibang.app-pngs-31 /home/quanjunlin/ai/system/DIRoid/app/build/generated/res/pngs/debug
+com.zz91.dibang.app-resValues-32 /home/quanjunlin/ai/system/DIRoid/app/build/generated/res/resValues/debug
+com.zz91.dibang.app-packageDebugResources-33 /home/quanjunlin/ai/system/DIRoid/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.zz91.dibang.app-packageDebugResources-34 /home/quanjunlin/ai/system/DIRoid/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.zz91.dibang.app-merged_res-35 /home/quanjunlin/ai/system/DIRoid/app/build/intermediates/merged_res/debug
+com.zz91.dibang.app-debug-36 /home/quanjunlin/ai/system/DIRoid/app/src/debug/res
+com.zz91.dibang.app-main-37 /home/quanjunlin/ai/system/DIRoid/app/src/main/res

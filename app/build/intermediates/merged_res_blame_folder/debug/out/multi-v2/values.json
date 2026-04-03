@@ -76,6 +76,23 @@
                     }
                 },
                 {
+                    "source": "/home/quanjunlin/ai/system/DIRoid/app/src/main/res/values/colors.xml",
+                    "from": {
+                        "startLines": "5,4,2,3",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "202,153,55,102",
+                        "endColumns": "49,48,46,50",
+                        "endOffsets": "247,197,97,148"
+                    },
+                    "to": {
+                        "startLines": "574,575,576,577",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "30167,30217,30266,30313",
+                        "endColumns": "49,48,46,50",
+                        "endOffsets": "30212,30261,30308,30359"
+                    }
+                },
+                {
                     "source": "/home/quanjunlin/.gradle/caches/9.0-milestone-1/transforms/803df8666be355f97b06eb79cf6ffac0/transformed/viewpager2-1.0.0/res/values/values.xml",
                     "from": {
                         "startLines": "2",
@@ -205,26 +222,7 @@
                     }
                 },
                 {
-                    "source": "/home/quanjunlin/ai/mobile/app/src/main/res/values/themes.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "102",
-                        "endLines": "10",
-                        "endColumns": "12",
-                        "endOffsets": "730"
-                    },
-                    "to": {
-                        "startLines": "6298",
-                        "startColumns": "4",
-                        "startOffsets": "442662",
-                        "endLines": "6306",
-                        "endColumns": "12",
-                        "endOffsets": "443288"
-                    }
-                },
-                {
-                    "source": "/home/quanjunlin/ai/mobile/app/src/main/res/values/strings.xml",
+                    "source": "/home/quanjunlin/ai/system/DIRoid/app/src/main/res/values/strings.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -274,6 +272,25 @@
                         "startOffsets": "126713",
                         "endColumns": "82",
                         "endOffsets": "126791"
+                    }
+                },
+                {
+                    "source": "/home/quanjunlin/ai/system/DIRoid/app/src/main/res/values/themes.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "102",
+                        "endLines": "10",
+                        "endColumns": "12",
+                        "endOffsets": "730"
+                    },
+                    "to": {
+                        "startLines": "6298",
+                        "startColumns": "4",
+                        "startOffsets": "442662",
+                        "endLines": "6306",
+                        "endColumns": "12",
+                        "endOffsets": "443288"
                     }
                 },
                 {
@@ -331,23 +348,6 @@
                         "endLines": "94,9079,10441,10525",
                         "endColumns": "60,12,24,24",
                         "endOffsets": "5072,632877,691999,696515"
-                    }
-                },
-                {
-                    "source": "/home/quanjunlin/ai/mobile/app/src/main/res/values/colors.xml",
-                    "from": {
-                        "startLines": "5,4,2,3",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "202,153,55,102",
-                        "endColumns": "49,48,46,50",
-                        "endOffsets": "247,197,97,148"
-                    },
-                    "to": {
-                        "startLines": "574,575,576,577",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "30167,30217,30266,30313",
-                        "endColumns": "49,48,46,50",
-                        "endOffsets": "30212,30261,30308,30359"
                     }
                 },
                 {

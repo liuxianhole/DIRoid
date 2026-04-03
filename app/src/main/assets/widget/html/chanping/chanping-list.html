@@ -156,14 +156,25 @@
 			loadingshow();
 		}
 		zzappajax("post",hosturl+"app/product.html",data,function(ret){
+			if (ret.hasOwnProperty("tokenerr") && ret.tokenerr) {
+				UserInfo.clear();
+				loadinghide();
+				$(".bdlist-box").html("");
+				$(".nodata").show();
+				$(".la_more").hide();
+				layer.msg(ret.errtext || "登录失效，请重新登录");
+				setTimeout(function() {
+					havelogin();
+				}, 300);
+				return false;
+			}
 			if (ret.hasOwnProperty("err")){
 				if (ret.err=="true"){
 					layer.msg(ret.errtext);
-					api.hideProgress();
-					api.refreshHeaderLoadDone();
 					loadinghide();
-					api.closeWin({
-                    });
+					$(".bdlist-box").html("");
+					$(".nodata").show();
+					$(".la_more").hide();
 					return false;
 				}
 			}
@@ -205,7 +216,12 @@
 				saveerrlog(err.body);
 			}
 			canAjax = true;
-			api.hideProgress();
+			loadinghide();
+			$(".la_more").hide();
+			if (page == 1) {
+				$(".bdlist-box").html("");
+				$(".nodata").show();
+			}
 			return false;
 		})
 	}
