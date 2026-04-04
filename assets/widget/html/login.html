@@ -95,13 +95,13 @@
 				//登录获取的mid
 				var memberID = ret.memberID;
 				
-				var selfid = ret.selfid;
+				var self_id = ret.self_id;
 				
 				//登录获取的group_id集团id
 				var group_id = ret.group_id;
 				var username = ret.username.toString()
 				//保存信息到本地
-				UserInfo.onSuccess(token, username, pwd_hash, memberID,group_id,selfid);
+				UserInfo.onSuccess(token, username, pwd_hash, memberID,group_id,self_id);
 				//alert(UserInfo.username())
 				api.alert({
 					title : '登录帐号',

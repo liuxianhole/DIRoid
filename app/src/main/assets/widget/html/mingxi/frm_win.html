@@ -38,7 +38,7 @@
 						</select>
 					</div>
 					<div class="aui-flex-item-6"> &nbsp;&nbsp;品类：<span class="aui-btn aui-btn-outlined selectproducts">全部+</span>
-						<input type="hidden" id="proselfid" value="">
+						<input type="hidden" id="proself_id" value="">
 					</div>
 				</div>
 				<div class="aui-flex-col">
@@ -95,7 +95,7 @@
 				api.execScript({
 					name : api.winName,
 					frameName:"frame1",
-					script : "searchall('"+$(".company_id").val()+"','"+$("#proselfid").val()+"','"+$(".start_date").val()+"','"+$(".end_date").val()+"','"+$(".supplier_name").val()+"')"
+					script : "searchall('"+$(".company_id").val()+"','"+$("#proself_id").val()+"','"+$(".start_date").val()+"','"+$(".end_date").val()+"','"+$(".supplier_name").val()+"')"
 				});
 			})
 			
@@ -115,9 +115,9 @@
 				});
 			})
 		}
-		function selectpro(selfid,name){
+		function selectpro(self_id,name){
 			$(".selectproducts").html(name);
-			$("#proselfid").val(selfid);
+			$("#proself_id").val(self_id);
 		}
 		function ajaxinfo(){
 			var data={}

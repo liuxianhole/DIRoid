@@ -100,7 +100,7 @@ var zzappajax = function(method, url, data, successCallback, errorCallback) {
 	data["company_id"] = UserInfo.memberID();
 	data["group_id"] = UserInfo.group_id();
 	data["usertoken"] = UserInfo.token();
-	data["selfid"] = UserInfo.selfid();
+	data["self_id"] = UserInfo.self_id();
 	data["appsystem"] = api.systemType;
 	data["visitoncode"] = api.appVersion;
 	data["clientid"] = api.deviceId;
@@ -135,12 +135,12 @@ function tokeninfo(){
 		pwd_hash : UserInfo.password(),
 		username : UserInfo.username(),
 		clientid : api.deviceId,
-		selfid : UserInfo.selfid()
+		self_id : UserInfo.self_id()
 	}
 	var datainfo={
 		company_id : UserInfo.memberID(),
 		usertoken : UserInfo.token(),
-		selfid : UserInfo.selfid()
+		self_id : UserInfo.self_id()
 	}
 	var login_sn = UserInfo.has_login();
 	if (login_sn){
@@ -151,10 +151,10 @@ function tokeninfo(){
 				zzappajax("post",hosturl+"app/get_token.html",data,function(ret){
 					if (ret.err=="false"){
 						var token=ret.result;
-						selfid=ret.selfid;
+						self_id=ret.self_id;
 						//保存信息到本地
 						UserInfo.token(token);
-						UserInfo.selfid(selfid);
+						UserInfo.self_id(self_id);
 					}else{
 						UserInfo.clear();
 						//havelogin();
@@ -562,7 +562,7 @@ UserInfo.clear = function() {
 	localStorage.removeItem('token');
 	localStorage.removeItem('memberID');
 	localStorage.removeItem('group_id');
-	localStorage.removeItem('selfid');
+	localStorage.removeItem('self_id');
 };
 
 //检查是否包含自动登录的信息
@@ -661,28 +661,28 @@ UserInfo.group_id = function() {
 		return;
 	}
 };
-UserInfo.selfid = function() {
+UserInfo.self_id = function() {
 	if (arguments.length >= 1) {
-		localStorage.setItem('selfid', arguments[0].toString());
+		localStorage.setItem('self_id', arguments[0].toString());
 	}
 	if (arguments.length == 0) {
-		return localStorage.getItem('selfid');
+		return localStorage.getItem('self_id');
 	}
 	if (arguments[0] === '') {
-		localStorage.removeItem('selfid');
+		localStorage.removeItem('self_id');
 		return;
 	}
 };
 UserInfo.get_pwd_hash = function(pwd) {
 	return $.md5(pwd);
 };
-UserInfo.onSuccess = function(token, username, pwd_hash, memberID,group_id,selfid) { //contact
+UserInfo.onSuccess = function(token, username, pwd_hash, memberID,group_id,self_id) { //contact
 	UserInfo.username(username);
 	UserInfo.memberID(memberID);
 	UserInfo.password(pwd_hash);
 	UserInfo.token(token);
 	UserInfo.group_id(group_id);
-	UserInfo.selfid(selfid);
+	UserInfo.self_id(self_id);
 	//把获取到的token保存到storage中
 };
 

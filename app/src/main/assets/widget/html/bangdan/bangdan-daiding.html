@@ -67,7 +67,7 @@
 		</div>
 		{{#  } }}
 		<div class="aui-text-center" style="margin-top: 10px">
-			<span class="aui-btn aui-btn-info btn-dj" storage_selfid="{{d.selfid}}">立即定价</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{# if (d.piclist!=""){ }}<span class="aui-btn aui-btn-default pic" sid="{{d.id}}" storage_selfid="{{d.selfid}}">查看照片</span>{{#  } }}
+			<span class="aui-btn aui-btn-info btn-dj" storage_self_id="{{d.self_id}}">立即定价</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{# if (d.piclist!=""){ }}<span class="aui-btn aui-btn-default pic" sid="{{d.id}}" storage_self_id="{{d.self_id}}">查看照片</span>{{#  } }}
 		</div>
 		<div class="aui-btn aui-btn-danger bddel">作废</div>
 	</div>
@@ -138,15 +138,15 @@
 				wintitle : "定价",
 				type : "dingjia",
 				bounces : false,
-				storage_selfid:$(this).attr("storage_selfid")
+				storage_self_id:$(this).attr("storage_self_id")
 			};
 			openWin("dingjia", "../bangdan/bangdan-pop.html", pageParam);
 		})
 		$(".bdlist-box").on("click",".pic",function(){
 			var sid=$(this).attr("sid");
-			var storage_selfid=$(this).attr("storage_selfid");
+			var storage_self_id=$(this).attr("storage_self_id");
 			X5broser = api.require('webBrowser');
-			var url=APP_BASE_URL+"mobile/piclist.html?sid="+sid+"&storage_selfid="+storage_selfid+"";
+			var url=APP_BASE_URL+"mobile/piclist.html?sid="+sid+"&storage_self_id="+storage_self_id+"";
 			X5broser.open({
 				url: url,
 			}, function(ret){

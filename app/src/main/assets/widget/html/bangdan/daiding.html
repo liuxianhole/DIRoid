@@ -19,14 +19,14 @@
 	<div class="aui-content">
         <ul class="aui-list-view">
             <li class="aui-list-view-cell" tapmode >
-                <a class="aui-arrow-right btn-dj" storage_selfid="{{d.selfid}}">
+                <a class="aui-arrow-right btn-dj" storage_self_id="{{d.self_id}}">
                     {{d.supplier_name}}
                     <span class="aui-badge aui-badge-danger aui-pull-right">未定价</span>
                     <p>毛重：{{d.gw}}，皮重：{{d.tare}}</p>
                 </a>
                 <p class="aui-flex-col" style="padding-top: 10px">
 		        	<div class="aui-flex-item-6">
-		                <div class="aui-text-info pic" sid="{{d.id}}" storage_selfid="{{d.selfid}}">
+		                <div class="aui-text-info pic" sid="{{d.id}}" storage_self_id="{{d.self_id}}">
 		                    {{# if (d.piclist!=""){ }}
 		                    <i class="aui-iconfont aui-icon-pic aui-bg-primary"></i>
 		                    {{# }else{ }}
@@ -107,18 +107,18 @@
 				wintitle : "定价",
 				type : "dingjia",
 				bounces : false,
-				storage_selfid:$(this).attr("storage_selfid")
+				storage_self_id:$(this).attr("storage_self_id")
 			};
 			openWin("dingjia", "../bangdan/bangdan-pop.html", pageParam);
 		})
 		$(".bdlist-box").on("click",".pic",function(){
 			var sid=$(this).attr("sid");
-			var storage_selfid=$(this).attr("storage_selfid");
+			var storage_self_id=$(this).attr("storage_self_id");
 			var pageParam = {
 				wintitle : "现场照片",
 				type : "piclist",
 				bounces : false,
-				storage_selfid:$(this).attr("storage_selfid")
+				storage_self_id:$(this).attr("storage_self_id")
 			};
 			openWin("piclist", "../mingxi/piclist.html", pageParam);
 		})

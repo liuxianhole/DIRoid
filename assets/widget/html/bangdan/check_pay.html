@@ -24,7 +24,7 @@
 	<div class="aui-content">
         <ul class="aui-list-view">
             <li class="aui-list-view-cell" tapmode >
-                <a class="aui-arrow-right btn-dj" suppliers_selfid="{{d.suppliers_selfid}}">
+                <a class="aui-arrow-right btn-dj" suppliers_self_id="{{d.suppliers_self_id}}">
                     {{d.suppliers_name}}
                     <p>过磅总净重：{{d.storage_weight}}</p>
                 
@@ -96,13 +96,13 @@
 	var domEvent = function(){	
 		//立即定价
 		$(".bdlist-box").on("click",".btn-dj",function(){
-			//alert($(this).attr("suppliers_selfid"))
+			//alert($(this).attr("suppliers_self_id"))
 			var pageParam = {
 				wintitle : "付款审核",
 				type : "paycheck",
 				bounces : false,
-				suppliers_selfid:$(this).attr("suppliers_selfid"),
-				ispay:1
+				suppliers_self_id:$(this).attr("suppliers_self_id"),
+				is_pay:1
 			};
 			openWin("paycheck", "../bangdan/check_win.html", pageParam);
 		})

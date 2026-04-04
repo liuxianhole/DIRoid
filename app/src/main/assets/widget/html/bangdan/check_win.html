@@ -71,16 +71,16 @@
     apiready = function(){
     	changeserverurl()
 		api.parseTapmode();
-		var ispay=api.pageParam.ispay;
-		if (ispay==0){
+		var is_pay=api.pageParam.is_pay;
+		if (is_pay==0){
 			$(".buy").show();
 			$(".blue").show();
 		}
-		if (ispay==3){
+		if (is_pay==3){
 			$(".checkpay").show();
 			$("#aui-footer").css("height","90px");
 		}
-		if (ispay==1){
+		if (is_pay==1){
 			$("#aui-footer").css("height","50px");
 		}
 		var iosstatusheight=getisostatusheight();

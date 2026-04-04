@@ -23,7 +23,7 @@
 	<script id="bdlist" type="text/html">
 	<div class="aui-content">
         <ul class="aui-list-view">
-            <li class="aui-list-view-cell btn-dj" tapmode storage_selfid="{{d.selfid}}">
+            <li class="aui-list-view-cell btn-dj" tapmode storage_self_id="{{d.self_id}}">
                 <div>
                     {{d.supplier_name}}<span style="color:#999">（{{d.status}}）</span><span class="aui-btn aui-btn-danger bddel" bid="{{d.id}}">点击作废</span>
                     <span class="aui-badge aui-badge-info aui-pull-right">{{d.product_name}}</span>
@@ -52,7 +52,7 @@
 			        </p>
 			        <p class="aui-flex-col">
 			        	<div class="aui-flex-item-6">
-			                <div class="aui-text-info pic" sid="{{d.id}}" storage_selfid="{{d.selfid}}">
+			                <div class="aui-text-info pic" sid="{{d.id}}" storage_self_id="{{d.self_id}}">
 			                    {{# if (d.piclist!=""){ }}
 			                    <i class="aui-iconfont aui-icon-pic aui-bg-primary"></i>
 			                    {{# }else{ }}
@@ -130,12 +130,12 @@
 		//立即定价
 		$(".bdlist-box").on("click",".pic",function(){
 			var sid=$(this).attr("sid");
-			var storage_selfid=$(this).attr("storage_selfid");
+			var storage_self_id=$(this).attr("storage_self_id");
 			var pageParam = {
 				wintitle : "现场照片",
 				type : "piclist",
 				bounces : false,
-				storage_selfid:$(this).attr("storage_selfid")
+				storage_self_id:$(this).attr("storage_self_id")
 			};
 			openWin("piclist", "../mingxi/piclist.html", pageParam);
 		})

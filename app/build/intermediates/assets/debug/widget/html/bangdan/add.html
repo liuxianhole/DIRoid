@@ -22,7 +22,7 @@
                     </div>
                     <div class="aui-list-item-input">
                         <span class="aui-btn aui-btn-outlined selectproducts">请选择产品名称</span>
-                        <input type="hidden" id="proselfid" value="">
+                        <input type="hidden" id="proself_id" value="">
                     </div>
                 </div>
             </li>
@@ -32,7 +32,7 @@
                         供应商
                     </div>
                     <div class="aui-list-item-input">
-                        <select class="suppliers_selfid">
+                        <select class="suppliers_self_id">
                         </select>
                     </div>
                 </div>
@@ -142,11 +142,11 @@
 			if(!canbtn){
 				return;
 			}
-			if ($("#proselfid").val()==""){
+			if ($("#proself_id").val()==""){
 				layer.msg("请选择产品名称！");
 				return false;
 			}
-			if ($(".suppliers_selfid").val()==""){
+			if ($(".suppliers_self_id").val()==""){
 				layer.msg("请选择供应商！");
 				return false;
 			}
@@ -204,8 +204,8 @@
 				}
 			}
 			var data = {
-				products_selfid:$("#proselfid").val(),
-				suppliers_selfid:$(".suppliers_selfid").val(),
+				products_self_id:$("#proself_id").val(),
+				suppliers_self_id:$(".suppliers_self_id").val(),
 				gw:$(".gw").val(),
 				tare:$(".tare").val(),
 				clasp:$(".clasp").val(),
@@ -254,9 +254,9 @@
 			})
 		})
 	};
-	function selectpro(selfid,name){
+	function selectpro(self_id,name){
 		$(".selectproducts").html(name);
-		$("#proselfid").val(selfid);
+		$("#proself_id").val(self_id);
 	}
 	function ajaxinfo(){
 		var data={}
@@ -265,9 +265,9 @@
 			api.pageParam['prolist']=ret.products;
 			var htmls="";
 			$.each(ret.supplier_list, function(index, item) {
-				htmls+="<option value='"+item.selfid+"'>"+item.name+"</option>"
+				htmls+="<option value='"+item.self_id+"'>"+item.name+"</option>"
 			})
-			$(".suppliers_selfid").html(htmls)
+			$(".suppliers_self_id").html(htmls)
 			loadinghide();
 		},function(err){
 			if(err){

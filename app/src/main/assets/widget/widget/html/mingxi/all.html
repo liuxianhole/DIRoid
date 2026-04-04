@@ -13,9 +13,9 @@
 	<script id="bdlist" type="text/html">
 	<div class="aui-content">
         <ul class="aui-list-view">
-            <li class="aui-list-view-cell btn-dj" tapmode storage_selfid="{{d.selfid}}">
+            <li class="aui-list-view-cell btn-dj" tapmode storage_self_id="{{d.self_id}}">
                 <div>
-                    {{d.supplier_name}}<span style="color:#999">（{{d.status}}）{{d.stype}} {{d.ispay}}</span>
+                    {{d.supplier_name}}<span style="color:#999">（{{d.status}}）{{d.stype}} {{d.is_pay}}</span>
                     <span class="aui-badge aui-badge-info aui-pull-right">{{d.product_name}}</span>
                     <p class="aui-flex-col">
                     	<div class="aui-flex-item-4">
@@ -42,7 +42,7 @@
 			        </p>
 			        <p class="aui-flex-col">
 			        	<div class="aui-flex-item-6">
-			                <div class="aui-text-info pic" sid="{{d.id}}" storage_selfid="{{d.selfid}}">
+			                <div class="aui-text-info pic" sid="{{d.id}}" storage_self_id="{{d.self_id}}">
 			                    {{# if (d.piclist!=""){ }}
 			                    <i class="aui-iconfont aui-icon-pic aui-bg-primary"></i>
 			                    {{# }else{ }}
@@ -114,12 +114,12 @@
 		
 		$(".bdlist-box").on("click",".pic",function(){
 			var sid=$(this).attr("sid");
-			var storage_selfid=$(this).attr("storage_selfid");
+			var storage_self_id=$(this).attr("storage_self_id");
 			var pageParam = {
 				wintitle : "现场照片",
 				type : "piclist",
 				bounces : false,
-				storage_selfid:$(this).attr("storage_selfid")
+				storage_self_id:$(this).attr("storage_self_id")
 			};
 			openWin("piclist", "../mingxi/piclist.html", pageParam);
 		})
@@ -128,9 +128,9 @@
 	var seardata = {
 		page:page,
 	}
-	function searchall(company_id,proselfid,start_date,end_date,supplier_name){
+	function searchall(company_id,proself_id,start_date,end_date,supplier_name){
 		seardata['ucompany_id']=company_id;
-		seardata['products_selfid']=proselfid;
+		seardata['products_self_id']=proself_id;
 		seardata['gmt_start']=start_date;
 		seardata['gmt_end']=end_date;
 		seardata['contact']=supplier_name;

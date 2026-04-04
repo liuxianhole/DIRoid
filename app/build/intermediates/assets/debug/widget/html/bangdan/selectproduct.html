@@ -76,7 +76,7 @@
 			var prostr=""
 			$.each(prolist,function(i,item){
 				//alert(item.id)
-				prostr=prostr+"<span selfid='"+item.selfid+"'><i></i>"+item.name+"</span>"
+				prostr=prostr+"<span self_id='"+item.self_id+"'><i></i>"+item.name+"</span>"
 			})
 			$(".prolist").html(prostr)
 			//选择地区
@@ -84,12 +84,12 @@
 				$(".small-area span").removeClass("take-now-span")
 				$(this).toggleClass("take-now-span");
 				var proname=$(this).text();
-				var selfid=$(this).attr("selfid")
+				var self_id=$(this).attr("self_id")
 				closeselect()
                 api.execScript({
 					name : api.winName,
 					frameName : api.winName+'_',
-					script : "selectpro('"+selfid+"','"+proname+"')"
+					script : "selectpro('"+self_id+"','"+proname+"')"
 				});
 			});
 			var $body = $api.dom('body');

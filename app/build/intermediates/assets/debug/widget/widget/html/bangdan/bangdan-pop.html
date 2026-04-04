@@ -35,7 +35,7 @@
 				<div class="db-select-box">
 					<span class="aui-btn aui-btn-outlined selectproducts">请选择产品名称</span>
 				</div>
-				<input type="hidden" id="proselfid" value="">
+				<input type="hidden" id="proself_id" value="">
 			</div>
 		</div>
 		<div class="aui-padded-10  zz-div-box aui-padded-t-0">
@@ -90,9 +90,9 @@
 		into();	// 获取供应信息
 		domEvent();
 	};
-	function selectpro(selfid,name){
+	function selectpro(self_id,name){
 		$(".selectproducts").html(name);
-		$("#proselfid").val(selfid);
+		$("#proself_id").val(self_id);
 	}
 	var canbtn = true;
 	var tare_check=0;
@@ -110,7 +110,7 @@
 			if(!canbtn){
 				return;
 			}
-			if ($("#proselfid").val()==""){
+			if ($("#proself_id").val()==""){
 				layer.msg("请选择产品名称！");
 				return false;
 			}
@@ -129,9 +129,9 @@
 			//alert(tare_check)
 			var data = {
 				id:$("#sid").val(),
-				products_selfid:$("#proselfid").val(),
+				products_self_id:$("#proself_id").val(),
 				price:$(".now_price").val(),
-				user_selfid:UserInfo.selfid(),
+				user_self_id:UserInfo.self_id(),
 				tare_check:tare_check,
 				clasp:$(".clasp").val(),
 			}
@@ -181,7 +181,7 @@
 		//$(".gw").html(api.pageParam.bdinfo.gw);
 		//$(".price").html(api.pageParam.bdinfo.price);
 		var data = {
-			storage_selfid:api.pageParam.storage_selfid,
+			storage_self_id:api.pageParam.storage_self_id,
 		}
 		api.showProgress({
 			title : '',

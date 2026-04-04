@@ -18,9 +18,9 @@
 	<script id="bdlist" type="text/html">
 	<div class="aui-content">
         <ul class="aui-list-view">
-            <li class="aui-list-view-cell btn-dj" tapmode storage_selfid="{{d.selfid}}">
+            <li class="aui-list-view-cell btn-dj" tapmode storage_self_id="{{d.self_id}}">
                 <div>
-                    {{d.supplier_name}}<span style="color:#999">（{{d.status}}）{{d.stype}} {{d.ispay}}</span>
+                    {{d.supplier_name}}<span style="color:#999">（{{d.status}}）{{d.stype}} {{d.is_pay}}</span>
                     <span class="aui-badge aui-badge-info aui-pull-right">{{d.product_name}}</span>
                     <p class="aui-flex-col">
                     	<div class="aui-flex-item-4">
@@ -46,7 +46,7 @@
 			        </p>
 			        <p class="aui-flex-col">
 			        	<div class="aui-flex-item-6">
-			                <div class="aui-text-info pic" sid="{{d.id}}" storage_selfid="{{d.selfid}}">
+			                <div class="aui-text-info pic" sid="{{d.id}}" storage_self_id="{{d.self_id}}">
 			                    {{# if (d.piclist!=""){ }}
 			                    <i class="aui-iconfont aui-icon-pic aui-bg-primary"></i>
 			                    {{# }else{ }}
@@ -119,12 +119,12 @@
 		
 		$(".bdlist-box").on("click",".pic",function(){
 			var sid=$(this).attr("sid");
-			var storage_selfid=$(this).attr("storage_selfid");
+			var storage_self_id=$(this).attr("storage_self_id");
 			var pageParam = {
 				wintitle : "现场照片",
 				type : "piclist",
 				bounces : false,
-				storage_selfid:$(this).attr("storage_selfid")
+				storage_self_id:$(this).attr("storage_self_id")
 			};
 			openWin("piclist", "../mingxi/piclist.html", pageParam);
 		})
@@ -132,8 +132,8 @@
 	//未支付确认已经支付
 	function nopaysh(){
 		var data={
-			ispay:1,
-			suppliers_selfid:api.pageParam.suppliers_selfid
+			is_pay:1,
+			suppliers_self_id:api.pageParam.suppliers_self_id
 		}
 		zzappajax('post',hosturl+'app/storage_pay.html',data,function(ret){
 			if (ret.err=='false'){
@@ -162,8 +162,8 @@
 	}
 	function nopaycheck(){
 		var data={
-			ispay:3,
-			suppliers_selfid:api.pageParam.suppliers_selfid
+			is_pay:3,
+			suppliers_self_id:api.pageParam.suppliers_self_id
 		}
 		zzappajax('post',hosturl+'app/storage_check.html',data,function(ret){
 			if (ret.err=='false'){
@@ -192,8 +192,8 @@
 	}
 	function paycheck(){
 		var data={
-			ispay:1,
-			suppliers_selfid:api.pageParam.suppliers_selfid
+			is_pay:1,
+			suppliers_self_id:api.pageParam.suppliers_self_id
 		}
 		zzappajax('post',hosturl+'app/storage_check.html',data,function(ret){
 			//alert(JSON.stringify(ret))
@@ -221,10 +221,10 @@
 		});
 	}
 	var getinfo = function(){
-		//alert(api.pageParam.suppliers_selfid)
+		//alert(api.pageParam.suppliers_self_id)
 		var data = {
-			suppliers_selfid:api.pageParam.suppliers_selfid,
-			ispay:api.pageParam.ispay,
+			suppliers_self_id:api.pageParam.suppliers_self_id,
+			is_pay:api.pageParam.is_pay,
 			jiesuan:1,
 			page:page,
 		}
