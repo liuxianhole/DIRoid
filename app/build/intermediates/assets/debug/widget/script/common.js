@@ -103,7 +103,7 @@ var zzappajax = function(method, url, data, successCallback, errorCallback) {
 	data["self_id"] = UserInfo.self_id();
 	data["appsystem"] = api.systemType;
 	data["visitoncode"] = api.appVersion;
-	data["clientid"] = api.deviceId;
+	data["client_id"] = api.deviceId;
 	api.ajax({
 		url : url,
 		method : method,
@@ -134,7 +134,7 @@ function tokeninfo(){
 		company_id : UserInfo.memberID(),
 		pwd_hash : UserInfo.password(),
 		username : UserInfo.username(),
-		clientid : api.deviceId,
+		client_id : api.deviceId,
 		self_id : UserInfo.self_id()
 	}
 	var datainfo={
