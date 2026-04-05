@@ -1,45 +1,50 @@
 <!doctype html>
 <html>
-	<head>
-		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-		<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-		<meta content="telephone=no" name="format-detection" />
-		<meta content="address=no" name="format-detection" />
-		<meta name="apple-mobile-web-app-capable" content="no" />
-		<meta name="apple-touch-fullscreen" content="YES">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<title>91智能机</title>
-		<script type="text/javascript" src="../../script/jquery.js"></script>
-		<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css"/>		
-		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>	
-		<link rel="stylesheet" type="text/css" href="../../css/index.css">
-		
-	</head>
-	<body>
-		
-       
-       <header class="login-header">
-       		<a class="back-icon row-column-cnt" href="javascript:void(0)" onclick="javascript :history.back(-1)">
-		        <span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
-		    </a>
-       		<div class="login-title row-column-cnt">91智能机-登录</div>
-       </header>
-		
-		<div class="login-main">
-			<div class="login-center">
-				<div class="logo"><img src="../../image/logo.png" alt="" /></div>
-				<div class="frombox">
-					<div class="frombox-ipt"><i class="iconfont">&#xe63e;</i><input type="text" class="username" value="" placeholder="请输入用户名"/></div>
-					<div class="frombox-ipt"><i class="iconfont">&#xe622;</i><input type="password" class="pwd" value="" placeholder="请输密码"/></div>
-					<div class="frombox-btn">
-						<div class="login-btn j_login_btn">立即登录</div>
-					</div>
+
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+	<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta content="address=no" name="format-detection" />
+	<meta name="apple-mobile-web-app-capable" content="no" />
+	<meta name="apple-touch-fullscreen" content="YES">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>智慧农业收购管理系统-登录系统</title>
+	<script type="text/javascript" src="../../script/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/index.css">
+
+</head>
+
+<body>
+
+
+	<header class="login-header">
+		<a class="back-icon row-column-cnt" href="javascript:void(0)" onclick="javascript :history.back(-1)">
+			<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+		</a>
+		<div class="login-title row-column-cnt">91智能机-登录</div>
+	</header>
+
+	<div class="login-main">
+		<div class="login-center">
+			<div class="logo"><img src="../../image/logo.png" alt="" /></div>
+			<div class="frombox">
+				<div class="frombox-ipt"><i class="iconfont">&#xe63e;</i><input type="text" class="username" value=""
+						placeholder="请输入用户名" /></div>
+				<div class="frombox-ipt"><i class="iconfont">&#xe622;</i><input type="password" class="pwd" value=""
+						placeholder="请输密码" /></div>
+				<div class="frombox-btn">
+					<div class="login-btn j_login_btn">立即登录</div>
 				</div>
 			</div>
-			<div class="login-bottom">ZZ91再生技术支持</div>
 		</div>
-	</body>
+		<div class="login-bottom">ZZ91再生技术支持</div>
+	</div>
+</body>
+
 </html>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/jQuery.md5.js"></script>
@@ -48,9 +53,9 @@
 <script type="text/javascript">
 	var canAjax = true;
 
-	apiready = function(){
+	apiready = function () {
 		changeserverurl();
-		$(".j_login_btn").on("click", function(){
+		$(".j_login_btn").on("click", function () {
 			var username = $(".username").val();
 			var pwd = $(".pwd").val();
 			if (username.length == 0) {
@@ -62,26 +67,26 @@
 				return;
 			}
 			api.showProgress({
-				title : '登录中',
-				modal : false
+				title: '登录中',
+				modal: false
 			});
 			postAjax({
-				username : username,
-				passwdjm : UserInfo.get_pwd_hash(pwd),
-				appid : api.deviceId,
-				appsystem : api.systemType,
-				loginflag : 1
+				username: username,
+				passwdjm: UserInfo.get_pwd_hash(pwd),
+				appid: api.deviceId,
+				appsystem: api.systemType,
+				loginflag: 1
 			});
 		});
 	};
 
-	function postAjax(data){
-		if(!canAjax){
+	function postAjax(data) {
+		if (!canAjax) {
 			return;
 		}
 		canAjax = false;
-		zzappajax("post", hosturl + "app/logincheck.html", data, function(ret){
-			if((ret && ret.err == "false") || (ret && ret.err === false) || (ret && ret.token)){
+		zzappajax("post", hosturl + "app/logincheck.html", data, function (ret) {
+			if ((ret && ret.err == "false") || (ret && ret.err === false) || (ret && ret.token)) {
 				var pwd_hash = ret.md5pwd || data.passwdjm;
 				var token = ret.token || "";
 				var memberID = ret.memberID || "";
@@ -92,8 +97,8 @@
 				canAjax = true;
 				api.hideProgress();
 				api.execScript({
-					name : "root",
-					script : "reloadapp();"
+					name: "root",
+					script: "reloadapp();"
 				});
 				window.location.replace("index.html");
 				return;
@@ -101,8 +106,8 @@
 			api.hideProgress();
 			hint((ret && ret.errtext) ? ret.errtext : "登录失败，请稍后重试");
 			canAjax = true;
-		}, function(err){
-			if(err){
+		}, function (err) {
+			if (err) {
 				saveerrlog(err.body);
 			}
 			canAjax = true;

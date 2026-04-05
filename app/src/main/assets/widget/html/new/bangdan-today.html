@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>title</title>
-    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
-    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
-	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
-	<link rel="stylesheet" type="text/css" href="../../css/common.css"/>	
-    <style>
-    	.qj-center-title {
-		    width: 95px;
-		    padding-right: 10px;
-		    text-align: right;
+	<meta name="viewport"
+		content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>title</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	<style>
+		.qj-center-title {
+			width: 95px;
+			padding-right: 10px;
+			text-align: right;
 		}
-    </style>
+	</style>
 </head>
+
 <body>
 	<div class="aui-padded-15">
 		<div class="zz-div-box">
 			<div class="zz-div-td1">
-				<input type="text" class="aui-input db-input ipt-search" placeholder="请输入磅单编号"/>
+				<input type="text" class="aui-input db-input ipt-search" placeholder="请输入磅单编号" />
 			</div>
 			<div class="aui-margin-l-10">
 				<div class="aui-btn aui-btn-success j_btn_search">搜索</div>
@@ -29,7 +32,7 @@
 		</div>
 	</div>
 	<div class="bdlist-box"></div>
-	
+
 	<script id="bdlist" type="text/html">
 		<div class="db-bg-white aui-padded-15 aui-content">
 			<div class="zz-div-box">
@@ -98,56 +101,56 @@
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
 	var page = 1;
-	var pagecount=0;
-	var iccode ="";
-	apiready = function(){
+	var pagecount = 0;
+	var iccode = "";
+	apiready = function () {
 		changeserverurl()
-		
+
 		domEvent()
 		getinfo();
-		
+
 		//底部加载
 		api.addEventListener({
-			name : 'scrolltobottom'
-		}, function(ret, err) {
-			if (page>=pagecount){
+			name: 'scrolltobottom'
+		}, function (ret, err) {
+			if (page >= pagecount) {
 				$(".la_more").html("全部加载完毕");
 				return false;
 			}
 			$(".la_more").html("加载更多中...");
-			setTimeout(function() {
-				page +=1;
+			setTimeout(function () {
+				page += 1;
 				getinfo();
 			}, 10)
 		});
-		
+
 		//页面刷新
 		api.setRefreshHeaderInfo({
-			visible : true,
+			visible: true,
 			// bgColor: '#F2F2F2',
-			bgColor : '#E6E6E6',
-			textColor : '#000000',
-			textDown : '下拉刷新',
-			textUp : '释放刷新',
-		}, function(ret, err) {
-			
+			bgColor: '#E6E6E6',
+			textColor: '#000000',
+			textDown: '下拉刷新',
+			textUp: '释放刷新',
+		}, function (ret, err) {
+
 			$(".ipt-search").val("");//搜索框置空
 			iccode = "";
 			page = 1;
 			getinfo();
 			api.toast({
-				msg : '数据已是最新！',
-				duration : 3000,
-				location : 'bottom'
+				msg: '数据已是最新！',
+				duration: 3000,
+				location: 'bottom'
 			});
 		});
 	};
-	
-	var domEvent = function(){	
+
+	var domEvent = function () {
 		//搜索
-		$(".j_btn_search").on("click",function(){		
+		$(".j_btn_search").on("click", function () {
 			iccode = $(".ipt-search").val();
-			if(iccode.length == 0){
+			if (iccode.length == 0) {
 				hint("请输入供应商编号！");
 				api.hideProgress();
 				return;
@@ -155,51 +158,51 @@
 			page = 1;
 			getinfo();
 			api.pageUp({
-				'top' : true
+				'top': true
 			});
 		})
 	}
-	var getinfo = function(){
+	var getinfo = function () {
 		var data = {
-			pricing_today:1,
-			page:page,
-			code:iccode
+			pricing_today: 1,
+			page: page,
+			code: iccode
 		}
-		
-		if (page==1){
+
+		if (page == 1) {
 			loadingshow();
 		}
-		zzappajax("post",hosturl+"app/pricing.html",data,function(ret){
-			var pageHtml_dj='';
-			$.each(ret.listall, function(index, item) {
+		zzappajax("post", hosturl + "app/pricing.html", data, function (ret) {
+			var pageHtml_dj = '';
+			$.each(ret.listall, function (index, item) {
 				var getTpl = $api.html($api.byId("bdlist"));
-				laytpl(getTpl).render(item, function(html) {
+				laytpl(getTpl).render(item, function (html) {
 					pageHtml_dj = pageHtml_dj + html;
 				});
 			})
-			
+
 			if (page == 1) {
-				pagecount=ret.page_listcount;
-				if (pageHtml_dj==""){
-            		$(".nodata").show();
-            		$(".la_more").hide();
-            	}else{
-            		$(".nodata").hide();
-            		$(".la_more").show();
-                }
+				pagecount = ret.page_listcount;
+				if (pageHtml_dj == "") {
+					$(".nodata").show();
+					$(".la_more").hide();
+				} else {
+					$(".nodata").hide();
+					$(".la_more").show();
+				}
 				$(".bdlist-box").html(pageHtml_dj);
 			} else {
 				$(".bdlist-box").append(pageHtml_dj);
 			}
 			//显示页码
 			api.toast({
-				msg : page+"/"+pagecount+"页",
-				duration : 2000,
-				location : 'bottom'
+				msg: page + "/" + pagecount + "页",
+				duration: 2000,
+				location: 'bottom'
 			});
 			loadinghide();
-		},function(err){
-			if(err){
+		}, function (err) {
+			if (err) {
 				saveerrlog(err.body);
 			}
 			canAjax = true;
@@ -209,4 +212,5 @@
 	}
 </script>
 <script type="text/javascript" src="../../script/servercomm.js"></script>
+
 </html>
