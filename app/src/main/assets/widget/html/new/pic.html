@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 		<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
@@ -19,36 +18,69 @@
 		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
 		<script type="text/javascript" src="../../script/layer/layer.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://m.zz91.com/zt/dibang/css/index.css">
-
 	</head>
-
 	<body>
 		<div style="height:45px;">
 			<header class="aui-bar aui-bar-nav  aui-border-b ">
 				<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
 					<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
 				</a>
-				<div class="aui-title">
-					现场照片
-				</div>
+				<div class="aui-title">现场照片</div>
 			</header>
 		</div>
-		
-		<div class="picbox aui-margin-t-10">
-			<div class="aui-padded-md zz-div-box">
-				<div class="zz-div-td1 font_bold">过毛重</div>
-				<div class="column-cnt aui-text-66 aui-font-size-12">2018-03-26  18:06:08</div>
-			</div>
-			<div class="picbox-md"><img src="https://m.zz91.com/zt/dibang/images/u2220.jpg" alt="" /></div>
-		</div>
-		
-		<div class="picbox aui-margin-t-10">
-			<div class="aui-padded-md zz-div-box">
-				<div class="zz-div-td1 font_bold">过皮重</div>
-				<div class="column-cnt aui-text-66 aui-font-size-12">2018-03-26  18:06:08</div>
-			</div>
-			<div class="picbox-md"><img src="https://m.zz91.com/zt/dibang/images/u2220.jpg" alt="" /></div>
-		</div>
-	</body>
 
+		<div class="picmain"></div>
+		<div class="aui-text-center aui-padded-15 aui-text-999 nodata" style="display:none;">暂无现场照片</div>
+
+		<script id="itemTpl" type="text/html">
+			<div class="picbox aui-margin-t-10">
+				<div class="aui-padded-md zz-div-box">
+					<div class="zz-div-td1 font_bold">{{d.title || d.pictype || ''}}</div>
+					<div class="column-cnt aui-text-66 aui-font-size-12">{{d.gmt_created || ''}}</div>
+				</div>
+				<div class="picbox-md"><img src="{{d.pic || ''}}" alt="" /></div>
+			</div>
+		</script>
+	</body>
 </html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		changeserverurl();
+		getinfo();
+	};
+
+	function getStorageId(){
+		if (api.pageParam && api.pageParam.storage_self_id) {
+			return api.pageParam.storage_self_id;
+		}
+		var match = location.search.match(/[?&]storage_self_id=([^&]+)/);
+		return match ? decodeURIComponent(match[1]) : "";
+	}
+
+	function getinfo(){
+		var data = {
+			storage_self_id: getStorageId()
+		};
+		zzappajax("get", hosturl + "app/pic.html", data, function(ret){
+			var list = ret || [];
+			var html = "";
+			$.each(list, function(index, item){
+				var tpl = $api.html($api.byId("itemTpl"));
+				laytpl(tpl).render(item, function(rendered){
+					html += rendered;
+				});
+			});
+			$(".picmain").html(html);
+			$(".nodata").toggle(list.length === 0);
+		}, function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			$(".picmain").html("");
+			$(".nodata").show();
+		});
+	}
+</script>

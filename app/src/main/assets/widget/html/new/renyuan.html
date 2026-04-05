@@ -14,11 +14,10 @@
 		<link rel="shortcut icon" href="https://img0.zz91.com/front/favicon.ico" />
 		<title>互助社区-zz91再生网</title>
         <script type="text/javascript" src="../../script/jquery.js"></script>
-		<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css"/>		
-		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>	
+		<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
 		<script type="text/javascript" src="../../script/layer/layer.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://m.zz91.com/zt/dibang/css/index.css">
-		
 	</head>
 	<body>
 		<div style="height:2.25rem;">
@@ -34,197 +33,53 @@
 				</a>
 			</header>
 		</div>
-		
+
 		<div class="searchbox aui-bg-ff">
 			<div class="search-name aui-row aui-padded-md aui-border-b">
 				<div class="aui-col-xs-9"><input class="search-ipt" value="" placeholder="请输入姓名"/></div>
 				<div class="aui-col-xs-3 aui-text-right">
-					<div class="aui-btn aui-btn-info"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
+					<div class="aui-btn aui-btn-info j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
 				</div>
 			</div>
 		</div>
-       
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="aui-font-size-18">康贤月</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<i class="iconfont aui-text-info j_beizhu">&#xe60b;</i>
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
+
+		<div class="list-box"></div>
+		<div class="aui-text-center aui-padded-15 aui-text-999 nodata" style="display:none;">暂无相关数据</div>
+
+		<script id="itemTpl" type="text/html">
+			<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
+				<div class="zz-div-box aui-font-size-14">
+					<div class="aui-font-size-18">{{d.contact || ''}}</div>
+					<div class="row-right column-cnt zz-div-td1">
+						<i class="iconfont aui-text-info j_beizhu">&#xe60b;</i>
+						<span class="aui-margin-l-10 j_bjbtn" data-id="{{d.id || ''}}">编辑</span>
+					</div>
+				</div>
+				<div class="aui-margin-t-10 aui-font-size-12 zz-div-box">
+					<div class="zz-div-td1">
+						<div class="aui-text-66">手机：{{d.mobile || ''}}</div>
+						<div class="aui-text-66">用户类别：{{d.utype || ''}}</div>
+						<div class="aui-text-66">用户名：{{d.username || ''}}</div>
+					</div>
+					<div class="column-btm">
+						<div class="aui-text-66">{{d.company_name || d.address || ''}}</div>
+					</div>
 				</div>
 			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12 zz-div-box">
-				<div class="zz-div-td1">
-					<div class="aui-text-66">手机：13804714564</div>
-					<div class="aui-text-66">用户类别：集团管理员</div>
-					<div class="aui-text-66">用户名：kangxianyue</div>
-				</div>
-				<div class="column-btm">
-					<div class="aui-text-66">阿思拓-九堡分站</div>
-				</div>	
-			</div>
-		</div>
-			
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="aui-font-size-18">康贤月</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<i class="iconfont aui-text-info j_beizhu">&#xe60b;</i>
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
-				</div>
-			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12 zz-div-box">
-				<div class="zz-div-td1">
-					<div class="aui-text-66">手机：13804714564</div>
-					<div class="aui-text-66">用户类别：集团管理员</div>
-					<div class="aui-text-66">用户名：kangxianyue</div>
-				</div>
-				<div class="column-btm">
-					<div class="aui-text-66">阿思拓-九堡分站</div>
-				</div>	
-			</div>
-		</div>
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="aui-font-size-18">康贤月</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<i class="iconfont aui-text-info j_beizhu">&#xe60b;</i>
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
-				</div>
-			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12 zz-div-box">
-				<div class="zz-div-td1">
-					<div class="aui-text-66">手机：13804714564</div>
-					<div class="aui-text-66">用户类别：集团管理员</div>
-					<div class="aui-text-66">用户名：kangxianyue</div>
-				</div>
-				<div class="column-btm">
-					<div class="aui-text-66">阿思拓-九堡分站</div>
-				</div>	
-			</div>
-		</div>
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="aui-font-size-18">康贤月</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<i class="iconfont aui-text-info j_beizhu">&#xe60b;</i>
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
-				</div>
-			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12 zz-div-box">
-				<div class="zz-div-td1">
-					<div class="aui-text-66">手机：13804714564</div>
-					<div class="aui-text-66">用户类别：集团管理员</div>
-					<div class="aui-text-66">用户名：kangxianyue</div>
-				</div>
-				<div class="column-btm">
-					<div class="aui-text-66">阿思拓-九堡分站</div>
-				</div>	
-			</div>
-		</div>
-		
-		
-		<!--编辑人员-->
+		</script>
+
 		<div class="pop-gy aui-bg-ff aui-padded-10" style="display: none;">
 			<ul class="aui-list aui-form-list aui-font-size-14 limd-top">
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label ">
-							用户级别：
-						</div>
-						<div class="aui-list-item-input">
-							<select name="" class="aui-font-size-14">
-								<option value="">请选择</option>
-							</select>
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label ">
-							分站：
-						</div>
-						<div class="aui-list-item-input">
-							<select name="" class="aui-font-size-14">
-								<option value="">请选择</option>
-							</select>
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label ">
-							用户名：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="text" value="Administrator" class="aui-font-size-14" placeholder="请输入用户名">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							姓名：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="text" class="aui-font-size-14" placeholder="请输入姓名">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							性别：
-						</div>
-						<div class="aui-list-item-input">
-							<label><input class="aui-radio" type="radio" name="demo1" checked> 男</label>
-							<label><input class="aui-radio" type="radio" name="demo1"> 女</label>
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							手机：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="text" class="aui-font-size-14" placeholder="请输手机">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							密码：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="text" class="aui-font-size-14" placeholder="请输手机">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item limd ">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-input aui-text-right">
-							<label><input class="aui-radio" type="checkbox" name="resnum"> 是否修改密码</label>
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item limd"> 
-					<div class="aui-list-item-label">
-						备注：
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-input">
-						<textarea type="password" placeholder="请输入备注" class="aui-font-size-14 form-info bj-text"></textarea>
-					</div>
-				</li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label ">用户级别：</div><div class="aui-list-item-input"><select name="" class="aui-font-size-14"><option value="">请选择</option></select></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label ">分站：</div><div class="aui-list-item-input"><select name="" class="aui-font-size-14"><option value="">请选择</option></select></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label ">用户名：</div><div class="aui-list-item-input"><input type="text" class="aui-font-size-14" placeholder="请输入用户名"></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">姓名：</div><div class="aui-list-item-input"><input type="text" class="aui-font-size-14" placeholder="请输入姓名"></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">性别：</div><div class="aui-list-item-input"><label><input class="aui-radio" type="radio" name="demo1" checked> 男</label><label><input class="aui-radio" type="radio" name="demo1"> 女</label></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">手机：</div><div class="aui-list-item-input"><input type="text" class="aui-font-size-14" placeholder="请输手机"></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">密码：</div><div class="aui-list-item-input"><input type="text" class="aui-font-size-14" placeholder="请输手机"></div></div></li>
+				<li class="aui-list-item limd "><div class="aui-list-item-inner"><div class="aui-list-item-input aui-text-right"><label><input class="aui-radio" type="checkbox" name="resnum"> 是否修改密码</label></div></div></li>
+				<li class="aui-list-item limd"><div class="aui-list-item-label">备注：</div></li>
+				<li class="aui-list-item"><div class="aui-list-item-input"><textarea type="password" placeholder="请输入备注" class="aui-font-size-14 form-info bj-text"></textarea></div></li>
 			</ul>
 			<div class="aui-text-center aui-padded-15">
 				<botton class="aui-btn aui-btn-outlined j_delgy">删除</botton>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -233,35 +88,68 @@
 		</div>
 	</body>
 </html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
-	//	编辑
-	$(".j_bjbtn").on("click",function(){
-		layer.open({
-		  type: 1,
-		  title:false,
-		  skin: 'layui-pop-gy', //样式类名
-		  closeBtn: 1, //不显示关闭按钮
-		  anim: 2,
-		  area:["90%",""],
-		  shadeClose: true, //开启遮罩关闭
-		  content: $(".pop-gy")
+	var keyword = "";
+
+	apiready = function(){
+		changeserverurl();
+		bindEvent();
+		getinfo();
+	};
+
+	function bindEvent(){
+		$(".j_search_btn").on("click", function(){
+			keyword = $(".search-ipt").val();
+			getinfo();
 		});
-	})
-	
-	$(".j_close").on("click",function(){
-		layer.closeAll()
-	})
-	
-	$(".j_delgy").on('click',function(){
-		layer.confirm('确定删除信息？', {
-		  btn: ['确定','取消'] //按钮
-		}, function(){
-		  layer.msg('删除成功', {icon: 1});
-		}, function(){
-		  layer.closeAll()
+		$(".list-box").on("click", ".j_bjbtn", function(){
+			layer.open({
+				type: 1,
+				title:false,
+				skin: 'layui-pop-gy',
+				closeBtn: 1,
+				anim: 2,
+				area:["90%",""],
+				shadeClose: true,
+				content: $(".pop-gy")
+			});
 		});
-	})
-	$(".j_beizhu").on("click",function(){
-		layer.tips('这里是备注 这里是备注 <br>不能写太长这里是备注 不能写太长', $(this));
-	})
+		$(".j_delgy").on("click", function(){
+			layer.confirm('确定删除信息？', {
+				btn: ['确定','取消']
+			}, function(){
+				layer.msg('删除成功', {icon: 1});
+			}, function(){
+				layer.closeAll();
+			});
+		});
+	}
+
+	function getinfo(){
+		var data = {
+			page: 1,
+			contact: keyword
+		};
+		zzappajax("post", hosturl + "app/user.html", data, function(ret){
+			var list = ret.listall || [];
+			var html = "";
+			$.each(list, function(index, item){
+				var tpl = $api.html($api.byId("itemTpl"));
+				laytpl(tpl).render(item, function(rendered){
+					html += rendered;
+				});
+			});
+			$(".list-box").html(html);
+			$(".nodata").toggle(list.length === 0);
+		}, function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			$(".list-box").html("");
+			$(".nodata").show();
+		});
+	}
 </script>

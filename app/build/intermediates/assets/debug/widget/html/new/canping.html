@@ -14,11 +14,10 @@
 		<link rel="shortcut icon" href="https://img0.zz91.com/front/favicon.ico" />
 		<title>互助社区-zz91再生网</title>
         <script type="text/javascript" src="../../script/jquery.js"></script>
-		<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css"/>		
-		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>	
+		<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>
 		<script type="text/javascript" src="../../script/layer/layer.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://m.zz91.com/zt/dibang/css/index.css">
-		
 	</head>
 	<body>
 		<div style="height:2.25rem;">
@@ -34,79 +33,36 @@
 				</a>
 			</header>
 		</div>
-		
+
 		<div class="searchbox aui-bg-ff">
 			<div class="search-name aui-row aui-padded-md aui-border-b">
 				<div class="aui-col-xs-9"><input class="search-ipt" value="" placeholder="请输入产品名称"/></div>
 				<div class="aui-col-xs-3 aui-text-right">
-					<div class="aui-btn aui-btn-info"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
+					<div class="aui-btn aui-btn-info j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
 				</div>
 			</div>
 		</div>
-       
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="font_bold aui-font-size-18">花纸</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
+
+		<div class="list-box"></div>
+		<div class="aui-text-center aui-padded-15 aui-text-999 nodata" style="display:none;">暂无相关数据</div>
+
+		<script id="itemTpl" type="text/html">
+			<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
+				<div class="zz-div-box aui-font-size-14">
+					<div class="font_bold aui-font-size-18">{{d.name || ''}}</div>
+					<div class="row-right column-cnt zz-div-td1">
+						<span class="aui-margin-l-10 j_bjbtn" data-id="{{d.id || ''}}">编辑</span>
+					</div>
+				</div>
+				<div class="aui-margin-t-10 aui-font-size-12">
+					<div class="aui-text-66">
+						<span class="guige">规格：{{d.spec || ''}}</span>
+						<span>{{d.unit_name || d.unit || ''}}</span>
+					</div>
 				</div>
 			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12">
-				<div class="aui-text-66">
-					<span class="guige">规格：12</span> <span>计数单位：千克</span>
-				</div>
-			</div>
-		</div>
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="font_bold aui-font-size-18">花纸</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
-				</div>
-			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12">
-				<div class="aui-text-66">
-					<span class="guige">规格：12</span> <span>计数单位：千克</span>
-				</div>
-			</div>
-		</div>
-		
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="font_bold aui-font-size-18">花纸</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
-				</div>
-			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12">
-				<div class="aui-text-66">
-					<span class="guige">规格：12</span> <span>计数单位：千克</span>
-				</div>
-			</div>
-		</div>
-		
-		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
-			<div class="zz-div-box aui-font-size-14">
-				<div class="font_bold aui-font-size-18">花纸</div>
-				
-				<div class="row-right column-cnt zz-div-td1">
-					<span class="aui-margin-l-10 j_bjbtn">编辑</span>
-				</div>
-			</div>
-			<div class=" aui-margin-t-10 aui-font-size-12">
-				<div class="aui-text-66">
-					<span class="guige">规格：12</span> <span>计数单位：千克</span>
-				</div>
-			</div>
-		</div>
-			
-		<!--编辑产品-->
+		</script>
+
 		<div class="pop-gy aui-bg-ff aui-padded-10" style="display: none;">
 			<ul class="aui-list aui-form-list aui-font-size-14 limd-top">
 				<li class="aui-list-item">
@@ -141,7 +97,6 @@
 						</div>
 					</div>
 				</li>
-				
 			</ul>
 			<div class="aui-text-center aui-padded-15">
 				<botton class="aui-btn aui-btn-outlined j_delgy">删除</botton>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -150,32 +105,68 @@
 		</div>
 	</body>
 </html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
-	//	编辑
-	$(".j_bjbtn").on("click",function(){
-		layer.open({
-		  type: 1,
-		  title:false,
-		  skin: 'layui-pop-gy', //样式类名
-		  closeBtn: 1, //不显示关闭按钮
-		  anim: 2,
-		  area:["90%",""],
-		  shadeClose: true, //开启遮罩关闭
-		  content: $(".pop-gy")
+	var keyword = "";
+
+	apiready = function(){
+		changeserverurl();
+		bindEvent();
+		getinfo();
+	};
+
+	function bindEvent(){
+		$(".j_search_btn").on("click", function(){
+			keyword = $(".search-ipt").val();
+			getinfo();
 		});
-	})
-	
-	$(".j_close").on("click",function(){
-		layer.closeAll()
-	})
-	
-	$(".j_delgy").on('click',function(){
-		layer.confirm('确定删除信息？', {
-		  btn: ['确定','取消'] //按钮
-		}, function(){
-		  layer.msg('删除成功', {icon: 1});
-		}, function(){
-		  layer.closeAll()
+		$(".list-box").on("click", ".j_bjbtn", function(){
+			layer.open({
+				type: 1,
+				title:false,
+				skin: 'layui-pop-gy',
+				closeBtn: 1,
+				anim: 2,
+				area:["90%",""],
+				shadeClose: true,
+				content: $(".pop-gy")
+			});
 		});
-	})
+		$(".j_delgy").on("click", function(){
+			layer.confirm('确定删除信息？', {
+				btn: ['确定','取消']
+			}, function(){
+				layer.msg('删除成功', {icon: 1});
+			}, function(){
+				layer.closeAll();
+			});
+		});
+	}
+
+	function getinfo(){
+		var data = {
+			page: 1,
+			name: keyword
+		};
+		zzappajax("post", hosturl + "app/product.html", data, function(ret){
+			var list = ret.listall || [];
+			var html = "";
+			$.each(list, function(index, item){
+				var tpl = $api.html($api.byId("itemTpl"));
+				laytpl(tpl).render(item, function(rendered){
+					html += rendered;
+				});
+			});
+			$(".list-box").html(html);
+			$(".nodata").toggle(list.length === 0);
+		}, function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			$(".list-box").html("");
+			$(".nodata").show();
+		});
+	}
 </script>

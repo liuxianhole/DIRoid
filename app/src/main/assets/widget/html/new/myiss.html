@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 		<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
@@ -19,83 +18,87 @@
 		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
 		<script type="text/javascript" src="../../script/layer/layer.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://m.zz91.com/zt/dibang/css/index.css">
-
 	</head>
-
 	<body>
 		<div style="height:45px;">
 			<header class="aui-bar aui-bar-nav  aui-border-b ">
 				<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
 					<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
 				</a>
-				<div class="aui-title">
-					个人资料
-				</div>
+				<div class="aui-title">个人资料</div>
 			</header>
 		</div>
 		<div class="aui-content aui-margin-b-15 myiss">
 			<ul class="aui-list aui-form-list">
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							姓名：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="text" placeholder="请输入手机姓名">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							性别：
-						</div>
-						<div class="aui-list-item-input">
-							<label><input class="aui-radio" type="radio" name="demo1" checked> 男</label>
-							<label><input class="aui-radio" type="radio" name="demo1"> 女</label>
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							手机：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="password" placeholder="请输入手机号码">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-label">
-							密码：
-						</div>
-						<div class="aui-list-item-input">
-							<input type="number" placeholder="请输入密码">
-						</div>
-					</div>
-				</li>
-				<li class="aui-list-item">
-					<div class="aui-list-item-inner">
-						<div class="aui-list-item-input aui-text-right">
-							<label><input class="aui-radio" type="checkbox" name="resnum"> 是否修改密码</label>
-						</div>
-					</div>
-				</li>
-				
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">姓名：</div><div class="aui-list-item-input"><input type="text" class="contact" placeholder="请输入手机姓名"></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">性别：</div><div class="aui-list-item-input"><label><input class="aui-radio sex" type="radio" name="demo1" value="男"> 男</label><label><input class="aui-radio sex" type="radio" name="demo1" value="女"> 女</label></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">手机：</div><div class="aui-list-item-input"><input type="text" class="mobile" placeholder="请输入手机号码"></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-label">密码：</div><div class="aui-list-item-input"><input type="password" class="pwd" placeholder="请输入密码"></div></div></li>
+				<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-input aui-text-right"><label><input class="aui-radio ischange_pwd" type="checkbox" name="resnum"> 是否修改密码</label></div></div></li>
 			</ul>
 			<div class="aui-padded-15 aui-bg-ff">
-                <div class="aui-btn aui-btn-info aui-margin-r-5 aui-btn-block">保存</div>
+                <div class="aui-btn aui-btn-info aui-margin-r-5 aui-btn-block save-btn">保存</div>
             </div>
 		</div>
-		
-		<div  class="outlogin">
-			<a href="login.html" class="aui-text-info">
-				退出重新登录
-			</a>
-		</div>
-			
-	</body>
 
+		<div class="outlogin">
+			<a href="login.html" class="aui-text-info loginout">退出重新登录</a>
+		</div>
+	</body>
 </html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var userId = 0;
+	var canSave = true;
+
+	apiready = function(){
+		changeserverurl();
+		getInfo();
+		bindEvent();
+	};
+
+	function bindEvent(){
+		$(".save-btn").on("click", function(){
+			if (!canSave || !userId) {
+				return;
+			}
+			var data = {
+				user_id: userId,
+				mobile: $(".mobile").val(),
+				contact: $(".contact").val(),
+				sex: $(".sex:checked").val(),
+				pwd: $(".pwd").val()
+			};
+			if ($(".ischange_pwd").is(":checked") && $(".pwd").val()) {
+				data.ischange_pwd = 1;
+			}
+			canSave = false;
+			zzappajax("post", hosturl + "app/myinfo_save.html", data, function(ret){
+				layer.msg(ret.errtext || "保存成功");
+				canSave = true;
+			}, function(err){
+				if(err){
+					saveerrlog(err.body);
+				}
+				canSave = true;
+			});
+		});
+		$(".loginout").on("click", function(){
+			UserInfo.clear();
+		});
+	}
+
+	function getInfo(){
+		zzappajax("post", hosturl + "app/myinfo.html", {}, function(ret){
+			$(".contact").val(ret.contact || "");
+			$(".mobile").val(ret.mobile || "");
+			$(".sex[value='" + (ret.sex || "男") + "']").prop("checked", true);
+			userId = ret.id || 0;
+		}, function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+		});
+	}
+</script>

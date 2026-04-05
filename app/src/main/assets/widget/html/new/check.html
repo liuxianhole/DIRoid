@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<title>待审核</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css">
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	<style>
+		html,
+		body {
+			background: #f2f2f2
+		}
+	</style>
+</head>
+
+<body>
+	<div class="bdlist-box">
+		<div class="aui-toast" id="loading">
+			<div class="aui-toast-loading"></div>
+			<div class="aui-toast-content">加载中</div>
+		</div>
+	</div>
+	<script id="bdlist" type="text/html">
+	<div class="aui-content">
+        <ul class="aui-list-view">
+            <li class="aui-list-view-cell" tapmode >
+                <a class="aui-arrow-right btn-dj" suppliers_self_id="{{d.suppliers_self_id}}">
+                    {{d.suppliers_name}}
+                    <span class="aui-badge aui-badge-danger aui-pull-right">未审核</span>
+                    <p>过磅总净重：{{d.storage_weight}}</p>
+                
+	                <p class="aui-flex-col" style="padding-top: 10px">
+			        	<div class="aui-flex-item-6">
+			                <div class="aui-text-info">
+			                    总额：￥{{d.total}}
+			                </div>
+			            </div>
+			            <div class="aui-flex-item-6 aui-text-right aui-text-default">
+			            	{{d.gmt_created}}
+			            </div>
+			        </p>
+		        </a>
+            </li>
+        </ul>
+    </div>
+	</script>
+
+	<div class="nodata">暂无待审核磅单</div>
+
+	<body>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/jquery.js"></script>
+		<script type="text/javascript" src="../../script/layer/layer.js"></script>
+		<script type="text/javascript" src="../../script/laytpl.js"></script>
+		<script type="text/javascript" src="../../script/common.js"></script>
+		<script type="text/javascript">
+			var page = 1;
+			var pagecount = 0;
+			var bdinfo = []; //保存数据页面传值
+			var iccode = "";
+			var sid = 0;
+			apiready = function () {
+				changeserverurl()
+				domEvent();
+				getinfo();
+				//页面刷新
+				api.setRefreshHeaderInfo({
+					visible: true,
+					// bgColor: '#F2F2F2',
+					bgColor: '#E6E6E6',
+					textColor: '#000000',
+					textDown: '下拉刷新',
+					textUp: '释放刷新',
+				}, function (ret, err) {
+
+					getinfo();
+					api.toast({
+						msg: '数据已是最新！',
+						duration: 3000,
+						location: 'bottom'
+					});
+				});
+			};
+			var domEvent = function () {
+				//立即定价
+				$(".bdlist-box").on("click", ".btn-dj", function () {
+					//alert($(this).attr("suppliers_self_id"))
+					var pageParam = {
+						wintitle: "付款审核",
+						type: "paycheck",
+						bounces: false,
+						suppliers_self_id: $(this).attr("suppliers_self_id"),
+						is_pay: 0
+					};
+					openWin("paycheck", "../bangdan/check_win.html", pageParam);
+				})
+
+			}
+			var getinfo = function () {
+				var data = {};
+				zzappajax("get", hosturl + "app/pricing_nocheck_suppliers.html", data, function (ret) {
+					//alert(JSON.stringify(ret))
+					if (ret.hasOwnProperty("err")) {
+						if (ret.err == "true") {
+							layer.msg(ret.errtext);
+							api.hideProgress();
+							api.refreshHeaderLoadDone();
+							loadinghide();
+							return false;
+						}
+					}
+					var pageHtml_dj = '';
+					$.each(ret.listall, function (index, item) {
+						var getTpl = $api.html($api.byId("bdlist"));
+						laytpl(getTpl).render(item, function (html) {
+							pageHtml_dj = pageHtml_dj + html;
+						});
+					})
+					$(".bdlist-box").html(pageHtml_dj);
+					if (pageHtml_dj == "") {
+						$(".nodata").show()
+					} else {
+						$(".nodata").hide()
+					}
+					loadinghide();
+				}, function (err) {
+					if (err) {
+						saveerrlog(err.body);
+					}
+					canAjax = true;
+					api.hideProgress();
+					api.refreshHeaderLoadDone();
+					loadinghide();
+					return false;
+				})
+			}
+		</script>
+		<script type="text/javascript" src="../../script/servercomm.js"></script>
+
+</html>

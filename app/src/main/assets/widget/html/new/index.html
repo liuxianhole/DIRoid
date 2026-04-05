@@ -1,112 +1,256 @@
 <!doctype html>
 <html>
-	<head>
-		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-		<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-		<meta content="telephone=no" name="format-detection" />
-		<meta content="address=no" name="format-detection" />
-		<meta name="apple-mobile-web-app-capable" content="no" />
-		<link rel="apple-touch-icon-precomposed" href="http://img0.zz91.com/zz91/images/logo.png" />
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-precomposed" />
-		<meta name="apple-touch-fullscreen" content="YES">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link rel="shortcut icon" href="https://img0.zz91.com/front/favicon.ico" />
-		<title>互助社区-zz91再生网</title>
-        <script type="text/javascript" src="../../script/jquery.js"></script>
-		<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css"/>		
-		<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css"/>	
-		<script type="text/javascript" src="../../script/layer/layer.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://m.zz91.com/zt/dibang/css/index.css">
-		
-	</head>
-	<body>
-		<div style="height:2.25rem;">
-			<header class="aui-bar aui-bar-nav  aui-border-b ">
-		    	<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
-			        <span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
-			    </a>
-			    <div class="aui-title">
-			    	再生资源智能管理系统
-			    </div>
-			</header>
+
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+	<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta content="address=no" name="format-detection" />
+	<meta name="apple-mobile-web-app-capable" content="no" />
+	<link rel="apple-touch-icon-precomposed" href="http://img0.zz91.com/zz91/images/logo.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-precomposed" />
+	<meta name="apple-touch-fullscreen" content="YES">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="shortcut icon" href="https://img0.zz91.com/front/favicon.ico" />
+	<title>互助社区-zz91再生网</title>
+	<script type="text/javascript" src="../../script/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<script type="text/javascript" src="../../script/layer/layer.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://m.zz91.com/zt/dibang/css/index.css">
+</head>
+
+<body>
+	<div style="height:2.25rem;">
+		<header class="aui-bar aui-bar-nav  aui-border-b ">
+			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
+				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+			</a>
+			<div class="aui-title">再生资源智能管理系统</div>
+		</header>
+	</div>
+	<ul class="aui-list aui-media-list">
+		<a href="myiss.html">
+			<li class="aui-list-item aui-list-item-middle">
+				<div class="aui-media-list-item-inner">
+					<div class="aui-list-item-media" style="width: 3rem;">
+						<img src="https://m.zz91.com/zt/dibang/images/man.png" class="aui-img-round aui-list-img-sm">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow">
+						<div class="aui-list-item-text">
+							<div class="aui-list-item-title aui-font-size-14 profile-name"></div>
+						</div>
+						<div class="aui-list-item-text">点击编辑个人资料</div>
+					</div>
+				</div>
+			</li>
+		</a>
+	</ul>
+
+	<section class="aui-grid aui-margin-t-15 db-navbig">
+		<div class="aui-row">
+			<div class="aui-col-xs-6 j_bangdan"><a href="bangdan-add.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
+					<div class="aui-grid-label aui-text-default">开单定价</div><span
+						class="aui-badge aui-badge-danger bd_num"
+						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
+				</a></div>
+			<div class="aui-col-xs-6 j_bangdan"><a href="bangdan.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
+					<div class="aui-grid-label aui-text-default">扫码回皮</div><span
+						class="aui-badge aui-badge-danger bd_num"
+						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
+				</a></div>
+			<div class="aui-col-xs-6 j_bangdan"><a href="bangdan-add.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
+					<div class="aui-grid-label aui-text-default">补单</div><span class="aui-badge aui-badge-danger bd_num"
+						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
+				</a></div>
+			<div class="aui-col-xs-6 j_bangdan"><a href="check_main.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
+					<div class="aui-grid-label aui-text-default">付款审核</div><span
+						class="aui-badge aui-badge-danger bd_num"
+						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
+				</a></div>
+			<div class="aui-col-xs-6 j_huizong"><a href="shuju.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe8a6;</i>
+					<div class="aui-grid-label aui-text-default">数据汇总</div>
+				</a></div>
+			<div class="aui-col-xs-6 j_mingxi"><a href="ruku.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe657;</i>
+					<div class="aui-grid-label aui-text-default">入库明细</div>
+				</a></div>
 		</div>
-		<ul class="aui-list aui-media-list">
-			<a href="myiss.html">
-				<li class="aui-list-item aui-list-item-middle">
-		            <div class="aui-media-list-item-inner">
-		                <div class="aui-list-item-media" style="width: 3rem;">
-		                    <img src="https://m.zz91.com/zt/dibang/images/man.png" class="aui-img-round aui-list-img-sm">
-		                </div>
-		                <div class="aui-list-item-inner aui-list-item-arrow">
-		                    <div class="aui-list-item-text">
-		                        <div class="aui-list-item-title aui-font-size-14">方大同</div>
-		                    </div>
-		                    <div class="aui-list-item-text">
-		                                                             点击编辑个人资料
-		                    </div>
-		                </div>
-		            </div>
-		        </li>
-	        </a>
-       </ul>
-       
-       <section class="aui-grid aui-margin-t-15 db-navbig">
-		    <div class="aui-row">
-		        <div class="aui-col-xs-6">
-		        	<a href="bangdan.html">
-			            <i class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
-			            <div class="aui-grid-label aui-text-default">待定价磅单</div>
-		            </a>
-		        </div>
-		        <div class="aui-col-xs-6">
-		        	<a href="baojia.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe603;</i>
-		            	<div class="aui-grid-label aui-text-default">产品报价</div>
-		           </a>
-		        </div>
-		        <div class="aui-col-xs-6">
-		        	<a href="shuju.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe8a6;</i>
-		            	<div class="aui-grid-label aui-text-default">数据汇总</div>
-		          	</a>
-		        </div>
-		        <div class="aui-col-xs-6">
-		        	<a href="ruku.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe657;</i>
-		            	<div class="aui-grid-label aui-text-default">入库明细</div>
-		            </a>
-		        </div>
-		    </div>
-		</section>
-		
-		<section class="aui-grid aui-margin-t-15 db-navbig">
-		    <div class="aui-row">
-		        <div class="aui-col-xs-3">
-		        	<a href="gongying.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe665;</i>
-		            	<div class="aui-grid-label aui-text-default">供应商管理</div>
-		            </a>
-		        </div>
-		        <div class="aui-col-xs-3">
-		        	<a href="fengzhan.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe60a;</i>
-		            	<div class="aui-grid-label aui-text-default">分站管理</div>
-		            </a>
-		        </div>
-		        <div class="aui-col-xs-3">
-		        	<a href="canping.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe630;</i>
-		            	<div class="aui-grid-label aui-text-default">产品管理</div>
-		            </a>
-		        </div>
-		        <div class="aui-col-xs-3">
-		        	<a href="renyuan.html">
-		            	<i class="aui-iconfont iconfont aui-text-info">&#xe632;</i>
-		            	<div class="aui-grid-label aui-text-default">人员管理</div>
-		            </a>
-		        </div>
-		    </div>
-		</section>
-	</body>
+	</section>
+
+	<section class="aui-grid aui-margin-t-15 db-navbig">
+		<div class="aui-row">
+			<div class="aui-col-xs-3 j_gongying"><a href="gongying.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe665;</i>
+					<div class="aui-grid-label aui-text-default">供应商管理</div>
+				</a></div>
+			<div class="aui-col-xs-3 j_fenzhan"><a href="fengzhan.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe60a;</i>
+					<div class="aui-grid-label aui-text-default">分站管理</div>
+				</a></div>
+			<div class="aui-col-xs-3 j_chanping"><a href="canping.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe630;</i>
+					<div class="aui-grid-label aui-text-default">产品管理</div>
+				</a></div>
+			<div class="aui-col-xs-3 j_renyuan"><a href="renyuan.html"><i
+						class="aui-iconfont iconfont aui-text-info">&#xe632;</i>
+					<div class="aui-grid-label aui-text-default">人员管理</div>
+				</a></div>
+		</div>
+	</section>
+</body>
+
 </html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var sid = 0;
+
+	apiready = function () {
+		if (!UserInfo.has_login()) {
+			api.execScript({
+				name: "root",
+				script: "reloadapp();"
+			});
+			window.location.href = "login.html";
+			return;
+		}
+		changeserverurl();
+		bindEvent();
+		getProfile();
+		getinfo();
+		getuserqx();
+		getsocketbandang();
+	};
+
+	function bindEvent() {
+		api.setRefreshHeaderInfo({
+			visible: true,
+			bgColor: '#E6E6E6',
+			textColor: '#000000',
+			textDown: '下拉刷新',
+			textUp: '释放刷新',
+		}, function () {
+			getinfo();
+			getuserqx();
+			api.toast({
+				msg: '数据已是最新！',
+				duration: 3000,
+				location: 'bottom'
+			});
+		});
+	}
+
+	function getProfile() {
+		zzappajax("post", hosturl + "app/myinfo.html", {}, function (ret) {
+			$(".profile-name").text(ret.contact || ret.mobile || "");
+		}, function () {
+			$(".profile-name").text("");
+		});
+	}
+
+	function getuserqx() {
+		zzappajax("post", hosturl + "app/getuser_qx.html", '', function (ret) {
+			$(".j_bangdan,.j_huizong,.j_mingxi,.j_gongying,.j_fenzhan,.j_chanping,.j_renyuan,.j_baojia").show();
+			if (ret.hasOwnProperty("tokenerr")) {
+				return false;
+			}
+			if (ret) {
+				if (ret.indexOf("price") < 0) {
+					$(".j_bangdan").hide();
+				}
+				if (ret.indexOf("tong_ji_all") < 0) {
+					$(".j_huizong").hide();
+				}
+				if (ret.indexOf("tong_ji_ming_xi") < 0) {
+					$(".j_mingxi").hide();
+				}
+				if (ret.indexOf("gong_yin_shang") < 0) {
+					$(".j_gongying").hide();
+				}
+				if (ret.indexOf("feng_zhan") < 0) {
+					$(".j_fenzhan").hide();
+				}
+				if (ret.indexOf("products") < 0) {
+					$(".j_chanping").hide();
+				}
+				if (ret.indexOf("users") < 0) {
+					$(".j_renyuan").hide();
+				}
+			}
+			api.refreshHeaderLoadDone();
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+			api.refreshHeaderLoadDone();
+			return false;
+		});
+	}
+
+	function getinfo() {
+		zzappajax("post", hosturl + "app/get_num.html", '', function (ret) {
+			var utype = ret.utype;
+			if (parseInt(ret.count) > 0) {
+				$(".bd_num").html(ret.count).show();
+			} else {
+				$(".bd_num").hide();
+			}
+			if (utype == "1") {
+				$(".j_fenzhan").show();
+			}
+			if (utype == "1" || utype == "4") {
+				$(".j_renyuan").show();
+			}
+			api.refreshHeaderLoadDone();
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+			api.refreshHeaderLoadDone();
+			return false;
+		});
+	}
+
+	function getsocketbandang() {
+		var socketManager = api.require('socketManager');
+		socketManager.createSocket({
+			host: '101.37.14.79',
+			port: 6969
+		}, function (ret) {
+			if (ret) {
+				sid = ret.sid;
+				if (ret.state == 103 && ret.data == "storageinsert") {
+					getinfo();
+				}
+				if (ret.state == 102) {
+					writesocketbandang();
+				}
+				if (ret.state == 204) {
+					getsocketbandang();
+				}
+			} else {
+				getsocketbandang();
+			}
+		});
+	}
+
+	function writesocketbandang() {
+		var socketManager = api.require('socketManager');
+		socketManager.write({
+			sid: sid,
+			data: '{"sendvalue":"updatestorage","company_id":' + UserInfo.memberID() + '}|'
+		}, function () { });
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2.1.css">
+    <style>
+    	body{
+    		
+    	}
+		.scale-status {
+			margin-top: 0.3rem;
+			font-size: 0.6rem;
+			color: #666;
+		}
+		.qr-box {
+			padding: 0.75rem 0;
+			text-align: center;
+			background: #fff;
+			margin-bottom: 0.5rem;
+		}
+		.order-code {
+			font-size: 0.8rem;
+			font-weight: bold;
+			color: #333;
+			margin-top: 0.25rem;
+		}
+		.qrcode-wrap {
+			width: 180px;
+			height: 180px;
+			margin: 0.5rem auto 0;
+		}
+		.qrcode-wrap canvas,
+		.qrcode-wrap table {
+			margin: 0 auto;
+		}
+    </style>
+</head>
+<body>
+	<div style="height:2.25rem;">
+		<header class="aui-bar aui-bar-nav aui-border-b">
+			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript:history.back(-1)">
+				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+			</a>
+			<div class="aui-title">新增磅单</div>
+		</header>
+	</div>
+	<div class="qr-box">
+		<div>单号</div>
+		<div class="order-code" id="order_code_text"></div>
+		<div class="qrcode-wrap" id="order_qrcode"></div>
+		<input type="hidden" id="order_code" value="">
+	</div>
+	<div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        产品名称
+                    </div>
+                    <div class="aui-list-item-input">
+                        <span class="aui-btn aui-btn-outlined selectproducts">请选择产品名称</span>
+                        <input type="hidden" id="proself_id" value="">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        供应商
+                    </div>
+                    <div class="aui-list-item-input">
+                        <select class="suppliers_self_id">
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        毛重
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="gw" placeholder="请输入毛重">
+                        <div class="scale-status" id="scale_status">正在连接地磅读数...</div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        皮重
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="tare" placeholder="请输入皮重">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        扣杂
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="clasp" placeholder="" value="0">
+                    </div>
+                </div>
+            </li>
+            
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        是否0皮重
+                    </div>
+                    <div class="aui-list-item-input">
+                        <label><input class="aui-radio tare_check" type="radio" name="demo1" value="1" > 是</label>
+                        <label><input class="aui-radio tare_check" type="radio" name="demo1" value="0" checked=""> 否</label>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        单价
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="price" placeholder="输入单价">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        实际支付
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="number" class="total" placeholder="请输入实际付款">
+                    </div>
+                </div>
+            </li>
+            
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                    <div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">提交</div>
+                    <div class="aui-btn aui-btn-danger aui-margin-l-15 close-pop">取消</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/qrcode.js"></script>
+<script type="text/javascript" src="../../script/jquery.qrcode.js"></script>
+<script type="text/javascript">
+	var tare_check=0;
+	var MAGIC_NUM = 0x494154;
+	var ws = null;
+	var uart = "";
+	var di_bang_ip = "";
+	var time_id = null;
+	var orderCode = "";
+
+	apiready = function(){
+		changeserverurl();
+		ajaxinfo();
+		initOrderCode();
+		initDiBangConfig();
+		get_di_bang_weight();
+		window.setInterval(read_di_bang_weight, 1000);
+		//选择地区
+		$(".selectproducts").on("click", function() {
+			openwindows("selectproduct", 'selectproduct.html')
+		})
+		$(".close-pop").on("click",function(){
+			api.closeWin({
+            });;
+		})
+		$(".tare_check").on("click", function() {
+			if ($(this).val()=="1"){
+				$(".tare").val(0);
+				tare_check=1;
+			}else{
+				tare_check=0
+			}
+		})
+		
+		var canbtn = true;
+		var tare_check=0;
+		//确定提交
+		$(".j_btn").on("click",function(){
+			if(!canbtn){
+				return;
+			}
+			if ($("#proself_id").val()==""){
+				layer.msg("请选择产品名称！");
+				return false;
+			}
+			if ($(".suppliers_self_id").val()==""){
+				layer.msg("请选择供应商！");
+				return false;
+			}
+			if ($(".gw").val()==""){
+				layer.msg("请输入毛重！");
+				$(".gw").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".gw").val());
+				if (isnumflag){
+					layer.msg("毛重必须是数字！")
+					return false;
+				}
+			}
+			if ($(".tare").val()==""){
+				layer.msg("请输入皮重！");
+				$(".tare").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".tare").val());
+				if (isnumflag){
+					layer.msg("皮重必须是数字！")
+					return false;
+				}
+			}
+			if ($(".clasp").val()==""){
+				$(".clasp").val(0)
+			}else{
+				var isnumflag=isNaN($(".clasp").val());
+				if (isnumflag){
+					layer.msg("扣杂必须是数字！")
+					return false;
+				}
+			}
+			if ($(".price").val()==""){
+				layer.msg("请输入价格！");
+				$(".price").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".price").val());
+				if (isnumflag){
+					layer.msg("价格必须是数字！")
+					return false;
+				}
+			}
+			if ($(".total").val()==""){
+				layer.msg("请输入实际支付！");
+				$(".total").focus();
+				return false;
+			}else{
+				var isnumflag=isNaN($(".total").val());
+				if (isnumflag){
+					layer.msg("支付价格必须是数字！")
+					return false;
+				}
+			}
+			var data = {
+				code:$("#order_code").val(),
+				products_self_id:$("#proself_id").val(),
+				suppliers_self_id:$(".suppliers_self_id").val(),
+				gw:$(".gw").val(),
+				tare:$(".tare").val(),
+				clasp:$(".clasp").val(),
+				price:$(".price").val(),
+				total:$(".total").val(),
+				tare_check:tare_check,
+			}
+			canbtn = false;
+			api.showProgress({
+				title : '',
+				modal : false
+			});
+			zzappajax("post",hosturl+"app/storage_save.html",data,function(ret){
+				if(ret.err == "false"){
+					api.execScript({
+						name : "bangdan",
+						frameName:"frame1",
+						script : "page = 1;getinfo()"
+					});
+					api.execScript({
+						name : "bangdan",
+						frameName:"frame3",
+						script : "page = 1;getinfo()"
+					});
+					api.execScript({
+						name : "bangdan",
+						frameName:"frame4",
+						script : "page = 1;getinfo()"
+					});
+					api.execScript({
+						name : "root",
+						frameName:"main",
+						script : "getinfo()"
+					});
+					api.closeWin({});
+				}
+				api.hideProgress();
+				canbtn = true;
+			},function(err){
+				if(err){
+					saveerrlog(err.body);
+				}
+				canbtn = true;
+				api.hideProgress();
+				return false;
+			})
+		})
+	};
+	function initOrderCode(){
+		orderCode = (api.pageParam && api.pageParam.code) || createOrderCode();
+		$("#order_code").val(orderCode);
+		$("#order_code_text").text(orderCode);
+		renderOrderQrcode(orderCode);
+	}
+	function createOrderCode(){
+		var now = new Date();
+		var month = ("0" + (now.getMonth() + 1)).slice(-2);
+		var day = ("0" + now.getDate()).slice(-2);
+		var hours = ("0" + now.getHours()).slice(-2);
+		var minutes = ("0" + now.getMinutes()).slice(-2);
+		var seconds = ("0" + now.getSeconds()).slice(-2);
+		var millis = ("00" + now.getMilliseconds()).slice(-3);
+		return "BD" + now.getFullYear() + month + day + hours + minutes + seconds + millis;
+	}
+	function renderOrderQrcode(code){
+		$("#order_qrcode").empty().qrcode({
+			render: "canvas",
+			width: 180,
+			height: 180,
+			text: code
+		});
+	}
+	function initDiBangConfig(){
+		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || "192.168.1.101";
+		uart = (api.pageParam && api.pageParam.di_bang_com) || "COM5";
+	}
+	function updateScaleStatus(text){
+		$("#scale_status").text(text);
+	}
+	function read_di_bang_weight() {
+		if (ws && ws.readyState == 1) {
+			var msg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"read\",\"port\":\"" + uart + "\"}";
+			ws.send(msg);
+		}
+	}
+	function close_web_socket() {
+		if (ws) {
+			ws.close();
+		}
+	}
+	function get_di_bang_weight() {
+		if (!("WebSocket" in window)) {
+			updateScaleStatus("当前环境不支持 WebSocket，请手动输入毛重");
+			return;
+		}
+		try {
+			ws = new WebSocket("ws://" + di_bang_ip + ":20010");
+		} catch (e) {
+			updateScaleStatus("连接地磅失败，请手动输入毛重");
+			return;
+		}
+		ws.onopen = function() {
+			time_id && window.clearInterval(time_id);
+			var openMsg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"open\",\"port\":\"" + uart + "\"}";
+			ws.send(openMsg);
+			var readMsg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"read\",\"port\":\"" + uart + "\"}";
+			ws.send(readMsg);
+			updateScaleStatus("正在读取地磅读数");
+		};
+		ws.onmessage = function(evt) {
+			var data = evt.data;
+			if (data.indexOf("sorry") == -1) {
+				updateScaleStatus("收到地磅读数");
+			}
+			try {
+				var dct = eval('(' + data + ')');
+				if (dct.fun == "read" && dct.val !== undefined && dct.val !== null && dct.val !== "") {
+					$(".gw").val(dct.val);
+					updateScaleStatus("待读数稳定");
+				}
+			} catch (e) {
+				updateScaleStatus("地磅读数解析失败，请手动输入毛重");
+			}
+		};
+		ws.onclose = function() {
+			updateScaleStatus("地磅连接已断开，正在重连...");
+			window.clearInterval(time_id);
+			time_id = window.setInterval(get_di_bang_weight, 1000);
+		};
+		ws.onerror = function() {
+			updateScaleStatus("连接地磅失败，请手动输入毛重");
+		};
+	}
+	function selectpro(self_id,name){
+		$(".selectproducts").html(name);
+		$("#proself_id").val(self_id);
+	}
+	function ajaxinfo(){
+		var data={}
+		zzappajax("post",hosturl+"app/product_select.html",data,function(ret){
+			//alert(JSON.stringify(ret));
+			api.pageParam['prolist']=ret.products;
+			var htmls="";
+			$.each(ret.supplier_list, function(index, item) {
+				htmls+="<option value='"+item.self_id+"'>"+item.name+"</option>"
+			})
+			$(".suppliers_self_id").html(htmls)
+			loadinghide();
+		},function(err){
+			if(err){
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+			return false;
+		})
+	}
+	window.onbeforeunload = function() {
+		close_web_socket();
+	};
+</script>
+</html>

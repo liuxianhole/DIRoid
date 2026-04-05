@@ -72,10 +72,10 @@
         var mainPos = $api.offset(main);
         var login_sn = UserInfo.has_login();
 		if (login_sn){
-        	var url="../html/myrc/myhome.html";
+        	var url="../html/new/index.html";
         	$(".myinfo").show();
         }else{
-        	var url="../html/login.html";
+        	var url="../html/new/login.html";
         	$(".myinfo").hide();
         }
         api.openFrame({
@@ -96,16 +96,16 @@
 				type : "myinfo",
 				bounces : false
 			};
-   			openWin("myinfo", "../myrc/myinfo.html", pageParam);
+   			openWin("myinfo", "../new/myiss.html", pageParam);
 		})
 		//alert(UserInfo.token())
     };
     function reloadapp(){
     	var login_sn = UserInfo.has_login();
 		if (login_sn){
-        	var url="../html/myrc/myhome.html";
+        	var url="../html/new/index.html";
         }else{
-        	var url="../html/login.html";
+        	var url="../html/new/login.html";
         }
         var headerPos = $api.offset(header);
         var main = $api.byId('wrap');

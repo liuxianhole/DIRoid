@@ -182,6 +182,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val APP_ENTRY_URL = "file:///android_asset/widget/html/index.html"
+        private const val APP_ENTRY_URL = "file:///android_asset/widget/html/new/index.html"
     }
 }
