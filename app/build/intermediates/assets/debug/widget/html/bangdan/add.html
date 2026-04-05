@@ -10,9 +10,41 @@
     	body{
     		
     	}
+		.scale-status {
+			margin-top: 0.3rem;
+			font-size: 0.6rem;
+			color: #666;
+		}
+		.qr-box {
+			padding: 0.75rem 0;
+			text-align: center;
+			background: #fff;
+			margin-bottom: 0.5rem;
+		}
+		.order-code {
+			font-size: 0.8rem;
+			font-weight: bold;
+			color: #333;
+			margin-top: 0.25rem;
+		}
+		.qrcode-wrap {
+			width: 180px;
+			height: 180px;
+			margin: 0.5rem auto 0;
+		}
+		.qrcode-wrap canvas,
+		.qrcode-wrap table {
+			margin: 0 auto;
+		}
     </style>
 </head>
 <body>
+	<div class="qr-box">
+		<div>单号</div>
+		<div class="order-code" id="order_code_text"></div>
+		<div class="qrcode-wrap" id="order_qrcode"></div>
+		<input type="hidden" id="order_code" value="">
+	</div>
 	<div class="aui-content aui-margin-b-15">
         <ul class="aui-list aui-form-list">
             <li class="aui-list-item">
@@ -44,6 +76,7 @@
                     </div>
                     <div class="aui-list-item-input">
                         <input type="number" class="gw" placeholder="请输入毛重">
+                        <div class="scale-status" id="scale_status">正在连接地磅读数...</div>
                     </div>
                 </div>
             </li>
@@ -113,11 +146,24 @@
 <script type="text/javascript" src="../../script/jquery.js"></script>
 <script type="text/javascript" src="../../script/layer/layer.js"></script>
 <script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/qrcode.js"></script>
+<script type="text/javascript" src="../../script/jquery.qrcode.js"></script>
 <script type="text/javascript">
 	var tare_check=0;
+	var MAGIC_NUM = 0x494154;
+	var ws = null;
+	var uart = "";
+	var di_bang_ip = "";
+	var time_id = null;
+	var orderCode = "";
+
 	apiready = function(){
 		changeserverurl();
 		ajaxinfo();
+		initOrderCode();
+		initDiBangConfig();
+		get_di_bang_weight();
+		window.setInterval(read_di_bang_weight, 1000);
 		//选择地区
 		$(".selectproducts").on("click", function() {
 			openwindows("selectproduct", 'selectproduct.html')
@@ -204,6 +250,7 @@
 				}
 			}
 			var data = {
+				code:$("#order_code").val(),
 				products_self_id:$("#proself_id").val(),
 				suppliers_self_id:$(".suppliers_self_id").val(),
 				gw:$(".gw").val(),
@@ -254,6 +301,91 @@
 			})
 		})
 	};
+	function initOrderCode(){
+		orderCode = (api.pageParam && api.pageParam.code) || createOrderCode();
+		$("#order_code").val(orderCode);
+		$("#order_code_text").text(orderCode);
+		renderOrderQrcode(orderCode);
+	}
+	function createOrderCode(){
+		var now = new Date();
+		var month = ("0" + (now.getMonth() + 1)).slice(-2);
+		var day = ("0" + now.getDate()).slice(-2);
+		var hours = ("0" + now.getHours()).slice(-2);
+		var minutes = ("0" + now.getMinutes()).slice(-2);
+		var seconds = ("0" + now.getSeconds()).slice(-2);
+		var millis = ("00" + now.getMilliseconds()).slice(-3);
+		return "BD" + now.getFullYear() + month + day + hours + minutes + seconds + millis;
+	}
+	function renderOrderQrcode(code){
+		$("#order_qrcode").empty().qrcode({
+			render: "canvas",
+			width: 180,
+			height: 180,
+			text: code
+		});
+	}
+	function initDiBangConfig(){
+		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || "192.168.1.101";
+		uart = (api.pageParam && api.pageParam.di_bang_com) || "COM5";
+	}
+	function updateScaleStatus(text){
+		$("#scale_status").text(text);
+	}
+	function read_di_bang_weight() {
+		if (ws && ws.readyState == 1) {
+			var msg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"read\",\"port\":\"" + uart + "\"}";
+			ws.send(msg);
+		}
+	}
+	function close_web_socket() {
+		if (ws) {
+			ws.close();
+		}
+	}
+	function get_di_bang_weight() {
+		if (!("WebSocket" in window)) {
+			updateScaleStatus("当前环境不支持 WebSocket，请手动输入毛重");
+			return;
+		}
+		try {
+			ws = new WebSocket("ws://" + di_bang_ip + ":20010");
+		} catch (e) {
+			updateScaleStatus("连接地磅失败，请手动输入毛重");
+			return;
+		}
+		ws.onopen = function() {
+			time_id && window.clearInterval(time_id);
+			var openMsg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"open\",\"port\":\"" + uart + "\"}";
+			ws.send(openMsg);
+			var readMsg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"read\",\"port\":\"" + uart + "\"}";
+			ws.send(readMsg);
+			updateScaleStatus("正在读取地磅读数");
+		};
+		ws.onmessage = function(evt) {
+			var data = evt.data;
+			if (data.indexOf("sorry") == -1) {
+				updateScaleStatus("收到地磅读数");
+			}
+			try {
+				var dct = eval('(' + data + ')');
+				if (dct.fun == "read" && dct.val !== undefined && dct.val !== null && dct.val !== "") {
+					$(".gw").val(dct.val);
+					updateScaleStatus("待读数稳定");
+				}
+			} catch (e) {
+				updateScaleStatus("地磅读数解析失败，请手动输入毛重");
+			}
+		};
+		ws.onclose = function() {
+			updateScaleStatus("地磅连接已断开，正在重连...");
+			window.clearInterval(time_id);
+			time_id = window.setInterval(get_di_bang_weight, 1000);
+		};
+		ws.onerror = function() {
+			updateScaleStatus("连接地磅失败，请手动输入毛重");
+		};
+	}
 	function selectpro(self_id,name){
 		$(".selectproducts").html(name);
 		$("#proself_id").val(self_id);
@@ -277,5 +409,8 @@
 			return false;
 		})
 	}
+	window.onbeforeunload = function() {
+		close_web_socket();
+	};
 </script>
 </html>
