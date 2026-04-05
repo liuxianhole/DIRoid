@@ -2,7 +2,7 @@
  * APICloud JavaScript Library
  * Copyright (c) 2014 apicloud.com
  */
-var APP_BASE_URL = "http://192.168.0.110:8000/";
+var APP_BASE_URL = "http://192.168.0.111:8000/";
 var hosturl = APP_BASE_URL;
 var appVersion="1.0.0";
 (function(window){

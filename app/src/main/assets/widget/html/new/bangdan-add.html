@@ -347,8 +347,8 @@
 	}
 	function initDiBangConfig() {
 		var bridgeConfig = getBridgeDiBangConfig();
-		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || bridgeConfig.diBangIp || "192.168.1.101";
-		uart = (api.pageParam && api.pageParam.di_bang_com) || bridgeConfig.diBangCom || "COM5";
+		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || bridgeConfig.diBangIp || "192.168.0.109";
+		uart = (api.pageParam && api.pageParam.di_bang_com) || bridgeConfig.diBangCom || "COM1";
 	}
 	function getBridgeDiBangConfig() {
 		if (!(window.AndroidBridge && window.AndroidBridge.getDiBangConfig)) {
