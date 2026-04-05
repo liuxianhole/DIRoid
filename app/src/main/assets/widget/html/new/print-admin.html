@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+	<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta content="address=no" name="format-detection" />
+	<meta name="apple-mobile-web-app-capable" content="no" />
+	<link rel="apple-touch-icon-precomposed" href="../../image/logo.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-precomposed" />
+	<meta name="apple-touch-fullscreen" content="YES">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="shortcut icon" href="../../image/favicon.ico" />
+	<title>智慧农业收购管理系统-打印测试</title>
+	<script type="text/javascript" src="../../script/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<script type="text/javascript" src="../../script/layer/layer.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css">
+	<style>
+		body {
+			background: #f5f5f5;
+		}
+		.preview-card {
+			background: #fff;
+			margin: 0.75rem;
+			padding: 1rem;
+			border-radius: 0.25rem;
+			box-shadow: 0 0.1rem 0.35rem rgba(0, 0, 0, 0.05);
+		}
+		.preview-title {
+			font-size: 0.9rem;
+			font-weight: bold;
+			text-align: center;
+			margin-bottom: 0.8rem;
+		}
+		.preview-row {
+			display: flex;
+			justify-content: space-between;
+			font-size: 0.7rem;
+			padding: 0.2rem 0;
+			border-bottom: 1px dashed #eee;
+		}
+		.preview-row span:first-child {
+			color: #666;
+			margin-right: 0.5rem;
+		}
+		.preview-actions {
+			padding: 0 0.75rem 1rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div style="height:2.25rem;">
+		<header class="aui-bar aui-bar-nav aui-border-b">
+			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
+				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+			</a>
+			<div class="aui-title">打印机配置</div>
+		</header>
+	</div>
+
+	<div class="preview-card">
+		<div class="preview-title">测试订单小票预览</div>
+		<div class="preview-row"><span>订单号</span><span class="j_order_no"></span></div>
+		<div class="preview-row"><span>产品名称</span><span class="j_product_name"></span></div>
+		<div class="preview-row"><span>供应商名称</span><span class="j_supplier_name"></span></div>
+		<div class="preview-row"><span>数量</span><span class="j_quantity"></span></div>
+		<div class="preview-row"><span>单价</span><span class="j_price"></span></div>
+		<div class="preview-row"><span>金额</span><span class="j_amount"></span></div>
+		<div class="preview-row"><span>支付方式</span><span class="j_pay_type"></span></div>
+		<div class="preview-row"><span>支付时间</span><span class="j_pay_time"></span></div>
+		<div class="preview-row"><span>备注</span><span class="j_remark"></span></div>
+	</div>
+
+	<div class="preview-actions">
+		<div class="aui-btn aui-btn-outlined aui-btn-block aui-margin-b-10 j_refresh_btn">重新生成测试订单</div>
+		<div class="aui-btn aui-btn-info aui-btn-block j_print_btn">打印测试小票</div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var printData = {};
+
+	apiready = function () {
+		changeserverurl();
+		bindEvent();
+		generatePrintData();
+		renderPreview();
+	};
+
+	function bindEvent() {
+		$(".j_refresh_btn").on("click", function () {
+			generatePrintData();
+			renderPreview();
+		});
+		$(".j_print_btn").on("click", function () {
+			printCurrentReceipt();
+		});
+	}
+
+	function generatePrintData() {
+		var productNames = ["花生壳", "玉米粒", "稻谷", "大豆", "小麦麸"];
+		var supplierNames = ["亿禾合作社", "丰仓农业", "德润农产", "永丰供应站", "金穗农服"];
+		var payTypes = ["现金", "银行卡", "微信", "支付宝"];
+		var quantity = randomFloat(12, 95, 2);
+		var price = randomFloat(1.8, 6.5, 2);
+		var amount = (parseFloat(quantity) * parseFloat(price)).toFixed(2);
+		printData = {
+			orderNo: createOrderNo(),
+			productName: randomPick(productNames),
+			supplierName: randomPick(supplierNames),
+			quantity: quantity + " 吨",
+			price: price + " 元/吨",
+			amount: amount + " 元",
+			payType: randomPick(payTypes),
+			payTime: formatDateTime(new Date()),
+			remark: "蓝牙打印测试小票"
+		};
+	}
+
+	function renderPreview() {
+		$(".j_order_no").text(printData.orderNo || "");
+		$(".j_product_name").text(printData.productName || "");
+		$(".j_supplier_name").text(printData.supplierName || "");
+		$(".j_quantity").text(printData.quantity || "");
+		$(".j_price").text(printData.price || "");
+		$(".j_amount").text(printData.amount || "");
+		$(".j_pay_type").text(printData.payType || "");
+		$(".j_pay_time").text(printData.payTime || "");
+		$(".j_remark").text(printData.remark || "");
+	}
+
+	function printCurrentReceipt() {
+		if (!(window.AndroidBridge && window.AndroidBridge.printTestReceipt)) {
+			hint("当前环境不支持蓝牙打印");
+			return false;
+		}
+		var result = {};
+		try {
+			result = JSON.parse(window.AndroidBridge.printTestReceipt(JSON.stringify(printData)));
+		} catch (e) {
+			result = {
+				success: false,
+				message: "打印失败，请检查打印机连接"
+			};
+		}
+		hint(result.message || (result.success ? "打印成功" : "打印失败"));
+	}
+
+	function createOrderNo() {
+		var now = new Date();
+		return "DY" + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate()) + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds()) + randomInt(100, 999);
+	}
+
+	function formatDateTime(date) {
+		return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) + " " + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
+	}
+
+	function pad(num) {
+		return num < 10 ? "0" + num : "" + num;
+	}
+
+	function randomPick(list) {
+		return list[Math.floor(Math.random() * list.length)];
+	}
+
+	function randomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	function randomFloat(min, max, digits) {
+		return (Math.random() * (max - min) + min).toFixed(digits);
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>

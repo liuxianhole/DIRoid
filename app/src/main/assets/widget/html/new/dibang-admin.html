@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+	<meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+	<meta content="telephone=no" name="format-detection" />
+	<meta content="address=no" name="format-detection" />
+	<meta name="apple-mobile-web-app-capable" content="no" />
+	<link rel="apple-touch-icon-precomposed" href="../../image/logo.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-precomposed" />
+	<meta name="apple-touch-fullscreen" content="YES">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="shortcut icon" href="../../image/favicon.ico" />
+	<title>智慧农业收购管理系统-地磅配置</title>
+	<script type="text/javascript" src="../../script/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<script type="text/javascript" src="../../script/layer/layer.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css">
+</head>
+
+<body>
+	<div style="height:2.25rem;">
+		<header class="aui-bar aui-bar-nav aui-border-b">
+			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
+				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+			</a>
+			<div class="aui-title">地磅配置</div>
+			<a class="aui-pull-right aui-btn aui-btn-outlined j_save_btn">
+				<span class="aui-iconfont iconfont">&#xe605;</span> 保存
+			</a>
+		</header>
+	</div>
+
+	<div class="searchbox aui-bg-ff">
+		<div class="search-name aui-row aui-padded-md aui-border-b">
+			<div class="aui-col-xs-9"><input class="search-ipt" value="" placeholder="请输入地磅名称" /></div>
+			<div class="aui-col-xs-3 aui-text-right">
+				<div class="aui-btn aui-btn-info j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="list-box"></div>
+	<div class="aui-text-center aui-padded-15 aui-text-999 nodata" style="display:none;">暂无地磅配置数据</div>
+
+	<script id="itemTpl" type="text/html">
+		<div class="aui-padded-15 aui-bg-ff aui-border-b aui-border-t aui-margin-t-15">
+			<div class="zz-div-box aui-font-size-14">
+				<div class="aui-font-size-18">{{d.mark_name || ''}}</div>
+				<div class="row-right column-cnt zz-div-td1">
+					<label class="aui-margin-l-10 aui-text-info">
+						<input class="aui-radio j_default_radio" type="radio" name="default_dibang" value="{{d.self_id || ''}}" data-ip="{{d.di_bang_ip || ''}}" data-com="{{d.di_bang_com || ''}}" {{# if(d.is_default){ }}checked{{# } }}>
+						默认地磅
+					</label>
+				</div>
+			</div>
+			<div class="aui-margin-t-10 aui-font-size-12 zz-div-box">
+				<div class="zz-div-td1">
+					<div class="aui-text-66">连接 IP：{{d.di_bang_ip || ''}}</div>
+					<div class="aui-text-66">连接串口：{{d.di_bang_com || ''}}</div>
+					<div class="aui-text-66">所属分站：{{d.company_name || ''}}</div>
+				</div>
+				<div class="column-btm">
+					<div class="aui-text-66">设备序列号：{{d.device_serial || ''}}</div>
+					<div class="aui-text-66">通道号：{{d.channel_no || ''}}</div>
+				</div>
+			</div>
+		</div>
+	</script>
+</body>
+
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var keyword = "";
+	var currentConfig = {
+		diBangIp: "",
+		diBangCom: ""
+	};
+
+	apiready = function () {
+		changeserverurl();
+		currentConfig = getBridgeDiBangConfig();
+		bindEvent();
+		getinfo();
+	};
+
+	function bindEvent() {
+		$(".j_search_btn").on("click", function () {
+			keyword = $(".search-ipt").val();
+			getinfo();
+		});
+		$(".j_save_btn").on("click", function () {
+			saveDefaultDiBang();
+		});
+	}
+
+	function getBridgeDiBangConfig() {
+		if (!(window.AndroidBridge && window.AndroidBridge.getDiBangConfig)) {
+			return {
+				diBangIp: "192.168.1.100",
+				diBangCom: "COM0"
+			};
+		}
+		try {
+			var result = window.AndroidBridge.getDiBangConfig();
+			if (!result) {
+				return {
+					diBangIp: "192.168.1.100",
+					diBangCom: "COM0"
+				};
+			}
+			var parsed = JSON.parse(result);
+			return {
+				diBangIp: parsed.diBangIp || "192.168.1.100",
+				diBangCom: parsed.diBangCom || "COM0"
+			};
+		} catch (e) {
+			return {
+				diBangIp: "192.168.1.100",
+				diBangCom: "COM0"
+			};
+		}
+	}
+
+	function getinfo() {
+		var data = {
+			mark_name: keyword
+		};
+		zzappajax("post", hosturl + "app/weighbridge_list.html", data, function (ret) {
+			if (ret && ret.tokenerr == "true") {
+				hint("登录已失效，请重新登录");
+				return false;
+			}
+			if (ret && ret.err == "true") {
+				hint(ret.errtext || "获取地磅配置失败");
+				$(".list-box").html("");
+				$(".nodata").show();
+				return false;
+			}
+			var list = ret.listall || [];
+			var html = "";
+			$.each(list, function (index, item) {
+				item.is_default = (item.di_bang_ip || "") == (currentConfig.diBangIp || "") && (item.di_bang_com || "") == (currentConfig.diBangCom || "");
+				var tpl = $api.html($api.byId("itemTpl"));
+				laytpl(tpl).render(item, function (rendered) {
+					html += rendered;
+				});
+			});
+			$(".list-box").html(html);
+			$(".nodata").toggle(list.length === 0);
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			$(".list-box").html("");
+			$(".nodata").show();
+		});
+	}
+
+	function saveDefaultDiBang() {
+		var checked = $(".j_default_radio:checked");
+		if (checked.length === 0) {
+			hint("请选择默认地磅");
+			return false;
+		}
+		var diBangIp = checked.attr("data-ip") || "";
+		var diBangCom = checked.attr("data-com") || "";
+		if (!diBangIp || !diBangCom) {
+			hint("当前地磅配置不完整");
+			return false;
+		}
+		if (!(window.AndroidBridge && window.AndroidBridge.saveDiBangConfig)) {
+			hint("当前环境不支持保存地磅配置");
+			return false;
+		}
+		var saveResult = false;
+		try {
+			saveResult = window.AndroidBridge.saveDiBangConfig(diBangIp, diBangCom);
+		} catch (e) {
+			saveResult = false;
+		}
+		if (!saveResult) {
+			hint("保存失败");
+			return false;
+		}
+		currentConfig.diBangIp = diBangIp;
+		currentConfig.diBangCom = diBangCom;
+		hint("默认地磅已保存");
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>

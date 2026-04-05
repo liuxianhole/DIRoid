@@ -67,8 +67,9 @@
 						产品名称
 					</div>
 					<div class="aui-list-item-input">
-						<span class="aui-btn aui-btn-outlined selectproducts">请选择产品名称</span>
-						<input type="hidden" id="proself_id" value="">
+						<select id="proself_id" class="products_self_id">
+							<option value="">请选择产品名称</option>
+						</select>
 					</div>
 				</div>
 			</li>
@@ -150,7 +151,7 @@
 
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-					<div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">提交</div>
+					<div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">保存/打印</div>
 					<div class="aui-btn aui-btn-danger aui-margin-l-15 close-pop">取消</div>
 				</div>
 			</li>
@@ -171,6 +172,7 @@
 	var di_bang_ip = "";
 	var time_id = null;
 	var orderCode = "";
+	var LAST_PRODUCT_KEY = "new_bangdan_add_last_product";
 
 	apiready = function () {
 		changeserverurl();
@@ -179,14 +181,17 @@
 		initDiBangConfig();
 		get_di_bang_weight();
 		window.setInterval(read_di_bang_weight, 1000);
-		//选择地区
-		$(".selectproducts").on("click", function () {
-			openwindows("selectproduct", 'selectproduct.html')
-		})
 		$(".close-pop").on("click", function () {
 			api.closeWin({
 			});;
 		})
+		$("#proself_id").on("change", function () {
+			var self_id = $(this).val();
+			var name = $(this).find("option:selected").text();
+			if (self_id) {
+				saveLastSelectedProduct(self_id, name);
+			}
+		});
 		$(".tare_check").on("click", function () {
 			if ($(this).val() == "1") {
 				$(".tare").val(0);
@@ -341,8 +346,20 @@
 		});
 	}
 	function initDiBangConfig() {
-		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || "192.168.1.101";
-		uart = (api.pageParam && api.pageParam.di_bang_com) || "COM5";
+		var bridgeConfig = getBridgeDiBangConfig();
+		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || bridgeConfig.diBangIp || "192.168.1.101";
+		uart = (api.pageParam && api.pageParam.di_bang_com) || bridgeConfig.diBangCom || "COM5";
+	}
+	function getBridgeDiBangConfig() {
+		if (!(window.AndroidBridge && window.AndroidBridge.getDiBangConfig)) {
+			return {};
+		}
+		try {
+			var result = window.AndroidBridge.getDiBangConfig();
+			return result ? JSON.parse(result) : {};
+		} catch (e) {
+			return {};
+		}
 	}
 	function updateScaleStatus(text) {
 		$("#scale_status").text(text);
@@ -402,14 +419,59 @@
 		};
 	}
 	function selectpro(self_id, name) {
-		$(".selectproducts").html(name);
 		$("#proself_id").val(self_id);
+		saveLastSelectedProduct(self_id, name);
+	}
+	function keybackFun() {
+		return true;
+	}
+	function saveLastSelectedProduct(self_id, name) {
+		localStorage.setItem(LAST_PRODUCT_KEY, JSON.stringify({
+			self_id: self_id,
+			name: name
+		}));
+	}
+	function getLastSelectedProduct() {
+		var value = localStorage.getItem(LAST_PRODUCT_KEY);
+		if (!value) {
+			return null;
+		}
+		try {
+			return JSON.parse(value);
+		} catch (e) {
+			localStorage.removeItem(LAST_PRODUCT_KEY);
+			return null;
+		}
+	}
+	function restoreSelectedProduct(products) {
+		var lastProduct = getLastSelectedProduct();
+		if (!lastProduct || !lastProduct.self_id) {
+			return;
+		}
+		var matchedProduct = null;
+		$.each(products || [], function (index, item) {
+			if ((item.self_id || "").toString() == lastProduct.self_id.toString()) {
+				matchedProduct = item;
+				return false;
+			}
+		});
+		if (matchedProduct) {
+			$("#proself_id").val(matchedProduct.self_id || lastProduct.self_id);
+			return;
+		}
 	}
 	function ajaxinfo() {
 		var data = {}
 		zzappajax("post", hosturl + "app/product_select.html", data, function (ret) {
 			//alert(JSON.stringify(ret));
+			api.pageParam = api.pageParam || {};
 			api.pageParam['prolist'] = ret.products;
+			var productHtmls = "<option value=''>请选择产品名称</option>";
+			$.each(ret.products || [], function (index, item) {
+				productHtmls += "<option value='" + item.self_id + "'>" + item.name + "</option>";
+			});
+			$("#proself_id").html(productHtmls);
+			restoreSelectedProduct(ret.products || []);
 			var htmls = "";
 			$.each(ret.supplier_list, function (index, item) {
 				htmls += "<option value='" + item.self_id + "'>" + item.name + "</option>"

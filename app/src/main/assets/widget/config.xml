@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><widget id="A6050918506956" security="false" version="0.0.1"> 
-  <name>91智能机</name>  
+  <name>农产品智能收购系统</name>  
   <description/>  
-  <author email="kangxy@asto.com.cn" href="http://www.zz91.com">杭州阿思拓信息科技有限公司</author>  
+  <author email="junlin.quan@qq.com" href="http://www.liuxianhole.com">深圳留仙智能科技有限公司</author>  
   <content src="html/index.html"/>  
+  <preference name="diBangIp" value="192.168.1.100"/>  
+  <preference name="diBangCom" value="COM0"/>  
   <preference name="pageBounce" value="false"/>  
   <preference name="appBackground" value="rgba(0,0,0,0.0)"/>  
   <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>  
