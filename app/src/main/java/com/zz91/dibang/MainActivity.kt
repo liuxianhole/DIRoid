@@ -19,11 +19,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import com.zz91.dibang.databinding.ActivityMainBinding
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var fileChooserCallback: ValueCallback<Array<Uri>>? = null
+    private lateinit var webAppBridge: WebAppBridge
 
     private val fileChooserLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -42,6 +46,21 @@ class MainActivity : AppCompatActivity() {
             val results = WebChromeClient.FileChooserParams.parseResult(result.resultCode, data)
             callback.onReceiveValue(results)
         }
+
+    private val scanLauncher = registerForActivityResult(ScanContract()) { result ->
+        val payload = JSONObject()
+        if (result.contents.isNullOrBlank()) {
+            payload.put("ret", JSONObject().put("eventType", "cancel"))
+        } else {
+            payload.put(
+                "ret",
+                JSONObject()
+                    .put("eventType", "success")
+                    .put("content", result.contents)
+            )
+        }
+        dispatchScanResult(payload.toString())
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +86,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         WebView.setWebContentsDebuggingEnabled(true)
-        binding.webView.addJavascriptInterface(WebAppBridge(this, binding.webView), "AndroidBridge")
+        webAppBridge = WebAppBridge(this, binding.webView)
+        binding.webView.addJavascriptInterface(webAppBridge, "AndroidBridge")
         binding.webView.webViewClient = AppWebViewClient()
         binding.webView.webChromeClient = AppWebChromeClient()
         binding.webView.loadUrl(APP_ENTRY_URL)
@@ -99,6 +119,37 @@ class MainActivity : AppCompatActivity() {
         binding.webView.removeJavascriptInterface("AndroidBridge")
         binding.webView.destroy()
         super.onDestroy()
+    }
+
+    fun openScanner(): Boolean {
+        return try {
+            val options = ScanOptions().apply {
+                setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                setPrompt("请扫描订单二维码")
+                setBeepEnabled(false)
+                setCaptureActivity(PortraitCaptureActivity::class.java)
+                setOrientationLocked(true)
+                setBarcodeImageEnabled(false)
+            }
+            scanLauncher.launch(options)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    fun closeScanner() {
+        // zxing scanner activity closes itself after success/cancel.
+    }
+
+    private fun dispatchScanResult(payload: String) {
+        val escapedPayload = JSONObject.quote(payload)
+        binding.webView.post {
+            binding.webView.evaluateJavascript(
+                "(function(){if(window.__apiCompatHandleScanResult){window.__apiCompatHandleScanResult($escapedPayload);}})();",
+                null
+            )
+        }
     }
 
     private inner class AppWebViewClient : WebViewClient() {

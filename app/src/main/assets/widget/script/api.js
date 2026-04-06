@@ -1198,6 +1198,33 @@ var appVersion="1.0.0";
                     }
                 };
             }
+            if (name === 'FNScanner') {
+                return {
+                    open: function(opts, callback) {
+                        window.__fnScannerCallback = callback;
+                        if (window.AndroidBridge && window.AndroidBridge.openScanner) {
+                            var opened = false;
+                            try {
+                                opened = !!window.AndroidBridge.openScanner();
+                            } catch (err) {
+                                opened = false;
+                            }
+                            if (!opened && callback) {
+                                callback(null, { msg: '当前环境不支持扫码' });
+                            }
+                            return;
+                        }
+                        callback && callback(null, { msg: '当前环境不支持扫码' });
+                    },
+                    closeView: function() {
+                        if (window.AndroidBridge && window.AndroidBridge.closeScanner) {
+                            try {
+                                window.AndroidBridge.closeScanner();
+                            } catch (err) {}
+                        }
+                    }
+                };
+            }
             if (name === 'socketManager') {
                 return {
                     createSocket: function() {},
@@ -1269,6 +1296,31 @@ var appVersion="1.0.0";
             }
         });
         return true;
+    };
+
+    window.__apiCompatOnScanResult = function(payload) {
+        var callback = window.__fnScannerCallback;
+        if (typeof callback !== 'function') {
+            return false;
+        }
+        if (typeof payload === 'string') {
+            try {
+                payload = JSON.parse(payload);
+            } catch (err) {
+                payload = { err: { msg: '扫码结果解析失败' } };
+            }
+        }
+        callback(payload && payload.ret ? payload.ret : null, payload && payload.err ? payload.err : null);
+        window.__fnScannerCallback = null;
+        return true;
+    };
+
+    window.__apiCompatHandleScanResult = function(payload) {
+        var activeWindow = findDeepActiveWindow(topWindow);
+        if (activeWindow && activeWindow.__apiCompatOnScanResult) {
+            return activeWindow.__apiCompatOnScanResult(payload);
+        }
+        return false;
     };
 
     window.addEventListener('resize', function() {

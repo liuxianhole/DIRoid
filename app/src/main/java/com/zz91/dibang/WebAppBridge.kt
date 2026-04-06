@@ -50,6 +50,16 @@ class WebAppBridge(
     }
 
     @JavascriptInterface
+    fun openScanner(): Boolean {
+        return (activity as? MainActivity)?.openScanner() ?: false
+    }
+
+    @JavascriptInterface
+    fun closeScanner() {
+        (activity as? MainActivity)?.closeScanner()
+    }
+
+    @JavascriptInterface
     fun getDiBangConfig(): String {
         val defaultIp = readConfigPreference("diBangIp", "192.168.1.100")
         val defaultCom = readConfigPreference("diBangCom", "COM0")
