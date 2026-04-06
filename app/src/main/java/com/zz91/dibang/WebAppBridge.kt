@@ -15,6 +15,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import org.json.JSONObject
 import java.io.OutputStream
+import java.net.InetSocketAddress
+import java.net.Socket
 import java.util.UUID
 
 class WebAppBridge(
@@ -72,6 +74,40 @@ class WebAppBridge(
             .commit()
     }
 
+    @JavascriptInterface
+    fun getPrinterConfig(): String {
+        return getPrinterConfigObject().toString()
+    }
+
+    @JavascriptInterface
+    fun savePrinterConfig(
+        connectionType: String?,
+        bluetoothAddress: String?,
+        networkIp: String?,
+        networkPort: String?
+    ): Boolean {
+        val type = connectionType?.trim()?.lowercase().orEmpty()
+        val btAddress = bluetoothAddress?.trim().orEmpty()
+        val ip = networkIp?.trim().orEmpty()
+        val port = networkPort?.trim().orEmpty().toIntOrNull() ?: 9100
+        if (type != "bluetooth" && type != "network" && type != "wifi") {
+            return false
+        }
+        if (type == "bluetooth" && btAddress.isBlank()) {
+            return false
+        }
+        if ((type == "network" || type == "wifi") && ip.isBlank()) {
+            return false
+        }
+        return prefs.edit()
+            .putString("printerType", "Xprinter")
+            .putString("printerConnectionType", type)
+            .putString("printerBluetoothAddress", btAddress)
+            .putString("printerNetworkIp", ip)
+            .putInt("printerNetworkPort", port)
+            .commit()
+    }
+
     private fun readConfigPreference(name: String, fallback: String): String {
         return runCatching {
             val content = activity.assets.open("widget/config.xml").bufferedReader().use { it.readText() }
@@ -80,10 +116,37 @@ class WebAppBridge(
         }.getOrDefault(fallback)
     }
 
+    private fun getPrinterConfigObject(): JSONObject {
+        return JSONObject()
+            .put("printerType", "Xprinter")
+            .put("connectionType", prefs.getString("printerConnectionType", "bluetooth").orEmpty())
+            .put("bluetoothAddress", prefs.getString("printerBluetoothAddress", "").orEmpty())
+            .put("networkIp", prefs.getString("printerNetworkIp", "").orEmpty())
+            .put("networkPort", prefs.getInt("printerNetworkPort", 9100))
+    }
+
     @JavascriptInterface
     fun printTestReceipt(payloadJson: String?): String {
         val result = JSONObject()
         try {
+            val printerConfig = getPrinterConfigObject()
+            val connectionType = printerConfig.optString("connectionType", "bluetooth")
+            val payload = payloadJson?.takeIf { it.isNotBlank() }?.let { JSONObject(it) } ?: JSONObject()
+            val content = buildReceiptText(payload)
+            if (connectionType == "network" || connectionType == "wifi") {
+                val ip = printerConfig.optString("networkIp")
+                val port = printerConfig.optInt("networkPort", 9100)
+                if (ip.isBlank()) {
+                    return result.put("success", false).put("message", "请先配置WiFi打印机 IP").toString()
+                }
+                Socket().use { socket ->
+                    socket.connect(InetSocketAddress(ip, port), 5000)
+                    socket.outputStream.use { outputStream ->
+                        writeReceipt(outputStream, content)
+                    }
+                }
+                return result.put("success", true).put("message", "打印任务已发送到 $ip:$port").toString()
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 ActivityCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
             ) {
@@ -101,10 +164,10 @@ class WebAppBridge(
             if (!adapter.isEnabled) {
                 return result.put("success", false).put("message", "请先打开手机蓝牙").toString()
             }
-            val device = findPrinterDevice(adapter.bondedDevices)
-                ?: return result.put("success", false).put("message", "未找到已配对的芯烨蓝牙打印机").toString()
-            val payload = payloadJson?.takeIf { it.isNotBlank() }?.let { JSONObject(it) } ?: JSONObject()
-            val content = buildReceiptText(payload)
+            val device = findPrinterDevice(
+                adapter.bondedDevices,
+                printerConfig.optString("bluetoothAddress")
+            ) ?: return result.put("success", false).put("message", "未找到已配对的芯烨蓝牙打印机").toString()
             val socket = device.createRfcommSocketToServiceRecord(printerUuid)
             adapter.cancelDiscovery()
             socket.connect()
@@ -118,9 +181,16 @@ class WebAppBridge(
         }
     }
 
-    private fun findPrinterDevice(devices: Set<BluetoothDevice>): BluetoothDevice? {
+    private fun findPrinterDevice(devices: Set<BluetoothDevice>, bluetoothAddress: String): BluetoothDevice? {
         if (devices.isEmpty()) {
             return null
+        }
+        val normalizedAddress = bluetoothAddress.trim().uppercase()
+        if (normalizedAddress.isNotBlank()) {
+            val exact = devices.firstOrNull { it.address?.uppercase() == normalizedAddress }
+            if (exact != null) {
+                return exact
+            }
         }
         val preferred = devices.firstOrNull {
             val name = it.name?.lowercase().orEmpty()

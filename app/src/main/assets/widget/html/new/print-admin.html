@@ -23,6 +23,7 @@
 		body {
 			background: #f5f5f5;
 		}
+		.config-card,
 		.preview-card {
 			background: #fff;
 			margin: 0.75rem;
@@ -30,11 +31,45 @@
 			border-radius: 0.25rem;
 			box-shadow: 0 0.1rem 0.35rem rgba(0, 0, 0, 0.05);
 		}
+		.config-title,
 		.preview-title {
 			font-size: 0.9rem;
 			font-weight: bold;
-			text-align: center;
 			margin-bottom: 0.8rem;
+		}
+		.preview-title {
+			text-align: center;
+		}
+		.config-label {
+			font-size: 0.7rem;
+			color: #666;
+			margin-bottom: 0.35rem;
+		}
+		.config-input,
+		.config-select {
+			width: 100%;
+			height: 2.2rem;
+			line-height: 2.2rem;
+			border: 1px solid #e5e5e5;
+			border-radius: 0.25rem;
+			padding: 0 0.6rem;
+			font-size: 0.75rem;
+			background: #fff;
+			margin-bottom: 0.8rem;
+		}
+		.config-static {
+			height: 2.2rem;
+			line-height: 2.2rem;
+			border: 1px solid #e5e5e5;
+			border-radius: 0.25rem;
+			padding: 0 0.6rem;
+			font-size: 0.75rem;
+			background: #fafafa;
+			margin-bottom: 0.8rem;
+			color: #333;
+		}
+		.config-hidden {
+			display: none;
 		}
 		.preview-row {
 			display: flex;
@@ -61,6 +96,29 @@
 			</a>
 			<div class="aui-title">打印机配置</div>
 		</header>
+	</div>
+
+	<div class="config-card">
+		<div class="config-title">打印机配置</div>
+		<div class="config-label">打印机类型</div>
+		<div class="config-static">芯烨（Xprinter）</div>
+		<div class="config-label">连接方式</div>
+		<select class="config-select j_connection_type">
+			<option value="bluetooth">蓝牙打印机</option>
+			<option value="network">网络打印机</option>
+			<option value="wifi">WiFi打印机</option>
+		</select>
+		<div class="j_bluetooth_group">
+			<div class="config-label">蓝牙地址</div>
+			<input class="config-input j_bluetooth_address" placeholder="例如：00:11:22:33:44:55" type="text" />
+		</div>
+		<div class="j_network_group config-hidden">
+			<div class="config-label j_ip_label">网络打印机 IP</div>
+			<input class="config-input j_network_ip" placeholder="例如：192.168.1.200" type="text" />
+			<div class="config-label j_port_label">网络打印机端口</div>
+			<input class="config-input j_network_port" placeholder="默认 9100" type="number" />
+		</div>
+		<div class="aui-btn aui-btn-info aui-btn-block j_save_btn">保存打印机配置</div>
 	</div>
 
 	<div class="preview-card">
@@ -91,11 +149,18 @@
 	apiready = function () {
 		changeserverurl();
 		bindEvent();
+		loadPrinterConfig();
 		generatePrintData();
 		renderPreview();
 	};
 
 	function bindEvent() {
+		$(".j_connection_type").on("change", function () {
+			toggleConfigFields($(this).val());
+		});
+		$(".j_save_btn").on("click", function () {
+			savePrinterConfig();
+		});
 		$(".j_refresh_btn").on("click", function () {
 			generatePrintData();
 			renderPreview();
@@ -135,6 +200,65 @@
 		$(".j_pay_type").text(printData.payType || "");
 		$(".j_pay_time").text(printData.payTime || "");
 		$(".j_remark").text(printData.remark || "");
+	}
+
+	function loadPrinterConfig() {
+			var config = {
+				connectionType: "bluetooth",
+				bluetoothAddress: "",
+				networkIp: "",
+			networkPort: 9100
+		};
+		if (window.AndroidBridge && window.AndroidBridge.getPrinterConfig) {
+			try {
+				config = $.extend(config, JSON.parse(window.AndroidBridge.getPrinterConfig()));
+			} catch (e) {
+			}
+		}
+		$(".j_connection_type").val(config.connectionType || "bluetooth");
+		$(".j_bluetooth_address").val(config.bluetoothAddress || "");
+		$(".j_network_ip").val(config.networkIp || "");
+		$(".j_network_port").val(config.networkPort || 9100);
+		toggleConfigFields(config.connectionType || "bluetooth");
+	}
+
+	function toggleConfigFields(connectionType) {
+		if (connectionType == "network" || connectionType == "wifi") {
+			$(".j_ip_label").text(connectionType == "wifi" ? "WiFi打印机 IP" : "网络打印机 IP");
+			$(".j_port_label").text(connectionType == "wifi" ? "WiFi打印机端口" : "网络打印机端口");
+			$(".j_network_group").removeClass("config-hidden");
+			$(".j_bluetooth_group").addClass("config-hidden");
+			return;
+		}
+		$(".j_bluetooth_group").removeClass("config-hidden");
+		$(".j_network_group").addClass("config-hidden");
+	}
+
+	function savePrinterConfig() {
+		if (!(window.AndroidBridge && window.AndroidBridge.savePrinterConfig)) {
+			hint("当前环境不支持打印机配置保存");
+			return false;
+		}
+		var connectionType = $(".j_connection_type").val() || "bluetooth";
+		var bluetoothAddress = $.trim($(".j_bluetooth_address").val() || "");
+		var networkIp = $.trim($(".j_network_ip").val() || "");
+		var networkPort = $.trim($(".j_network_port").val() || "9100");
+		if (connectionType == "bluetooth" && !bluetoothAddress) {
+			hint("请输入蓝牙地址");
+			return false;
+		}
+		if ((connectionType == "network" || connectionType == "wifi") && !networkIp) {
+			hint(connectionType == "wifi" ? "请输入WiFi打印机 IP" : "请输入网络打印机 IP");
+			return false;
+		}
+		var success = false;
+		try {
+			success = !!window.AndroidBridge.savePrinterConfig(connectionType, bluetoothAddress, networkIp, networkPort);
+		} catch (e) {
+			success = false;
+		}
+		hint(success ? "打印机配置已保存" : "打印机配置保存失败");
+		return success;
 	}
 
 	function printCurrentReceipt() {
