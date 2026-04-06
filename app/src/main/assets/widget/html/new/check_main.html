@@ -44,28 +44,32 @@
 
 	<div class="searchbox aui-bg-ff">
 		<div class="search-name aui-row aui-padded-md aui-border-b">
-			<div class="aui-col-xs-6"><input class="search-ipt" value="" placeholder="请输入榜单编号、供应商名" /></div>
+			<div class="aui-col-xs-6"><input class="search-ipt" value="" placeholder="请输入供应商名" /></div>
 			<div class="aui-col-xs-3 aui-text-center">
-				<div class="aui-btn aui-btn-info search-action-btn j_scan_btn"><i class="iconfont aui-font-size-14">&#xe657;</i>扫码</div>
+				<div class="aui-btn aui-btn-info search-action-btn j_scan_btn"><i
+						class="iconfont aui-font-size-14">&#xe657;</i>扫码</div>
 			</div>
 			<div class="aui-col-xs-3 aui-text-right">
-				<div class="aui-btn aui-btn-info search-action-btn j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
+				<div class="aui-btn aui-btn-info search-action-btn j_search_btn"><i
+						class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
 			</div>
 		</div>
 		<div class="search-time aui-padded-md zz-div-box aui-border-b">
 			<div class="search-time-md">日期：</div>
-			<div class="zz-div-td1 timeipt-box"><input value="" class="timeipt" /><i class="iconfont timeipt-icon">&#xe65b;</i></div>
+			<div class="zz-div-td1 timeipt-box"><input value="" class="timeipt" /><i
+					class="iconfont timeipt-icon">&#xe65b;</i></div>
 			<div class="search-time-md">-</div>
-			<div class="zz-div-td1 timeipt-box"><input value="" class="timeipt" /><i class="iconfont timeipt-icon">&#xe65b;</i></div>
+			<div class="zz-div-td1 timeipt-box"><input value="" class="timeipt" /><i
+					class="iconfont timeipt-icon">&#xe65b;</i></div>
 		</div>
 	</div>
 
 	<div style="height: 15px;" class="aui-border-b"></div>
 	<div style="height: 2.2rem;">
 		<div class="aui-tab" id="tab">
-			<div class="aui-tab-item aui-active j_type" data-type="0">待审核</div>
-			<div class="aui-tab-item j_type" data-type="3">已审核未付</div>
-			<div class="aui-tab-item j_type" data-type="1">已审核已付</div>
+			<div class="aui-tab-item aui-active j_type" data-type="pending">待审核</div>
+			<div class="aui-tab-item j_type" data-type="nopay">已审核未付</div>
+			<div class="aui-tab-item j_type" data-type="pay">已审核已付</div>
 		</div>
 	</div>
 
@@ -75,36 +79,29 @@
 	<script id="itemTpl" type="text/html">
 		<div class="aui-card-list aui-border-b">
 			<div class="aui-card-list-header">
-				<div>{{d.supplier_name || d.contact || ''}}</div>
+				<div>{{d.suppliers_name || ''}}</div>
 				<div>{{d.audit_text || ''}}</div>
 			</div>
 			<div class="aui-card-list-content-padded aui-border-b aui-border-t zz-div-box aui-bg-default">
-				<div class="column-cnt font_bold cpname">{{d.product_name || ''}}</div>
+				<div class="column-cnt font_bold cpname">{{d.suppliers_name || ''}}</div>
 				<div class="zz-div-box zz-div-td1">
 					<div class="zz-div-td1">
-						<div><span class="aui-text-66">毛重：</span>{{d.gw || ''}}</div>
-						<div><span class="aui-text-66">皮重：</span>{{d.tare || ''}}</div>
+						<div><span class="aui-text-66">过磅总净重：</span>{{d.storage_weight || ''}}</div>
+						<div><span class="aui-text-66">总额：</span>{{d.total || ''}}</div>
 					</div>
 					<div class="zz-div-td1">
-						<div><span class="aui-text-66">扣杂：</span>{{d.clasp || ''}}</div>
-						<div><span class="aui-text-66">净重：</span>{{d.nw || ''}}</div>
+						<div>&nbsp;</div>
+						<div><span class="aui-text-66">时间：</span>{{d.gmt_created || ''}}</div>
 					</div>
 				</div>
 				<div class="column-cnt aui-text-center">
-					<a href="pic.html?storage_self_id={{d.self_id || ''}}" class="aui-text-default"><i class="iconfont">&#xe67b;</i><br />查看</a>
-				</div>
-			</div>
-			<div class="aui-card-list-content-padded aui-border-b zz-div-box aui-font-size-12">
-				<div class="zz-div-td1 aui-text-99">{{d.company_name || ''}}<br />{{d.gmt_created || ''}}</div>
-				<div class="zz-div-box cpmoery">
-					<div class="cpmoery-danjia column-cnt">单价：<span class="aui-text-danger aui-font-size-14">{{d.price || ''}}</span></div>
-					<div class="zz-div-td1 column-cnt">总额：<span class="aui-text-danger aui-font-size-14">{{d.total || ''}}</span></div>
+					<div class="aui-text-default">{{d.audit_text || ''}}</div>
 				</div>
 			</div>
 			<div class="aui-card-list-footer">
-				<div class="aui-text-99">榜单编号：{{d.code || d.iccode || ''}}</div>
+				<div class="aui-text-99">供应商编号：{{d.suppliers_self_id || ''}}</div>
 				<div>
-					<div class="aui-btn aui-btn-info j_settlebtn" data-code="{{d.code || d.iccode || ''}}">结算</div>
+					<div class="aui-btn aui-btn-info j_openbtn" data-sid="{{d.suppliers_self_id || ''}}">{{d.btn_text || '查看'}}</div>
 				</div>
 			</div>
 		</div>
@@ -116,7 +113,30 @@
 <script type="text/javascript" src="../../script/laytpl.js"></script>
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
-	var currentType = "0";
+	var currentType = "pending";
+	var typeConfig = {
+		pending: {
+			url: "app/pricing_nocheck_suppliers.html",
+			title: "待审核",
+			btnText: "审核",
+			isPay: 0,
+			placeholder: "请输入供应商名"
+		},
+		nopay: {
+			url: "app/pricing_check_nopay.html",
+			title: "已审核未付",
+			btnText: "查看",
+			isPay: 3,
+			placeholder: "请输入供应商名"
+		},
+		pay: {
+			url: "app/pricing_check_pay.html",
+			title: "已审核已付",
+			btnText: "查看",
+			isPay: 1,
+			placeholder: "请输入供应商名"
+		}
+	};
 
 	apiready = function () {
 		changeserverurl();
@@ -129,7 +149,8 @@
 		$(".j_type").on("click", function () {
 			$(".aui-active").removeClass("aui-active");
 			$(this).addClass("aui-active");
-			currentType = $(this).data("type").toString();
+			currentType = ($(this).data("type") || "pending").toString();
+			$(".search-ipt").attr("placeholder", typeConfig[currentType].placeholder);
 			getinfo();
 		});
 		$(".j_search_btn, .j_refresh_btn").on("click", function () {
@@ -138,9 +159,9 @@
 		$(".j_scan_btn").on("click", function () {
 			openScan();
 		});
-		$(".list-box").on("click", ".j_settlebtn", function () {
-			var code = $(this).data("code");
-			goToSettlementPage(code);
+		$(".list-box").on("click", ".j_openbtn", function () {
+			var suppliersSelfId = $(this).attr("data-sid");
+			openCheckWin(suppliersSelfId);
 		});
 	}
 
@@ -165,13 +186,17 @@
 				return;
 			}
 			if (ret.eventType == "success" || ret.content) {
-				var orderNo = $.trim(ret.content || ret.msg || "");
-				if (!orderNo) {
-					hint("未识别到订单号");
+				var code = $.trim(ret.content || ret.msg || "");
+				if (!code) {
+					hint("未识别到榜单编号");
 					return;
 				}
-				$(".search-ipt").val(orderNo);
-				goToSettlementPage(orderNo);
+				openWin("bangdan_jiesuan", "bangdan-jiesuan.html", {
+					code: code,
+					url: "../new/bangdan-jiesuan.html",
+					wintitle: "磅单结算",
+					bounces: false
+				});
 				if (FNScanner.closeView) {
 					FNScanner.closeView();
 				}
@@ -183,19 +208,20 @@
 		});
 	}
 
-	function goToSettlementPage(code) {
-		code = $.trim(code || "");
-		if (!code) {
-			hint("未识别到榜单编号");
+	function openCheckWin(suppliersSelfId) {
+		if (!suppliersSelfId) {
+			hint("未查询到供应商");
 			return false;
 		}
-		$(".search-ipt").val(code);
-		openWin("bangdan_jiesuan", "bangdan-jiesuan.html", {
-			code: code,
-			url: "../new/bangdan-jiesuan.html",
-			wintitle: "磅单结算",
-			bounces: false
-		});
+		var pageParam = {
+			wintitle: "付款审核",
+			type: "paycheck",
+			bounces: false,
+			suppliers_self_id: suppliersSelfId,
+			is_pay: typeConfig[currentType].isPay,
+			url: "../new/check_win.html"
+		};
+		openWin("paycheck", "check_win.html", pageParam);
 	}
 
 	function initDatePicker() {
@@ -220,43 +246,47 @@
 		});
 	}
 
-	function getAuditText(isPay) {
-		isPay = (isPay || "").toString();
-		if (isPay == "3") {
-			return "已审核未付";
+	function isInDateRange(item) {
+		var day = ((item.gmt_created || "").split(" "))[0] || "";
+		var timeMin = $.trim($(".timeipt").eq(0).val() || "");
+		var timeMax = $.trim($(".timeipt").eq(1).val() || "");
+		if (timeMin && day && day < timeMin) {
+			return false;
 		}
-		if (isPay == "1") {
-			return "已审核已付";
+		if (timeMax && day && day > timeMax) {
+			return false;
 		}
-		return "待审核";
+		return true;
 	}
 
 	function getinfo() {
+		var conf = typeConfig[currentType] || typeConfig.pending;
 		var keyword = $.trim($(".search-ipt").val() || "");
-		var data = {
+		zzappajax("get", hosturl + conf.url, {
 			page: 1,
-			is_pay: currentType
-		};
-		if (keyword) {
-			data.keyword = keyword;
-		}
-		if ($(".timeipt").eq(0).val()) {
-			data.time_min = $(".timeipt").eq(0).val();
-		}
-		if ($(".timeipt").eq(1).val()) {
-			data.time_max = $(".timeipt").eq(1).val();
-		}
-		zzappajax("get", hosturl + "app/audit_order_list.html", data, function (ret) {
+			supplier_name: keyword
+		}, function (ret) {
 			if (ret && ret.hasOwnProperty("err") && ret.err == "true") {
 				$(".list-box").html("");
 				$(".nodata").show();
 				hint(ret.errtext || "暂无相关数据");
 				return false;
 			}
-			var list = ret.listall || [];
+			var list = $.grep(ret.listall || [], function (item) {
+				var ok = isInDateRange(item);
+				if (!ok) {
+					return false;
+				}
+				if (!keyword) {
+					return true;
+				}
+				var name = item.suppliers_name || "";
+				return name.indexOf(keyword) > -1;
+			});
 			var html = "";
 			$.each(list, function (index, item) {
-				item.audit_text = getAuditText(item.is_pay);
+				item.audit_text = conf.title;
+				item.btn_text = conf.btnText;
 				var tpl = $api.html($api.byId("itemTpl"));
 				laytpl(tpl).render(item, function (rendered) {
 					html += rendered;

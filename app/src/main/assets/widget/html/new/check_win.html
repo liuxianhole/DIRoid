@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<style>
+		html,
+		body {
+			background: #f5f5f5;
+			height: 100%;
+		}
+
+		.page-wrap {
+			min-height: 100%;
+			padding-bottom: 7.25rem;
+			box-sizing: border-box;
+		}
+
+		.footer-panel {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: #fff;
+			border-top: 1px solid #e5e5e5;
+			box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+			padding: 0.75rem;
+			z-index: 10;
+		}
+
+		.total-line {
+			font-size: 0.8rem;
+			line-height: 1.6rem;
+			text-align: center;
+			margin-bottom: 0.5rem;
+			color: #333;
+		}
+
+		.total-line .allje {
+			color: #e54d42;
+			font-weight: bold;
+		}
+
+		.action-row {
+			display: flex;
+			gap: 0.6rem;
+		}
+
+		.action-item {
+			flex: 1;
+		}
+
+		.action-item .aui-btn {
+			width: 100%;
+			height: 2.35rem;
+			line-height: 2.35rem;
+			padding: 0;
+			font-size: 0.75rem;
+		}
+
+		.action-single .aui-btn {
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="page-wrap">
+		<div style="height:2.25rem;">
+			<header class="aui-bar aui-bar-nav aui-border-b">
+				<a class="aui-pull-left" href="javascript:void(0)" onclick="closeWin()">
+					<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+				</a>
+				<div class="aui-title">付款审核</div>
+			</header>
+		</div>
+	</div>
+
+	<div class="footer-panel" id="footer_panel">
+		<div class="total-line">合计金额：￥<span class="allje">0.00</span></div>
+		<div class="action-row pending-actions" style="display:none;">
+			<div class="action-item buy">
+				<div class="aui-btn aui-btn-info">审核通过（暂不支付）</div>
+			</div>
+			<div class="action-item blue">
+				<div class="aui-btn aui-btn-success">审核通过（现场支付）</div>
+			</div>
+		</div>
+		<div class="action-single checkpay" style="display:none;">
+			<div class="aui-btn aui-btn-success">确认已经支付</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	apiready = function () {
+		changeserverurl();
+		api.parseTapmode();
+		initLayout();
+		bindEvent();
+	};
+
+	function initLayout() {
+		var is_pay = api.pageParam.is_pay;
+		if (is_pay == 0) {
+			$(".pending-actions").show();
+		}
+		if (is_pay == 3) {
+			$(".checkpay").show();
+		}
+		var iosstatusheight = getisostatusheight();
+		var body_h = $api.offset($api.dom("body")).h;
+		var footer_h = $api.offset($api.byId("footer_panel")).h;
+		api.openFrame({
+			name: "check_show",
+			url: "../new/check_show.html",
+			bounces: true,
+			vScrollBarEnabled: false,
+			hScrollBarEnabled: false,
+			pageParam: api.pageParam,
+			rect: {
+				x: 0,
+				y: iosstatusheight + 46,
+				w: "auto",
+				h: body_h - footer_h - iosstatusheight - 46
+			},
+			bgColor: "#f5f5f5"
+		});
+	}
+
+	function bindEvent() {
+		$(".buy").on("click", function () {
+			if (confirm("你确定未支付并审核通过吗？")) {
+				api.execScript({
+					frameName: "check_show",
+					script: "nopaycheck()"
+				});
+			}
+		});
+		$(".blue").on("click", function () {
+			if (confirm("你确定已经支付并审核通过吗？")) {
+				api.execScript({
+					frameName: "check_show",
+					script: "paycheck()"
+				});
+			}
+		});
+		$(".checkpay").on("click", function () {
+			if (confirm("你确定已经支付吗？")) {
+				api.execScript({
+					frameName: "check_show",
+					script: "nopaysh()"
+				});
+			}
+		});
+	}
+
+	function gettotal(total) {
+		$(".allje").html(total);
+	}
+
+	function closeWin() {
+		api.closeWin();
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
+
+</html>
