@@ -37,7 +37,7 @@
 			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
 				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
 			</a>
-			<div class="aui-title">待定价磅单</div>
+			<div class="aui-title">扫码回皮</div>
 			<a class="aui-pull-right aui-btn aui-btn-outlined j_refresh_btn">
 				<span class="aui-iconfont iconfont">&#xe769;</span> 刷新
 			</a>
@@ -46,7 +46,7 @@
 
 	<div class="searchbox aui-bg-ff">
 		<div class="search-name aui-row aui-padded-md aui-border-b">
-			<div class="aui-col-xs-6"><input class="search-ipt" value="" placeholder="请输入磅单编号、供应商名" /></div>
+				<div class="aui-col-xs-6"><input class="search-ipt" value="" placeholder="请输入榜单编号、供应商名" /></div>
 			<div class="aui-col-xs-3 aui-text-center">
 				<div class="aui-btn aui-btn-info search-action-btn j_scan_btn"><i class="iconfont aui-font-size-14">&#xe657;</i>扫码</div>
 			</div>
@@ -66,10 +66,9 @@
 
 	<div style="height: 15px;" class="aui-border-b"></div>
 	<div style="height: 2.2rem;">
-		<div class="aui-tab" id="tab">
-			<div class="aui-tab-item aui-active j_type" data-type="pending">未定价</div>
-			<div class="aui-tab-item j_type" data-type="priced">已定价</div>
-		</div>
+			<div class="aui-tab" id="tab">
+				<div class="aui-tab-item aui-active j_type" data-type="tare_pending">待回皮</div>
+			</div>
 	</div>
 
 	<div class="list-box"></div>
@@ -79,7 +78,7 @@
 			<div class="aui-card-list aui-border-b">
 				<div class="aui-card-list-header">
 					<div>{{d.supplier_name || d.contact || ''}}</div>
-					<div>未定价</div>
+					<div>待回皮</div>
 				</div>
 				<div class="aui-card-list-content-padded aui-border-b aui-border-t zz-div-box aui-bg-default">
 					<div class="column-cnt font_bold cpname">{{d.product_name || ''}}</div>
@@ -105,47 +104,10 @@
 					</div>
 				</div>
 				<div class="aui-card-list-footer">
-					<div class="aui-text-99">磅单编号：{{d.iccode || ''}}</div>
+					<div class="aui-text-99">榜单编号：{{d.code || d.iccode || ''}}</div>
 					<div>
-						<div class="aui-btn aui-btn-outlined j_del" data-id="{{d.id || ''}}">删除</div>&nbsp;&nbsp;&nbsp;&nbsp;
-						<div class="aui-btn aui-btn-info j_djbtn" data-id="{{d.self_id || ''}}">定价</div>
+						<div class="aui-btn aui-btn-info j_tarebtn" data-code="{{d.code || d.iccode || ''}}">回皮</div>
 					</div>
-				</div>
-			</div>
-		</script>
-
-	<script id="pricedTpl" type="text/html">
-			<div class="aui-card-list aui-border-b">
-				<div class="aui-card-list-header">
-					<div>{{d.supplier_name || ''}}</div>
-					<div>{{d.status || '已定价'}}</div>
-				</div>
-				<div class="aui-card-list-content-padded aui-border-b aui-border-t zz-div-box aui-bg-default">
-					<div class="column-cnt font_bold cpname">{{d.product_name || ''}}</div>
-					<div class="zz-div-box zz-div-td1">
-						<div class="zz-div-td1">
-							<div><span class="aui-text-66">毛重：</span>{{d.gw || ''}}</div>
-							<div><span class="aui-text-66">皮重：</span>{{d.tare || d.tare_text || ''}}</div>
-						</div>
-						<div class="zz-div-td1">
-							<div>&nbsp;</div>
-							<div><span class="aui-text-66">净重：</span>{{d.nw || ''}}</div>
-						</div>
-					</div>
-					<div class="column-cnt aui-text-center">
-						<a href="pic.html?storage_self_id={{d.self_id || ''}}" class="aui-text-default"><i class="iconfont">&#xe67b;</i><br />查看</a>
-					</div>
-				</div>
-				<div class="aui-card-list-content-padded aui-border-b zz-div-box aui-font-size-12">
-					<div class="zz-div-td1 aui-text-99">{{d.company_name || ''}}<br />{{d.gmt_created || ''}}</div>
-					<div class="zz-div-box cpmoery">
-						<div class="cpmoery-danjia column-cnt">单价：<span class="aui-text-danger aui-font-size-14">{{d.price || ''}}</span></div>
-						<div class="zz-div-td1 column-cnt">总额：<span class="aui-text-danger aui-font-size-14">{{d.total || ''}}</span></div>
-					</div>
-				</div>
-				<div class="aui-card-list-footer">
-					<div class="aui-text-99">磅单编号：{{d.iccode || ''}}</div>
-					<div></div>
 				</div>
 			</div>
 		</script>
@@ -156,7 +118,7 @@
 <script type="text/javascript" src="../../script/laytpl.js"></script>
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
-	var currentType = "pending";
+	var currentType = "tare_pending";
 
 	apiready = function () {
 		changeserverurl();
@@ -177,6 +139,10 @@
 		});
 		$(".j_scan_btn").on("click", function () {
 			openScan();
+		});
+		$(".list-box").on("click", ".j_tarebtn", function () {
+			var code = $(this).data("code");
+			goToTarePage(code);
 		});
 	}
 
@@ -207,7 +173,7 @@
 					return;
 				}
 				$(".search-ipt").val(orderNo);
-				getinfo();
+				goToTarePage(orderNo);
 				if (FNScanner.closeView) {
 					FNScanner.closeView();
 				}
@@ -217,6 +183,16 @@
 				}
 			}
 		});
+	}
+
+	function goToTarePage(code) {
+		code = $.trim(code || "");
+		if (!code) {
+			hint("未识别到榜单编号");
+			return false;
+		}
+		$(".search-ipt").val(code);
+		window.location.href = "bangdan-pizhong.html?code=" + encodeURIComponent(code);
 	}
 
 	function initDatePicker() {
@@ -257,11 +233,7 @@
 		if ($(".timeipt").eq(1).val()) {
 			data.time_max = $(".timeipt").eq(1).val();
 		}
-		if (currentType === "pending") {
-			data.pricing = 1;
-		} else {
-			data.priced = 1;
-		}
+		data.priced = 1;
 		zzappajax("get", hosturl + "app/pricing.html", data, function (ret) {
 			if (ret && ret.hasOwnProperty("err") && ret.err == "true") {
 				$(".list-box").html("");
@@ -270,10 +242,14 @@
 				return false;
 			}
 			var list = ret.listall || [];
+			list = $.grep(list, function (item) {
+				var tare = parseFloat(item.tare || 0);
+				var tareCheck = (item.tare_check || "").toString();
+				return tare <= 0 && tareCheck != "1";
+			});
 			var html = "";
-			var tplId = currentType === "pending" ? "pendingTpl" : "pricedTpl";
 			$.each(list, function (index, item) {
-				var tpl = $api.html($api.byId(tplId));
+				var tpl = $api.html($api.byId("pendingTpl"));
 				laytpl(tpl).render(item, function (rendered) {
 					html += rendered;
 				});

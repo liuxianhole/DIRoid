@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>磅单回皮</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2.1.css">
+	<style>
+		body {}
+
+		.scale-status {
+			margin-top: 0.3rem;
+			font-size: 0.6rem;
+			color: #666;
+		}
+
+		.qr-box {
+			padding: 0.75rem 0;
+			text-align: center;
+			background: #fff;
+			margin-bottom: 0.5rem;
+		}
+
+		.order-code {
+			font-size: 0.8rem;
+			font-weight: bold;
+			color: #333;
+			margin-top: 0.25rem;
+		}
+
+		.qrcode-wrap {
+			width: 180px;
+			height: 180px;
+			margin: 0.5rem auto 0;
+		}
+
+		.qrcode-wrap canvas,
+		.qrcode-wrap table {
+			margin: 0 auto;
+		}
+
+		.percent-input-wrap {
+			position: relative;
+		}
+
+		.percent-input-wrap input {
+			padding-right: 1.2rem;
+		}
+
+		.percent-suffix {
+			position: absolute;
+			right: 0.35rem;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #666;
+			font-size: 0.75rem;
+		}
+
+		.order-input-wrap {
+			padding: 0 0.75rem;
+			margin-top: 0.5rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div style="height:2.25rem;">
+		<header class="aui-bar aui-bar-nav aui-border-b">
+			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript:history.back(-1)">
+				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
+			</a>
+			<div class="aui-title">磅单回皮</div>
+		</header>
+	</div>
+	<div class="qr-box">
+		<div>单号</div>
+		<div class="order-input-wrap">
+			<input type="text" class="aui-input order_code_input" placeholder="请输入订单号">
+		</div>
+		<div class="order-code" id="order_code_text"></div>
+		<div class="qrcode-wrap" id="order_qrcode"></div>
+	</div>
+	<div class="aui-content aui-margin-b-15">
+		<ul class="aui-list aui-form-list">
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						产品名称
+					</div>
+					<div class="aui-list-item-input">
+						<select id="proself_id" class="products_self_id">
+							<option value="">请选择产品名称</option>
+						</select>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						供应商
+					</div>
+					<div class="aui-list-item-input">
+						<select class="suppliers_self_id">
+						</select>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						毛重
+					</div>
+					<div class="aui-list-item-input">
+						<input type="number" class="gw" placeholder="请输入毛重">
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						皮重
+					</div>
+					<div class="aui-list-item-input">
+						<input type="number" class="tare" placeholder="正在读取皮重">
+						<div class="scale-status" id="scale_status">正在连接地磅读数...</div>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						扣杂
+					</div>
+					<div class="aui-list-item-input">
+						<input type="number" class="clasp" placeholder="" value="0">
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						扣点
+					</div>
+					<div class="aui-list-item-input">
+						<div class="percent-input-wrap">
+							<input type="number" class="point" placeholder="请输入扣点" value="0" min="0" max="100">
+							<span class="percent-suffix">%</span>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						单价
+					</div>
+					<div class="aui-list-item-input">
+						<input type="number" class="price" placeholder="输入单价">
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						金额
+					</div>
+					<div class="aui-list-item-input">
+						<input type="number" class="total" placeholder="自动计算金额" readonly>
+					</div>
+				</div>
+			</li>
+
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+					<div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">保存/打印</div>
+					<div class="aui-btn aui-btn-danger aui-margin-l-15 close-pop">取消</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/qrcode.js"></script>
+<script type="text/javascript" src="../../script/jquery.qrcode.js"></script>
+<script type="text/javascript">
+	var MAGIC_NUM = 0x494154;
+	var ws = null;
+	var uart = "";
+	var di_bang_ip = "";
+	var time_id = null;
+	var orderCode = "";
+	var tare_check = 1;
+
+	apiready = function () {
+		changeserverurl();
+		ajaxinfo();
+		initDiBangConfig();
+		bindEvents();
+		initOrderCode();
+		get_di_bang_weight();
+		window.setInterval(read_di_bang_weight, 1000);
+	};
+
+	function bindEvents() {
+		$(".close-pop").on("click", function () {
+			api.closeWin({});
+		});
+		$(".order_code_input").on("change blur", function () {
+			var code = $.trim($(this).val());
+			if (!code) {
+				return;
+			}
+			orderCode = code;
+			renderOrderCode(code);
+			fetchOrderInfo(code);
+		});
+		$(".gw, .tare, .clasp, .point, .price").on("input change", function () {
+			calcTotal();
+		});
+		$(".j_btn").on("click", function () {
+			submitWeight();
+		});
+	}
+
+	function initOrderCode() {
+		orderCode = (api.pageParam && api.pageParam.code) || getQueryParam("code") || "";
+		if (orderCode) {
+			$(".order_code_input").val(orderCode);
+			renderOrderCode(orderCode);
+			fetchOrderInfo(orderCode);
+			return;
+		}
+		renderOrderCode("");
+	}
+
+	function renderOrderCode(code) {
+		$("#order_code_text").text(code || "未输入订单号");
+		$("#order_qrcode").empty();
+		if (!code) {
+			return;
+		}
+		$("#order_qrcode").qrcode({
+			render: "canvas",
+			width: 180,
+			height: 180,
+			text: code
+		});
+	}
+
+	function getQueryParam(name) {
+		var search = window.location.search || "";
+		if (!search || search.indexOf("?") !== 0) {
+			return "";
+		}
+		var list = search.substring(1).split("&");
+		for (var i = 0; i < list.length; i++) {
+			var pair = list[i].split("=");
+			if (decodeURIComponent(pair[0] || "") == name) {
+				return decodeURIComponent(pair[1] || "");
+			}
+		}
+		return "";
+	}
+
+	function initDiBangConfig() {
+		var bridgeConfig = getBridgeDiBangConfig();
+		di_bang_ip = (api.pageParam && api.pageParam.di_bang_ip) || bridgeConfig.diBangIp || "192.168.0.109";
+		uart = (api.pageParam && api.pageParam.di_bang_com) || bridgeConfig.diBangCom || "COM1";
+	}
+
+	function getBridgeDiBangConfig() {
+		if (!(window.AndroidBridge && window.AndroidBridge.getDiBangConfig)) {
+			return {};
+		}
+		try {
+			var result = window.AndroidBridge.getDiBangConfig();
+			return result ? JSON.parse(result) : {};
+		} catch (e) {
+			return {};
+		}
+	}
+
+	function updateScaleStatus(text) {
+		$("#scale_status").text(text);
+	}
+
+	function read_di_bang_weight() {
+		if (ws && ws.readyState == 1) {
+			var msg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"read\",\"port\":\"" + uart + "\"}";
+			ws.send(msg);
+		}
+	}
+
+	function close_web_socket() {
+		if (ws) {
+			ws.close();
+		}
+	}
+
+	function get_di_bang_weight() {
+		if (!("WebSocket" in window)) {
+			updateScaleStatus("当前环境不支持 WebSocket，请手动输入皮重");
+			return;
+		}
+		try {
+			ws = new WebSocket("ws://" + di_bang_ip + ":20010");
+		} catch (e) {
+			updateScaleStatus("连接地磅失败，请手动输入皮重");
+			return;
+		}
+		ws.onopen = function () {
+			time_id && window.clearInterval(time_id);
+			var openMsg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"open\",\"port\":\"" + uart + "\"}";
+			ws.send(openMsg);
+			var readMsg = "{\"m\":" + MAGIC_NUM + ", \"fun\":\"read\",\"port\":\"" + uart + "\"}";
+			ws.send(readMsg);
+			updateScaleStatus("正在读取皮重");
+		};
+		ws.onmessage = function (evt) {
+			var data = evt.data;
+			if (data.indexOf("sorry") == -1) {
+				updateScaleStatus("收到皮重读数");
+			}
+			try {
+				var dct = eval('(' + data + ')');
+				if (dct.fun == "read" && dct.val !== undefined && dct.val !== null && dct.val !== "") {
+					$(".tare").val(dct.val);
+					updateScaleStatus("待读数稳定");
+					calcTotal();
+				}
+			} catch (e) {
+				updateScaleStatus("皮重解析失败，请手动输入");
+			}
+		};
+		ws.onclose = function () {
+			updateScaleStatus("地磅连接已断开，正在重连...");
+			window.clearInterval(time_id);
+			time_id = window.setInterval(get_di_bang_weight, 1000);
+		};
+		ws.onerror = function () {
+			updateScaleStatus("连接地磅失败，请手动输入皮重");
+		};
+	}
+
+		function calcTotal() {
+			var gw = parseFloat($(".gw").val()) || 0;
+			var tare = parseFloat($(".tare").val()) || 0;
+			var clasp = parseFloat($(".clasp").val()) || 0;
+			var point = parseFloat($(".point").val()) || 0;
+			var price = parseFloat($(".price").val()) || 0;
+			var weight = gw - tare - clasp;
+			if (weight < 0) {
+				$(".total").val("");
+				return;
+			}
+			var amount = (price * weight) - (weight * point * 0.01);
+			$(".total").val(amount >= 0 ? amount.toFixed(2) : "");
+		}
+
+	function fetchOrderInfo(code) {
+		zzappajax("get", hosturl + "app/storage_weight_detail.html", {
+			code: code
+		}, function (ret) {
+			if (!ret || ret.err == "true") {
+				layer.msg((ret && ret.errtext) || "未查询到订单信息");
+				return;
+			}
+			fillOrderInfo(ret.info || {});
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+		});
+	}
+
+	function fillOrderInfo(info) {
+		if (info.products_self_id) {
+			$("#proself_id").val(info.products_self_id);
+		}
+		if (info.suppliers_self_id) {
+			$(".suppliers_self_id").val(info.suppliers_self_id);
+		}
+		$(".gw").val(info.gw || "");
+		$(".clasp").val(info.clasp || 0);
+		$(".point").val(info.point || 0);
+		$(".price").val(info.price || "");
+		calcTotal();
+	}
+
+	function submitWeight() {
+		var code = $.trim($(".order_code_input").val() || "");
+		if (!code) {
+			layer.msg("请输入订单号！");
+			return false;
+		}
+		if ($("#proself_id").val() == "") {
+			layer.msg("请选择产品名称！");
+			return false;
+		}
+		if ($(".suppliers_self_id").val() == "") {
+			layer.msg("请选择供应商！");
+			return false;
+		}
+		if ($(".gw").val() == "" || isNaN($(".gw").val())) {
+			layer.msg("毛重必须是数字！");
+			return false;
+		}
+		if ($(".tare").val() == "" || isNaN($(".tare").val())) {
+			layer.msg("皮重必须是数字！");
+			return false;
+		}
+		if ($(".clasp").val() != "" && isNaN($(".clasp").val())) {
+			layer.msg("扣杂必须是数字！");
+			return false;
+		}
+		if ($(".point").val() != "" && isNaN($(".point").val())) {
+			layer.msg("扣点必须是数字！");
+			return false;
+		}
+		var pointValue = parseFloat($(".point").val() || 0);
+		if (pointValue < 0 || pointValue > 100) {
+			layer.msg("扣点必须在0到100之间！");
+			return false;
+		}
+		if ($(".price").val() == "" || isNaN($(".price").val())) {
+			layer.msg("价格必须是数字！");
+			return false;
+		}
+		calcTotal();
+		var data = {
+			code: code,
+			products_self_id: $("#proself_id").val(),
+			suppliers_self_id: $(".suppliers_self_id").val(),
+			gw: $(".gw").val(),
+			tare: $(".tare").val(),
+			clasp: $(".clasp").val() || 0,
+			point: $(".point").val() || 0,
+			price: $(".price").val(),
+			total: $(".total").val() || 0,
+			tare_check: tare_check,
+			is_pay: 1
+		};
+		api.showProgress({
+			title: '',
+			modal: false
+		});
+		zzappajax("post", hosturl + "app/storage_weight_save.html", data, function (ret) {
+			api.hideProgress();
+			if (ret && ret.err == "false") {
+				api.closeWin({});
+				return;
+			}
+			layer.msg((ret && ret.errtext) || "保存失败");
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+		});
+	}
+
+	function ajaxinfo() {
+		zzappajax("post", hosturl + "app/product_select.html", {}, function (ret) {
+			var productHtmls = "<option value=''>请选择产品名称</option>";
+			$.each(ret.products || [], function (index, item) {
+				productHtmls += "<option value='" + item.self_id + "'>" + item.name + "</option>";
+			});
+			$("#proself_id").html(productHtmls);
+			var htmls = "<option value=''>请选择供应商</option>";
+			$.each(ret.supplier_list || [], function (index, item) {
+				htmls += "<option value='" + item.self_id + "'>" + item.name + "</option>";
+			});
+			$(".suppliers_self_id").html(htmls);
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			api.hideProgress();
+		});
+	}
+
+	window.onbeforeunload = function () {
+		close_web_socket();
+	};
+</script>
+
+</html>

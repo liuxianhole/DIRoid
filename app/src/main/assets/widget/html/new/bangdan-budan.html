@@ -192,12 +192,17 @@
 				saveLastSelectedProduct(self_id, name);
 			}
 		});
+		$(".gw, .tare, .clasp, .price").on("input change", function () {
+			calcTotal();
+		});
 		$(".tare_check").on("click", function () {
 			if ($(this).val() == "1") {
 				$(".tare").val(0);
 				tare_check = 1;
+				calcTotal();
 			} else {
 				tare_check = 0
+				calcTotal();
 			}
 		})
 
@@ -404,6 +409,7 @@
 				if (dct.fun == "read" && dct.val !== undefined && dct.val !== null && dct.val !== "") {
 					$(".gw").val(dct.val);
 					updateScaleStatus("待读数稳定");
+					calcTotal();
 				}
 			} catch (e) {
 				updateScaleStatus("地磅读数解析失败，请手动输入毛重");
@@ -417,6 +423,20 @@
 		ws.onerror = function () {
 			updateScaleStatus("连接地磅失败，请手动输入毛重");
 		};
+	}
+	function calcTotal() {
+		var gw = parseFloat($(".gw").val()) || 0;
+		var tare = parseFloat($(".tare").val()) || 0;
+		var clasp = parseFloat($(".clasp").val()) || 0;
+		var price = parseFloat($(".price").val()) || 0;
+		var point = 0;
+		var weight = gw - tare - clasp;
+		if (weight < 0) {
+			$(".total").val("");
+			return;
+		}
+		var amount = (price * weight) - (weight * point * 0.01);
+		$(".total").val(amount >= 0 ? amount.toFixed(2) : "");
 	}
 	function selectpro(self_id, name) {
 		$("#proself_id").val(self_id);
