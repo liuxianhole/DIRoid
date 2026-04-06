@@ -19,6 +19,12 @@
 	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
 	<script type="text/javascript" src="../../script/layer/layer.js"></script>
 	<link rel="stylesheet" type="text/css" href="../../css/index.css">
+	<style>
+		.search-action-btn {
+			width: 100%;
+			padding: 0;
+		}
+	</style>
 </head>
 
 <body>
@@ -41,9 +47,12 @@
 			<div class="rkitem zz-div-td2 phtype">单价</div>
 		</div>
 		<div class="search-name aui-row aui-padded-md aui-border-b">
-			<div class="aui-col-xs-9"><input class="search-ipt" value="" placeholder="请输入供应商名" /></div>
+			<div class="aui-col-xs-6"><input class="search-ipt" value="" placeholder="请输入供应商名" /></div>
+			<div class="aui-col-xs-3 aui-text-center">
+				<div class="aui-btn aui-btn-info search-action-btn j_scan_btn"><i class="iconfont aui-font-size-14">&#xe657;</i>扫码</div>
+			</div>
 			<div class="aui-col-xs-3 aui-text-right">
-				<div class="aui-btn aui-btn-info j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
+				<div class="aui-btn aui-btn-info search-action-btn j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
 			</div>
 		</div>
 	</div>
@@ -114,6 +123,63 @@
 		});
 		$(".j_search_btn").on("click", function () {
 			getinfo();
+		});
+		$(".j_scan_btn").on("click", function () {
+			openScan();
+		});
+	}
+
+	function openScan() {
+		if (!(window.api && api.require)) {
+			hint("当前环境不支持扫码");
+			return false;
+		}
+		var FNScanner = api.require("FNScanner");
+		if (!FNScanner || !FNScanner.open) {
+			hint("当前设备未安装扫码模块");
+			return false;
+		}
+		FNScanner.open({
+			autorotation: true
+		}, function (ret, err) {
+			if (err) {
+				hint(err.msg || "扫码失败");
+				return;
+			}
+			if (!ret) {
+				return;
+			}
+			if (ret.eventType == "success" || ret.content) {
+				var code = $.trim(ret.content || ret.msg || "");
+				if (!code) {
+					hint("未识别到入库单编号");
+					return;
+				}
+				$(".search-ipt").val(code);
+				goToMingxiPage(code);
+				if (FNScanner.closeView) {
+					FNScanner.closeView();
+				}
+			} else if (ret.eventType == "cancel") {
+				if (FNScanner.closeView) {
+					FNScanner.closeView();
+				}
+			}
+		});
+	}
+
+	function goToMingxiPage(code) {
+		code = $.trim(code || "");
+		if (!code) {
+			hint("未识别到入库单编号");
+			return false;
+		}
+		$(".search-ipt").val(code);
+		openWin("bangdan_mingxi", "bangdan-mingxi.html", {
+			code: code,
+			url: "../new/bangdan-mingxi.html",
+			wintitle: "入库单明细",
+			bounces: false
 		});
 	}
 

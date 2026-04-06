@@ -4,162 +4,167 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<title>待审核</title>
-	<link rel="stylesheet" type="text/css" href="../../css/aui.css">
+	<title>已审核已付</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css">
 	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
 	<style>
 		html,
 		body {
-			background: #f2f2f2
+			background: #f2f2f2;
 		}
 	</style>
 </head>
 
 <body>
-	<div class="bdlist-box">
-		<div class="aui-toast" id="loading">
-			<div class="aui-toast-loading"></div>
-			<div class="aui-toast-content">加载中</div>
+	<div class="list-box"></div>
+	<div class="aui-text-center aui-padded-15 aui-text-999 nodata" style="display:none;">暂无已审核已付订单</div>
+
+	<script id="itemTpl" type="text/html">
+		<div class="aui-card-list aui-border-b">
+			<div class="aui-card-list-header">
+				<div>{{d.supplier_name || d.contact || ''}}</div>
+				<div>已审核已付</div>
+			</div>
+			<div class="aui-card-list-content-padded aui-border-b aui-border-t zz-div-box aui-bg-default">
+				<div class="column-cnt font_bold cpname">{{d.product_name || ''}}</div>
+				<div class="zz-div-box zz-div-td1">
+					<div class="zz-div-td1">
+						<div><span class="aui-text-66">毛重：</span>{{d.gw || ''}}</div>
+						<div><span class="aui-text-66">皮重：</span>{{d.tare || ''}}</div>
+					</div>
+					<div class="zz-div-td1">
+						<div><span class="aui-text-66">扣杂：</span>{{d.clasp || ''}}</div>
+						<div><span class="aui-text-66">净重：</span>{{d.nw || ''}}</div>
+					</div>
+				</div>
+				<div class="column-cnt aui-text-center">
+					<a href="pic.html?storage_self_id={{d.self_id || ''}}" class="aui-text-default"><i class="iconfont">&#xe67b;</i><br />查看</a>
+				</div>
+			</div>
+			<div class="aui-card-list-content-padded aui-border-b zz-div-box aui-font-size-12">
+				<div class="zz-div-td1 aui-text-99">{{d.company_name || ''}}<br />{{d.gmt_created || ''}}</div>
+				<div class="zz-div-box cpmoery">
+					<div class="cpmoery-danjia column-cnt">单价：<span class="aui-text-danger aui-font-size-14">{{d.price || ''}}</span></div>
+					<div class="zz-div-td1 column-cnt">总额：<span class="aui-text-danger aui-font-size-14">{{d.total || ''}}</span></div>
+				</div>
+			</div>
+			<div class="aui-card-list-footer">
+				<div class="aui-text-99">榜单编号：{{d.code || d.iccode || ''}}</div>
+				<div><div class="aui-btn aui-btn-info j_settle_btn" data-code="{{d.code || d.iccode || ''}}">结算</div></div>
+			</div>
 		</div>
-	</div>
-	<script id="bdlist" type="text/html">
-	<div class="aui-content">
-        <ul class="aui-list-view">
-            <li class="aui-list-view-cell" tapmode >
-                <a class="aui-arrow-right btn-dj" suppliers_self_id="{{d.suppliers_self_id}}">
-                    {{d.suppliers_name}}
-                    <p>过磅总净重：{{d.storage_weight}}</p>
-                
-	                <p class="aui-flex-col" style="padding-top: 10px">
-			        	<div class="aui-flex-item-6">
-			                <div class="aui-text-info">
-			                    总额：￥{{d.total}}
-			                </div>
-			            </div>
-			            <div class="aui-flex-item-6 aui-text-right aui-text-default">
-			            	{{d.gmt_created}}
-			            </div>
-			        </p>
-		        </a>
-            </li>
-        </ul>
-    </div>
 	</script>
+</body>
 
-	<div class="nodata">暂无待审核磅单</div>
-	<div class='la_more'>上拉获取更多信息</div>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/layer/layer.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+	var keyword = "";
+	var timeMin = "";
+	var timeMax = "";
+	var isPayValue = 1;
 
-	<body>
-		<script type="text/javascript" src="../../script/api.js"></script>
-		<script type="text/javascript" src="../../script/jquery.js"></script>
-		<script type="text/javascript" src="../../script/layer/layer.js"></script>
-		<script type="text/javascript" src="../../script/laytpl.js"></script>
-		<script type="text/javascript" src="../../script/common.js"></script>
-		<script type="text/javascript">
-			var page = 1;
-			var pagecount = 0;
-			var bdinfo = []; //保存数据页面传值
-			var iccode = "";
-			var sid = 0;
-			apiready = function () {
-				changeserverurl()
-				domEvent();
-				getinfo();
-				api.addEventListener({
-					name: 'scrolltobottom'
-				}, function (ret, err) {
-					if (page >= pagecount) {
-						//$(".la_more").html("全部加载完毕");
-						//return false;
-					}
-					$(".la_more").html("加载更多中...");
-					setTimeout(function () {
-						page += 1;
-						getinfo();
-					}, 10)
-				});
-				//页面刷新
-				api.setRefreshHeaderInfo({
-					visible: true,
-					// bgColor: '#F2F2F2',
-					bgColor: '#E6E6E6',
-					textColor: '#000000',
-					textDown: '下拉刷新',
-					textUp: '释放刷新',
-				}, function (ret, err) {
+	apiready = function () {
+		changeserverurl();
+		bindEvent();
+		getinfo();
+		api.setRefreshHeaderInfo({
+			visible: true,
+			bgColor: "#E6E6E6",
+			textColor: "#000000",
+			textDown: "下拉刷新",
+			textUp: "释放刷新"
+		}, function () {
+			getinfo();
+			api.toast({
+				msg: "数据已是最新！",
+				duration: 3000,
+				location: "bottom"
+			});
+		});
+	};
 
-					getinfo();
-					api.toast({
-						msg: '数据已是最新！',
-						duration: 3000,
-						location: 'bottom'
-					});
-				});
-			};
-			var domEvent = function () {
-				//立即定价
-				$(".bdlist-box").on("click", ".btn-dj", function () {
-					//alert($(this).attr("suppliers_self_id"))
-					var pageParam = {
-						wintitle: "付款审核",
-						type: "paycheck",
-						bounces: false,
-						suppliers_self_id: $(this).attr("suppliers_self_id"),
-						is_pay: 1
-					};
-					openWin("paycheck", "../bangdan/check_win.html", pageParam);
-				})
-
+	function bindEvent() {
+		$(".list-box").on("click", ".j_settle_btn", function () {
+			var code = $.trim($(this).attr("data-code") || "");
+			if (!code) {
+				hint("未查询到榜单编号");
+				return false;
 			}
-			var getinfo = function () {
-				var data = {
-					page: page
-				};
-				zzappajax("get", hosturl + "app/pricing_check_pay.html", data, function (ret) {
-					//alert(JSON.stringify(ret))
-					if (ret.hasOwnProperty("err")) {
-						if (ret.err == "true") {
-							layer.msg(ret.errtext);
-							api.hideProgress();
-							api.refreshHeaderLoadDone();
-							loadinghide();
-							return false;
-						}
-					}
-					var pageHtml_dj = '';
-					$.each(ret.listall, function (index, item) {
-						var getTpl = $api.html($api.byId("bdlist"));
-						laytpl(getTpl).render(item, function (html) {
-							pageHtml_dj = pageHtml_dj + html;
-						});
-					})
-					if (page == 1) {
-						if (pageHtml_dj == "") {
-							$(".nodata").show();
-							$(".la_more").hide();
-						} else {
-							$(".nodata").hide();
-							$(".la_more").show();
-						}
-						$(".bdlist-box").html(pageHtml_dj);
-					} else {
-						$(".bdlist-box").append(pageHtml_dj);
-					}
+			openWin("bangdan_jiesuan", "bangdan-jiesuan.html", {
+				code: code,
+				url: "../new/bangdan-jiesuan.html",
+				wintitle: "磅单结算",
+				bounces: false
+			});
+		});
+	}
 
-					loadinghide();
-				}, function (err) {
-					if (err) {
-						saveerrlog(err.body);
-					}
-					canAjax = true;
-					api.hideProgress();
-					api.refreshHeaderLoadDone();
-					loadinghide();
-					return false;
-				})
+	function setFilterData(newKeyword, newTimeMin, newTimeMax) {
+		keyword = $.trim(newKeyword || "");
+		timeMin = $.trim(newTimeMin || "");
+		timeMax = $.trim(newTimeMax || "");
+		getinfo();
+	}
+
+	function isInDateRange(item) {
+		var day = ((item.gmt_created || "").split(" "))[0] || "";
+		if (timeMin && day && day < timeMin) {
+			return false;
+		}
+		if (timeMax && day && day > timeMax) {
+			return false;
+		}
+		return true;
+	}
+
+	function getinfo() {
+		var data = {
+			page: 1,
+			priced: 1
+		};
+		if (keyword) {
+			data.iccode = keyword;
+		}
+		if (timeMin) {
+			data.gmt_start = timeMin;
+		}
+		if (timeMax) {
+			data.gmt_end = timeMax;
+		}
+		zzappajax("get", hosturl + "app/pricing.html", data, function (ret) {
+			if (ret && ret.hasOwnProperty("err") && ret.err == "true") {
+				$(".list-box").html("");
+				$(".nodata").show();
+				return false;
 			}
-		</script>
-		<script type="text/javascript" src="../../script/servercomm.js"></script>
+			var list = $.grep(ret.listall || [], function (item) {
+				var itemIsPay = (item.is_pay || "").toString();
+				var tareCheck = (item.tare_check || "").toString();
+				return tareCheck == "1" && itemIsPay == String(isPayValue) && isInDateRange(item);
+			});
+			var html = "";
+			$.each(list, function (index, item) {
+				var tpl = $api.html($api.byId("itemTpl"));
+				laytpl(tpl).render(item, function (rendered) {
+					html += rendered;
+				});
+			});
+			$(".list-box").html(html);
+			$(".nodata").toggle(list.length === 0);
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			$(".list-box").html("");
+			$(".nodata").show();
+		});
+	}
+</script>
+<script type="text/javascript" src="../../script/servercomm.js"></script>
 
 </html>

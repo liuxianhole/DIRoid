@@ -13,32 +13,18 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<link rel="shortcut icon" href="../../image/favicon.ico" />
-	<title>审核管理</title>
+	<title>智慧农业收购管理系统</title>
 	<script type="text/javascript" src="../../script/jquery.js"></script>
 	<link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
 	<script type="text/javascript" src="../../script/layer/layer.js"></script>
-	<link href="../../css/mobiscroll.custom-2.6.2.min.css" rel="stylesheet"
-		type="text/css" />
-	<script src="../../script/mobiscroll.custom-2.6.2.min.js"
-		type="text/javascript"></script>
+	<link href="../../css/mobiscroll.custom-2.6.2.min.css" rel="stylesheet" type="text/css" />
+	<script src="../../script/mobiscroll.custom-2.6.2.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="../../css/index.css">
 	<style>
-		body {
-			background: #f5f5f5;
-		}
-
-		.searchbox {
-			background: #fff;
-		}
-
-		.tab-wrap {
-			height: 2.2rem;
-			background: #fff;
-		}
-
-		.aui-tab-item {
-			font-size: 0.75rem;
+		.search-action-btn {
+			width: 100%;
+			padding: 0;
 		}
 	</style>
 </head>
@@ -46,126 +32,244 @@
 <body>
 	<div style="height:2.25rem;">
 		<header class="aui-bar aui-bar-nav aui-border-b">
-			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript:history.back(-1)">
+			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
 				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
 			</a>
-			<div class="aui-title">审核管理</div>
+			<div class="aui-title">榜单审核</div>
+			<a class="aui-pull-right aui-btn aui-btn-outlined j_refresh_btn">
+				<span class="aui-iconfont iconfont">&#xe769;</span> 刷新
+			</a>
 		</header>
 	</div>
 
 	<div class="searchbox aui-bg-ff">
 		<div class="search-name aui-row aui-padded-md aui-border-b">
-			<div class="aui-col-xs-9"><input class="search-ipt" value="" placeholder="请输入供应商名、单号" /></div>
+			<div class="aui-col-xs-6"><input class="search-ipt" value="" placeholder="请输入榜单编号、供应商名" /></div>
+			<div class="aui-col-xs-3 aui-text-center">
+				<div class="aui-btn aui-btn-info search-action-btn j_scan_btn"><i class="iconfont aui-font-size-14">&#xe657;</i>扫码</div>
+			</div>
 			<div class="aui-col-xs-3 aui-text-right">
-				<div class="aui-btn aui-btn-info j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
+				<div class="aui-btn aui-btn-info search-action-btn j_search_btn"><i class="iconfont aui-font-size-14">&#xe633;</i>搜索</div>
 			</div>
 		</div>
 		<div class="search-time aui-padded-md zz-div-box aui-border-b">
 			<div class="search-time-md">日期：</div>
-			<div class="zz-div-td1 timeipt-box"><input type="" name="" value="" class="timeipt" /><i
-					class="iconfont timeipt-icon">&#xe65b;</i></div>
+			<div class="zz-div-td1 timeipt-box"><input value="" class="timeipt" /><i class="iconfont timeipt-icon">&#xe65b;</i></div>
 			<div class="search-time-md">-</div>
-			<div class="zz-div-td1 timeipt-box"><input type="" name="" value="" class="timeipt" /><i
-					class="iconfont timeipt-icon">&#xe65b;</i></div>
+			<div class="zz-div-td1 timeipt-box"><input value="" class="timeipt" /><i class="iconfont timeipt-icon">&#xe65b;</i></div>
 		</div>
 	</div>
 
 	<div style="height: 15px;" class="aui-border-b"></div>
-	<div class="tab-wrap">
+	<div style="height: 2.2rem;">
 		<div class="aui-tab" id="tab">
-			<div class="aui-tab-item aui-active j_type" data-index="0">未审核</div>
-			<div class="aui-tab-item j_type" data-index="1">已审核未付</div>
-			<div class="aui-tab-item j_type" data-index="2">已审核已付</div>
+			<div class="aui-tab-item aui-active j_type" data-type="0">待审核</div>
+			<div class="aui-tab-item j_type" data-type="3">已审核未付</div>
+			<div class="aui-tab-item j_type" data-type="1">已审核已付</div>
 		</div>
 	</div>
+
+	<div class="list-box"></div>
+	<div class="aui-text-center aui-padded-15 aui-text-999 nodata" style="display:none;">暂无相关数据</div>
+
+	<script id="itemTpl" type="text/html">
+		<div class="aui-card-list aui-border-b">
+			<div class="aui-card-list-header">
+				<div>{{d.supplier_name || d.contact || ''}}</div>
+				<div>{{d.audit_text || ''}}</div>
+			</div>
+			<div class="aui-card-list-content-padded aui-border-b aui-border-t zz-div-box aui-bg-default">
+				<div class="column-cnt font_bold cpname">{{d.product_name || ''}}</div>
+				<div class="zz-div-box zz-div-td1">
+					<div class="zz-div-td1">
+						<div><span class="aui-text-66">毛重：</span>{{d.gw || ''}}</div>
+						<div><span class="aui-text-66">皮重：</span>{{d.tare || ''}}</div>
+					</div>
+					<div class="zz-div-td1">
+						<div><span class="aui-text-66">扣杂：</span>{{d.clasp || ''}}</div>
+						<div><span class="aui-text-66">净重：</span>{{d.nw || ''}}</div>
+					</div>
+				</div>
+				<div class="column-cnt aui-text-center">
+					<a href="pic.html?storage_self_id={{d.self_id || ''}}" class="aui-text-default"><i class="iconfont">&#xe67b;</i><br />查看</a>
+				</div>
+			</div>
+			<div class="aui-card-list-content-padded aui-border-b zz-div-box aui-font-size-12">
+				<div class="zz-div-td1 aui-text-99">{{d.company_name || ''}}<br />{{d.gmt_created || ''}}</div>
+				<div class="zz-div-box cpmoery">
+					<div class="cpmoery-danjia column-cnt">单价：<span class="aui-text-danger aui-font-size-14">{{d.price || ''}}</span></div>
+					<div class="zz-div-td1 column-cnt">总额：<span class="aui-text-danger aui-font-size-14">{{d.total || ''}}</span></div>
+				</div>
+			</div>
+			<div class="aui-card-list-footer">
+				<div class="aui-text-99">榜单编号：{{d.code || d.iccode || ''}}</div>
+				<div>
+					<div class="aui-btn aui-btn-info j_settlebtn" data-code="{{d.code || d.iccode || ''}}">结算</div>
+				</div>
+			</div>
+		</div>
+	</script>
 </body>
 
 </html>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/laytpl.js"></script>
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
+	var currentType = "0";
+
 	apiready = function () {
-		initDatePicker();
-		openGroup();
+		changeserverurl();
 		bindEvent();
+		initDatePicker();
+		getinfo();
 	};
 
-	function openGroup() {
-		var headerHeight = $("header").outerHeight() || 0;
-		var searchHeight = $(".searchbox").outerHeight() || 0;
-		var topSpaceHeight = 15;
-		var tabHeight = $(".tab-wrap").outerHeight() || 0;
-		var iosstatusheight = getisostatusheight();
-		api.openFrameGroup({
-			preload: 1,
-			name: 'check_group',
-			rect: {
-				x: 0,
-				y: headerHeight + searchHeight + topSpaceHeight + tabHeight + iosstatusheight,
-				w: 'auto',
-				h: 'auto'
-			},
-			frames: [{
-				name: 'nocheck',
-				url: 'check.html',
-				bgColor: '#f2f2f2'
-			}, {
-				name: 'checknopay',
-				url: 'check_nopay.html',
-				bgColor: '#f2f2f2'
-			}, {
-				name: 'checkpay',
-				url: 'check_pay.html',
-				bgColor: '#f2f2f2'
-			}]
+	function bindEvent() {
+		$(".j_type").on("click", function () {
+			$(".aui-active").removeClass("aui-active");
+			$(this).addClass("aui-active");
+			currentType = $(this).data("type").toString();
+			getinfo();
+		});
+		$(".j_search_btn, .j_refresh_btn").on("click", function () {
+			getinfo();
+		});
+		$(".j_scan_btn").on("click", function () {
+			openScan();
+		});
+		$(".list-box").on("click", ".j_settlebtn", function () {
+			var code = $(this).data("code");
+			goToSettlementPage(code);
+		});
+	}
+
+	function openScan() {
+		if (!(window.api && api.require)) {
+			hint("当前环境不支持扫码");
+			return false;
+		}
+		var FNScanner = api.require("FNScanner");
+		if (!FNScanner || !FNScanner.open) {
+			hint("当前设备未安装扫码模块");
+			return false;
+		}
+		FNScanner.open({
+			autorotation: true
 		}, function (ret, err) {
-			if (ret) {
-				switchTab(ret.index);
+			if (err) {
+				hint(err.msg || "扫码失败");
+				return;
+			}
+			if (!ret) {
+				return;
+			}
+			if (ret.eventType == "success" || ret.content) {
+				var orderNo = $.trim(ret.content || ret.msg || "");
+				if (!orderNo) {
+					hint("未识别到订单号");
+					return;
+				}
+				$(".search-ipt").val(orderNo);
+				goToSettlementPage(orderNo);
+				if (FNScanner.closeView) {
+					FNScanner.closeView();
+				}
+			} else if (ret.eventType == "cancel") {
+				if (FNScanner.closeView) {
+					FNScanner.closeView();
+				}
 			}
 		});
 	}
 
-	function bindEvent() {
-		$(".j_search_btn").on("click", function () {
+	function goToSettlementPage(code) {
+		code = $.trim(code || "");
+		if (!code) {
+			hint("未识别到榜单编号");
 			return false;
+		}
+		$(".search-ipt").val(code);
+		openWin("bangdan_jiesuan", "bangdan-jiesuan.html", {
+			code: code,
+			url: "../new/bangdan-jiesuan.html",
+			wintitle: "磅单结算",
+			bounces: false
 		});
-		$(".j_type").on("click", function () {
-			var index = parseInt($(this).attr("data-index"), 10) || 0;
-			switchTab(index);
-			api.setFrameGroupIndex({
-				name: 'check_group',
-				index: index,
-				scroll: true,
-				showProgress: false
-			});
-		});
-	}
-
-	function switchTab(index) {
-		$(".aui-tab-item").removeClass("aui-active");
-		$(".j_type").eq(index).addClass("aui-active");
 	}
 
 	function initDatePicker() {
 		var currYear = (new Date()).getFullYear();
 		$(".timeipt").mobiscroll({
-			preset: 'date',
-			theme: 'android-ics light',
-			display: 'modal',
-			mode: 'scroller',
-			dateFormat: 'yy-mm-dd',
-			setText: '确定',
-			cancelText: '取消',
-			dateOrder: 'yymmdd',
-			yearText: '年',
-			monthText: '月',
-			dayText: '日',
+			preset: "date",
+			theme: "android-ics light",
+			display: "modal",
+			mode: "scroller",
+			dateFormat: "yy-mm-dd",
+			setText: "确定",
+			cancelText: "取消",
+			dateOrder: "yymmdd",
+			yearText: "年",
+			monthText: "月",
+			dayText: "日",
 			endYear: currYear + 2,
 			lang: "zh",
 			showNow: true,
 			minDate: new Date(),
-			nowText: '今天'
+			nowText: "今天"
+		});
+	}
+
+	function getAuditText(isPay) {
+		isPay = (isPay || "").toString();
+		if (isPay == "3") {
+			return "已审核未付";
+		}
+		if (isPay == "1") {
+			return "已审核已付";
+		}
+		return "待审核";
+	}
+
+	function getinfo() {
+		var keyword = $.trim($(".search-ipt").val() || "");
+		var data = {
+			page: 1,
+			is_pay: currentType
+		};
+		if (keyword) {
+			data.keyword = keyword;
+		}
+		if ($(".timeipt").eq(0).val()) {
+			data.time_min = $(".timeipt").eq(0).val();
+		}
+		if ($(".timeipt").eq(1).val()) {
+			data.time_max = $(".timeipt").eq(1).val();
+		}
+		zzappajax("get", hosturl + "app/audit_order_list.html", data, function (ret) {
+			if (ret && ret.hasOwnProperty("err") && ret.err == "true") {
+				$(".list-box").html("");
+				$(".nodata").show();
+				hint(ret.errtext || "暂无相关数据");
+				return false;
+			}
+			var list = ret.listall || [];
+			var html = "";
+			$.each(list, function (index, item) {
+				item.audit_text = getAuditText(item.is_pay);
+				var tpl = $api.html($api.byId("itemTpl"));
+				laytpl(tpl).render(item, function (rendered) {
+					html += rendered;
+				});
+			});
+			$(".list-box").html(html);
+			$(".nodata").toggle(list.length === 0);
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
+			$(".list-box").html("");
+			$(".nodata").show();
 		});
 	}
 </script>
-<script type="text/javascript" src="../../script/servercomm.js"></script>
