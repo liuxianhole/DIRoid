@@ -852,7 +852,7 @@ var appVersion="1.0.0";
 
     var compatApi = {
         __webviewCompat: true,
-        appName: '91智能机',
+        appName: '智收易',
         appVersion: typeof appVersion !== 'undefined' ? appVersion : '0.0.17',
         systemType: 'android',
         systemVersion: '14',

@@ -1,4 +1,4 @@
-package com.zz91.dibang
+package com.liuxianhole.dibang
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -21,7 +21,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import com.zz91.dibang.databinding.ActivityMainBinding
+import com.liuxianhole.dibang.databinding.ActivityMainBinding
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {

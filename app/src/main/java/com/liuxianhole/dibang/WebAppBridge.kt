@@ -1,4 +1,4 @@
-package com.zz91.dibang
+package com.liuxianhole.dibang
 
 import android.Manifest
 import android.app.Activity

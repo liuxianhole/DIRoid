@@ -1,4 +1,4 @@
-package com.zz91.dibang
+package com.liuxianhole.dibang
 
 import com.journeyapps.barcodescanner.CaptureActivity
 

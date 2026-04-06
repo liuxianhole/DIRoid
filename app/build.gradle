@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace "com.zz91.dibang"
+    namespace "com.liuxianhole.dibang"
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.zz91.dibang"
+        applicationId "com.liuxianhole.dibang"
         minSdk 24
         targetSdk 34
         versionCode 17
