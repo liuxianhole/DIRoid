@@ -41,41 +41,6 @@
 		.qrcode-wrap table {
 			margin: 0 auto;
 		}
-
-		.percent-input-wrap {
-			position: relative;
-		}
-
-		.percent-input-wrap input {
-			padding-right: 1.2rem;
-		}
-
-		.percent-suffix {
-			position: absolute;
-			right: 0.35rem;
-			top: 50%;
-			transform: translateY(-50%);
-			color: #666;
-			font-size: 0.75rem;
-		}
-
-		.inline-input-wrap {
-			display: flex;
-			align-items: center;
-			gap: 0.4rem;
-		}
-
-		.inline-input-wrap input {
-			flex: 1;
-		}
-
-		.inline-scan-btn {
-			flex: 0 0 auto;
-			height: 1.8rem;
-			line-height: 1.8rem;
-			padding: 0 0.6rem;
-			border-radius: 0.2rem;
-		}
 	</style>
 </head>
 
@@ -122,37 +87,21 @@
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label">
-						用户类型
+						毛重
 					</div>
 					<div class="aui-list-item-input">
-						<select class="customer_type">
-							<option value="normal" selected>普通用户</option>
-							<option value="sznm">数农码用户</option>
-						</select>
-					</div>
-				</div>
-			</li>
-			<li class="aui-list-item sznm_code_box" style="display:none;">
-				<div class="aui-list-item-inner">
-					<div class="aui-list-item-label">
-						数农码编号
-					</div>
-					<div class="aui-list-item-input">
-						<div class="inline-input-wrap">
-							<input type="text" class="sznm_code" placeholder="请扫码输入数农码用户编号">
-							<div class="aui-btn aui-btn-info inline-scan-btn j_sznm_scan_btn"><i class="iconfont">&#xe657;</i>扫码</div>
-						</div>
+						<input type="number" class="gw" placeholder="请输入毛重">
+						<div class="scale-status" id="scale_status">正在连接地磅读数...</div>
 					</div>
 				</div>
 			</li>
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label">
-						毛重
+						皮重
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="gw" placeholder="请输入毛重">
-						<div class="scale-status" id="scale_status">正在连接地磅读数...</div>
+						<input type="number" class="tare" placeholder="请输入皮重">
 					</div>
 				</div>
 			</li>
@@ -166,16 +115,16 @@
 					</div>
 				</div>
 			</li>
+
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label">
-						扣点
+						是否0皮重
 					</div>
 					<div class="aui-list-item-input">
-						<div class="percent-input-wrap">
-							<input type="number" class="point" placeholder="请输入扣点" value="0" min="0" max="100">
-							<span class="percent-suffix">%</span>
-						</div>
+						<label><input class="aui-radio tare_check" type="radio" name="demo1" value="1"> 是</label>
+						<label><input class="aui-radio tare_check" type="radio" name="demo1" value="0" checked="">
+							否</label>
 					</div>
 				</div>
 			</li>
@@ -189,6 +138,17 @@
 					</div>
 				</div>
 			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						实际支付
+					</div>
+					<div class="aui-list-item-input">
+						<input type="number" class="total" placeholder="请输入实际付款">
+					</div>
+				</div>
+			</li>
+
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
 					<div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">保存/打印</div>
@@ -205,6 +165,7 @@
 <script type="text/javascript" src="../../script/qrcode.js"></script>
 <script type="text/javascript" src="../../script/jquery.qrcode.js"></script>
 <script type="text/javascript">
+	var tare_check = 0;
 	var MAGIC_NUM = 0x494154;
 	var ws = null;
 	var uart = "";
@@ -212,7 +173,6 @@
 	var time_id = null;
 	var orderCode = "";
 	var LAST_PRODUCT_KEY = "new_bangdan_add_last_product";
-	var tare_check = 1;
 
 	apiready = function () {
 		changeserverurl();
@@ -232,15 +192,17 @@
 				saveLastSelectedProduct(self_id, name);
 			}
 		});
-		$(".customer_type").on("change", function () {
-			toggleCustomerType();
-		});
-		$(".j_sznm_scan_btn").on("click", function () {
-			openSznmScan();
-		});
-		toggleCustomerType();
+		$(".tare_check").on("click", function () {
+			if ($(this).val() == "1") {
+				$(".tare").val(0);
+				tare_check = 1;
+			} else {
+				tare_check = 0
+			}
+		})
 
 		var canbtn = true;
+		var tare_check = 0;
 		//确定提交
 		$(".j_btn").on("click", function () {
 			if (!canbtn) {
@@ -265,6 +227,17 @@
 					return false;
 				}
 			}
+			if ($(".tare").val() == "") {
+				layer.msg("请输入皮重！");
+				$(".tare").focus();
+				return false;
+			} else {
+				var isnumflag = isNaN($(".tare").val());
+				if (isnumflag) {
+					layer.msg("皮重必须是数字！")
+					return false;
+				}
+			}
 			if ($(".clasp").val() == "") {
 				$(".clasp").val(0)
 			} else {
@@ -273,25 +246,6 @@
 					layer.msg("扣杂必须是数字！")
 					return false;
 				}
-			}
-			if ($(".point").val() == "") {
-				$(".point").val(0);
-			} else {
-				var pointValue = parseFloat($(".point").val());
-				var isnumflag = isNaN(pointValue);
-				if (isnumflag) {
-					layer.msg("扣点必须是数字！")
-					return false;
-				}
-				if (pointValue < 0 || pointValue > 100) {
-					layer.msg("扣点必须在0到100之间！");
-					return false;
-				}
-			}
-			if ($(".customer_type").val() == "sznm" && $.trim($(".sznm_code").val()) == "") {
-				layer.msg("请输入数农码用户编号！");
-				$(".sznm_code").focus();
-				return false;
 			}
 			if ($(".price").val() == "") {
 				layer.msg("请输入价格！");
@@ -304,19 +258,27 @@
 					return false;
 				}
 			}
+			if ($(".total").val() == "") {
+				layer.msg("请输入实际支付！");
+				$(".total").focus();
+				return false;
+			} else {
+				var isnumflag = isNaN($(".total").val());
+				if (isnumflag) {
+					layer.msg("支付价格必须是数字！")
+					return false;
+				}
+			}
 			var data = {
 				code: $("#order_code").val(),
 				products_self_id: $("#proself_id").val(),
 				suppliers_self_id: $(".suppliers_self_id").val(),
-				customer_type: $(".customer_type").val(),
-				sznm_code: $.trim($(".sznm_code").val()),
 				gw: $(".gw").val(),
-				tare: 0,
+				tare: $(".tare").val(),
 				clasp: $(".clasp").val(),
-				point: $(".point").val() || 0,
 				price: $(".price").val(),
+				total: $(".total").val(),
 				tare_check: tare_check,
-				is_pay: 1
 			}
 			canbtn = false;
 			api.showProgress({
@@ -459,52 +421,6 @@
 	function selectpro(self_id, name) {
 		$("#proself_id").val(self_id);
 		saveLastSelectedProduct(self_id, name);
-	}
-	function toggleCustomerType() {
-		var customerType = $(".customer_type").val() || "normal";
-		if (customerType == "sznm") {
-			$(".sznm_code_box").show();
-			return;
-		}
-		$(".sznm_code_box").hide();
-		$(".sznm_code").val("");
-	}
-	function openSznmScan() {
-		if (!(window.api && api.require)) {
-			layer.msg("当前环境不支持扫码");
-			return false;
-		}
-		var FNScanner = api.require("FNScanner");
-		if (!FNScanner || !FNScanner.open) {
-			layer.msg("当前设备未安装扫码模块");
-			return false;
-		}
-		FNScanner.open({
-			autorotation: true
-		}, function (ret, err) {
-			if (err) {
-				layer.msg(err.msg || "扫码失败");
-				return;
-			}
-			if (!ret) {
-				return;
-			}
-			if (ret.eventType == "success" || ret.content) {
-				var sznmCode = $.trim(ret.content || ret.msg || "");
-				if (!sznmCode) {
-					layer.msg("未识别到数农码编号");
-					return;
-				}
-				$(".sznm_code").val(sznmCode);
-				if (FNScanner.closeView) {
-					FNScanner.closeView();
-				}
-			} else if (ret.eventType == "cancel") {
-				if (FNScanner.closeView) {
-					FNScanner.closeView();
-				}
-			}
-		});
 	}
 	function keybackFun() {
 		return true;
