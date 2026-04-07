@@ -145,13 +145,19 @@
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
 	var printData = {};
+	var autoPrintAfterLoad = false;
 
 	apiready = function () {
 		changeserverurl();
 		bindEvent();
 		loadPrinterConfig();
-		generatePrintData();
+		initPrintData();
 		renderPreview();
+		if (autoPrintAfterLoad) {
+			window.setTimeout(function () {
+				printCurrentReceipt();
+			}, 500);
+		}
 	};
 
 	function bindEvent() {
@@ -168,6 +174,15 @@
 		$(".j_print_btn").on("click", function () {
 			printCurrentReceipt();
 		});
+	}
+
+	function initPrintData() {
+		if (api.pageParam && api.pageParam.printData) {
+			printData = api.pageParam.printData;
+			autoPrintAfterLoad = !!api.pageParam.autoPrint;
+			return;
+		}
+		generatePrintData();
 	}
 
 	function generatePrintData() {
@@ -194,9 +209,9 @@
 		$(".j_order_no").text(printData.orderNo || "");
 		$(".j_product_name").text(printData.productName || "");
 		$(".j_supplier_name").text(printData.supplierName || "");
-		$(".j_quantity").text(printData.quantity || "");
+		$(".j_quantity").text(printData.weight || printData.quantity || "");
 		$(".j_price").text(printData.price || "");
-		$(".j_amount").text(printData.amount || "");
+		$(".j_amount").text(printData.actualPay || printData.amount || "");
 		$(".j_pay_type").text(printData.payType || "");
 		$(".j_pay_time").text(printData.payTime || "");
 		$(".j_remark").text(printData.remark || "");
@@ -276,6 +291,12 @@
 			};
 		}
 		hint(result.message || (result.success ? "打印成功" : "打印失败"));
+		if (result.success && autoPrintAfterLoad) {
+			window.setTimeout(function () {
+				api.closeWin({});
+			}, 1200);
+		}
+		return result.success;
 	}
 
 	function createOrderNo() {

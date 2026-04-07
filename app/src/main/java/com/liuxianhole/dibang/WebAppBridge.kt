@@ -18,6 +18,9 @@ import java.io.OutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.Charset
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
 class WebAppBridge(
@@ -28,6 +31,7 @@ class WebAppBridge(
     private val prefs = activity.getSharedPreferences("dibang_runtime_config", Context.MODE_PRIVATE)
     private val printerUuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     private val printerCharset: Charset = Charset.forName("GBK")
+    private val printTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
 
     @JavascriptInterface
     fun toast(message: String?) {
@@ -139,12 +143,23 @@ class WebAppBridge(
 
     @JavascriptInterface
     fun printTestReceipt(payloadJson: String?): String {
+        return printReceipt(payloadJson, false)
+    }
+
+    @JavascriptInterface
+    fun printOrderReceipt(payloadJson: String?): String {
+        return printReceipt(payloadJson, true)
+    }
+
+    private fun printReceipt(payloadJson: String?, includeQr: Boolean): String {
         val result = JSONObject()
         try {
             val printerConfig = getPrinterConfigObject()
             val connectionType = printerConfig.optString("connectionType", "bluetooth")
             val payload = payloadJson?.takeIf { it.isNotBlank() }?.let { JSONObject(it) } ?: JSONObject()
-            val content = buildReceiptText(payload)
+            val headerContent = buildReceiptHeaderText(payload, includeQr)
+            val bodyContent = buildReceiptBodyText(payload)
+            val qrText = payload.optString("qrText").ifBlank { payload.optString("orderNo") }.takeIf { includeQr && it.isNotBlank() }
             if (connectionType == "network" || connectionType == "wifi") {
                 val ip = printerConfig.optString("networkIp")
                 val port = printerConfig.optInt("networkPort", 9100)
@@ -154,7 +169,7 @@ class WebAppBridge(
                 Socket().use { socket ->
                     socket.connect(InetSocketAddress(ip, port), 5000)
                     socket.outputStream.use { outputStream ->
-                        writeReceipt(outputStream, content)
+                        writeReceiptWithFallback(outputStream, headerContent, bodyContent, qrText)
                     }
                 }
                 return result.put("success", true).put("message", "打印任务已发送到 $ip:$port").toString()
@@ -184,12 +199,24 @@ class WebAppBridge(
             adapter.cancelDiscovery()
             socket.connect()
             socket.outputStream.use { outputStream ->
-                writeReceipt(outputStream, content)
+                writeReceiptWithFallback(outputStream, headerContent, bodyContent, qrText)
             }
             socket.close()
             return result.put("success", true).put("message", "打印任务已发送到 ${device.name ?: device.address}").toString()
         } catch (e: Exception) {
             return result.put("success", false).put("message", e.message ?: "打印失败，请检查蓝牙打印机连接").toString()
+        }
+    }
+
+    private fun writeReceiptWithFallback(outputStream: OutputStream, headerContent: String, bodyContent: String, qrText: String?) {
+        if (qrText.isNullOrBlank()) {
+            writeReceipt(outputStream, headerContent, bodyContent, null)
+            return
+        }
+        try {
+            writeReceipt(outputStream, headerContent, bodyContent, qrText)
+        } catch (_: Exception) {
+            writeReceipt(outputStream, headerContent, bodyContent, null)
         }
     }
 
@@ -211,45 +238,88 @@ class WebAppBridge(
         return preferred ?: devices.firstOrNull()
     }
 
-    private fun buildReceiptText(payload: JSONObject): String {
+    private fun buildReceiptHeaderText(payload: JSONObject, includeQr: Boolean): String {
         val orderNo = payload.optString("orderNo")
+        return buildString {
+            appendLine("      智慧农业管理")
+            appendLine(payload.optString("title").ifBlank { "测试订单小票" })
+            appendLine("--------------------------------")
+            appendLine("订单号: $orderNo")
+            if (includeQr) appendLine("二维码")
+        }
+    }
+
+    private fun buildReceiptBodyText(payload: JSONObject): String {
         val productName = payload.optString("productName")
         val supplierName = payload.optString("supplierName")
         val quantity = payload.optString("quantity")
+        val grossWeight = payload.optString("grossWeight")
         val price = payload.optString("price")
         val amount = payload.optString("amount")
+        val actualPay = payload.optString("actualPay")
         val payType = payload.optString("payType")
         val payTime = payload.optString("payTime")
         val remark = payload.optString("remark")
+        val tare = payload.optString("tare")
+        val clasp = payload.optString("clasp")
+        val pointPercent = payload.optString("pointPercent")
+        val weight = payload.optString("weight")
         return buildString {
-            appendLine("      智慧农业管理")
-            appendLine("      测试订单小票")
-            appendLine("--------------------------------")
-            appendLine("订单号: $orderNo")
             appendLine("产品名称: $productName")
             appendLine("供应商: $supplierName")
-            appendLine("数量: $quantity")
+            if (grossWeight.isNotBlank()) appendLine("毛重: $grossWeight")
+            if (quantity.isNotBlank()) appendLine("数量: $quantity")
+            if (tare.isNotBlank()) appendLine("皮重: $tare")
+            if (clasp.isNotBlank()) appendLine("扣杂: $clasp")
+            if (pointPercent.isNotBlank()) appendLine("扣点: $pointPercent")
+            if (weight.isNotBlank()) appendLine("重量: $weight")
             appendLine("单价: $price")
-            appendLine("金额: $amount")
+            if (actualPay.isNotBlank()) {
+                appendLine("实际支付: $actualPay")
+            } else {
+                appendLine("金额: $amount")
+            }
             appendLine("支付方式: $payType")
             appendLine("支付时间: $payTime")
             appendLine("备注: $remark")
             appendLine("--------------------------------")
-            appendLine("打印时间: ${System.currentTimeMillis()}")
+            appendLine("打印时间: ${printTimeFormat.format(Date())}")
             appendLine("")
             appendLine("")
         }
     }
 
-    private fun writeReceipt(outputStream: OutputStream, content: String) {
+    private fun writeReceipt(outputStream: OutputStream, headerContent: String, bodyContent: String, qrText: String?) {
         outputStream.write(byteArrayOf(0x1B, 0x40))
         // Xprinter ESC/POS devices are much more reliable with GBK plus an explicit Chinese code table.
         outputStream.write(byteArrayOf(0x1C, 0x26))
         outputStream.write(byteArrayOf(0x1B, 0x39, 0x01))
         outputStream.write(byteArrayOf(0x1B, 0x74, 0x00))
-        outputStream.write(content.toByteArray(printerCharset))
+        outputStream.write(byteArrayOf(0x1D, 0x21, 0x01))
+        outputStream.write(headerContent.toByteArray(printerCharset))
+        if (!qrText.isNullOrBlank()) {
+            writeQrCode(outputStream, qrText)
+        }
+        outputStream.write(bodyContent.toByteArray(printerCharset))
+        outputStream.write(byteArrayOf(0x1D, 0x21, 0x00))
         outputStream.write(byteArrayOf(0x0A, 0x0A, 0x0A))
         outputStream.write(byteArrayOf(0x1D, 0x56, 0x42, 0x00))
         outputStream.flush()
+    }
+
+    private fun writeQrCode(outputStream: OutputStream, qrText: String) {
+        val qrBytes = qrText.toByteArray(Charsets.US_ASCII)
+        val length = qrBytes.size + 3
+        val pL = (length and 0xFF).toByte()
+        val pH = ((length shr 8) and 0xFF).toByte()
+        outputStream.write(byteArrayOf(0x1B, 0x61, 0x01))
+        outputStream.write(byteArrayOf(0x1D, 0x28, 0x6B, 0x04, 0x00, 0x31, 0x41, 0x32, 0x00))
+        outputStream.write(byteArrayOf(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x43, 0x0C))
+        outputStream.write(byteArrayOf(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x45, 0x30))
+        outputStream.write(byteArrayOf(0x1D, 0x28, 0x6B, pL, pH, 0x31, 0x50, 0x30))
+        outputStream.write(qrBytes)
+        outputStream.write(byteArrayOf(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x51, 0x30))
+        outputStream.write(byteArrayOf(0x0A))
+        outputStream.write(byteArrayOf(0x1B, 0x61, 0x00))
     }
 }
