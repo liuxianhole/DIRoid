@@ -402,7 +402,8 @@ function loadcommonurl(url, pageParam) {
 	var iosstatusheight=getisostatusheight();
 	topHeight=topHeight+iosstatusheight;
 	if (pageParam.hiddentop){
-		topHeight=topHeight-$(".topbar").height();
+		topHeight = 0;
+		$("#header").hide();
 		$(".topbar").hide();
 	}
 	var bottomHeight = $("footer").height();

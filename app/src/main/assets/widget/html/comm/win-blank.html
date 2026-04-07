@@ -29,6 +29,16 @@
 	    #header h1{
 	        font-size: 20px; height: 44px; line-height: 44px; margin: 0em; color: #fff;
 	    }
+	    .header-light{
+	    	background: #ffffff !important;
+	    	color: #222 !important;
+	    	border-bottom: 1px solid #e5e5e5;
+	    }
+	    .header-light a,
+	    .header-light .aui-title,
+	    .header-light .aui-iconfont{
+	    	color: #222 !important;
+	    }
 	    #main{
 	        -webkit-box-flex: 1; 
 	        -webkit-flex: 1;
@@ -80,6 +90,9 @@
         $api.fixStatusBar(header);
 		var wintitle = api.pageParam.wintitle;
 		var url      = api.pageParam.url;
+		if(api.pageParam.headerTheme == "light"){
+			$(".zz-header").removeClass("aui-bg-success aui-bar-primary").addClass("header-light");
+		}
 		if(wintitle.length>0){
 			$(".j_wintitle").html(wintitle);
 			$(".header-modle").eq(1).addClass("aui-hide")

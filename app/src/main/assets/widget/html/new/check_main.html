@@ -217,11 +217,12 @@
 			wintitle: "付款审核",
 			type: "paycheck",
 			bounces: false,
+			hiddentop: true,
+			headerTheme: "light",
 			suppliers_self_id: suppliersSelfId,
-			is_pay: typeConfig[currentType].isPay,
-			url: "../new/check_win.html"
+			is_pay: typeConfig[currentType].isPay
 		};
-		openWin("paycheck", "check_win.html", pageParam);
+		openWin("paycheck", "../new/check_win.html", pageParam);
 	}
 
 	function initDatePicker() {
