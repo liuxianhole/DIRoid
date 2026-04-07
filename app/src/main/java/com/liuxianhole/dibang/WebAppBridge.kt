@@ -17,6 +17,7 @@ import org.json.JSONObject
 import java.io.OutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.nio.charset.Charset
 import java.util.UUID
 
 class WebAppBridge(
@@ -26,6 +27,7 @@ class WebAppBridge(
     private val mainHandler = Handler(Looper.getMainLooper())
     private val prefs = activity.getSharedPreferences("dibang_runtime_config", Context.MODE_PRIVATE)
     private val printerUuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+    private val printerCharset: Charset = Charset.forName("GBK")
 
     @JavascriptInterface
     fun toast(message: String?) {
@@ -241,7 +243,11 @@ class WebAppBridge(
 
     private fun writeReceipt(outputStream: OutputStream, content: String) {
         outputStream.write(byteArrayOf(0x1B, 0x40))
-        outputStream.write(content.toByteArray(Charsets.UTF_8))
+        // Xprinter ESC/POS devices are much more reliable with GBK plus an explicit Chinese code table.
+        outputStream.write(byteArrayOf(0x1C, 0x26))
+        outputStream.write(byteArrayOf(0x1B, 0x39, 0x01))
+        outputStream.write(byteArrayOf(0x1B, 0x74, 0x00))
+        outputStream.write(content.toByteArray(printerCharset))
         outputStream.write(byteArrayOf(0x0A, 0x0A, 0x0A))
         outputStream.write(byteArrayOf(0x1D, 0x56, 0x42, 0x00))
         outputStream.flush()
