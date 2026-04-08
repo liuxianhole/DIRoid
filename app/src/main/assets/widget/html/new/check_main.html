@@ -214,15 +214,10 @@
 			return false;
 		}
 		var pageParam = {
-			wintitle: "付款审核",
-			type: "paycheck",
-			bounces: false,
-			hiddentop: true,
-			headerTheme: "light",
 			suppliers_self_id: suppliersSelfId,
 			is_pay: typeConfig[currentType].isPay
 		};
-		openWin("paycheck", "../new/check_win.html", pageParam);
+		openWinNormal("paycheck", "widget://html/new/check_win.html", pageParam);
 	}
 
 	function initDatePicker() {
