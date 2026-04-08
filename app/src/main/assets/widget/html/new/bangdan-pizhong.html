@@ -24,11 +24,11 @@
 			margin-bottom: 0.5rem;
 		}
 
-		.order-code {
-			font-size: 0.8rem;
-			font-weight: bold;
+		.order-title {
+			font-size: 0.82rem;
+			font-weight: 700;
 			color: #333;
-			margin-top: 0.25rem;
+			margin-bottom: 0.45rem;
 		}
 
 		.qrcode-wrap {
@@ -76,11 +76,10 @@
 		</header>
 	</div>
 	<div class="qr-box">
-		<div>单号</div>
+		<div class="order-title">单号</div>
 		<div class="order-input-wrap">
 			<input type="text" class="aui-input order_code_input" placeholder="请输入订单号">
 		</div>
-		<div class="order-code" id="order_code_text"></div>
 		<div class="qrcode-wrap" id="order_qrcode"></div>
 	</div>
 	<div class="aui-content aui-margin-b-15">
@@ -240,7 +239,6 @@
 	}
 
 	function renderOrderCode(code) {
-		$("#order_code_text").text(code || "未输入订单号");
 		$("#order_qrcode").empty();
 		if (!code) {
 			return;
@@ -451,11 +449,22 @@
 			modal: false
 		});
 		zzappajax("post", hosturl + "app/storage_weight_save.html", data, function (ret) {
-			api.hideProgress();
 			if (ret && ret.err == "false") {
-				api.closeWin({});
+				var printResult = printSavedOrder();
+				if (!printResult.success) {
+					api.hideProgress();
+					hint(printResult.message || "订单已保存，但打印失败");
+					return;
+				}
+				refreshBangdanList();
+				hint(printResult.message || "订单已保存并已发送打印");
+				window.setTimeout(function () {
+					window.location.reload();
+				}, 500);
+				api.hideProgress();
 				return;
 			}
+			api.hideProgress();
 			layer.msg((ret && ret.errtext) || "保存失败");
 		}, function (err) {
 			if (err) {
@@ -463,6 +472,98 @@
 			}
 			api.hideProgress();
 		});
+	}
+
+	function printSavedOrder() {
+		if (!(window.AndroidBridge && window.AndroidBridge.printOrderReceipt)) {
+			return {
+				success: false,
+				message: "订单已保存，当前环境不支持打印"
+			};
+		}
+		try {
+			var resultText = window.AndroidBridge.printOrderReceipt(JSON.stringify(buildPrintPayload()));
+			var result = resultText ? JSON.parse(resultText) : {
+				success: false,
+				message: "打印失败"
+			};
+			if (result.success) {
+				return result;
+			}
+			if (window.AndroidBridge.printTestReceipt) {
+				var fallbackText = window.AndroidBridge.printTestReceipt(JSON.stringify(buildPrintPayload()));
+				var fallbackResult = fallbackText ? JSON.parse(fallbackText) : {
+					success: false,
+					message: "打印失败"
+				};
+				if (fallbackResult.success) {
+					fallbackResult.message = (result.message || "二维码打印失败") + "，已切换为文本小票打印";
+				}
+				return fallbackResult;
+			}
+			return result;
+		} catch (e) {
+			return {
+				success: false,
+				message: "打印失败，请检查打印机连接"
+			};
+		}
+	}
+
+	function buildPrintPayload() {
+		var gw = parseFloat($(".gw").val()) || 0;
+		var tare = parseFloat($(".tare").val()) || 0;
+		var clasp = parseFloat($(".clasp").val()) || 0;
+		var point = parseFloat($(".point").val()) || 0;
+		var weight = gw - tare - clasp;
+		return {
+			title: "订单小票",
+			orderNo: $.trim($(".order_code_input").val()) || orderCode,
+			qrText: $.trim($(".order_code_input").val()) || orderCode,
+			productName: $("#proself_id option:selected").text() || "",
+			supplierName: $(".suppliers_self_id option:selected").text() || "",
+			grossWeight: (gw || 0) + " kg",
+			tare: (tare || 0) + " kg",
+			clasp: (clasp || 0) + " kg",
+			pointPercent: point.toFixed(2) + "%",
+			weight: (weight > 0 ? weight.toFixed(2) : "0.00") + " kg",
+			price: ($(".price").val() || "0") + " 元/kg",
+			amount: ($(".total").val() || "0") + " 元",
+			payType: "现场支付",
+			payTime: formatDateTime(new Date()),
+			remark: "磅单回皮保存后打印"
+		};
+	}
+
+	function refreshBangdanList() {
+		api.execScript({
+			name: "bangdan",
+			frameName: "frame1",
+			script: "page = 1;getinfo()"
+		});
+		api.execScript({
+			name: "bangdan",
+			frameName: "frame3",
+			script: "page = 1;getinfo()"
+		});
+		api.execScript({
+			name: "bangdan",
+			frameName: "frame4",
+			script: "page = 1;getinfo()"
+		});
+		api.execScript({
+			name: "root",
+			frameName: "main",
+			script: "getinfo()"
+		});
+	}
+
+	function formatDateTime(date) {
+		return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) + " " + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
+	}
+
+	function pad(num) {
+		return num < 10 ? "0" + num : "" + num;
 	}
 
 	function ajaxinfo() {
