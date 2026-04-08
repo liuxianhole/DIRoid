@@ -318,6 +318,42 @@ header .aui-btn-outlined{
 	font-size: 0.5rem;
 	margin-top: 0.7rem;
 }
+.new-page-header{
+	background: linear-gradient(135deg, #2b6cb0 0%, #3d87d9 100%);
+	color: #fff;
+	border-bottom: none !important;
+	box-shadow: 0 0.18rem 0.8rem rgba(43, 108, 176, 0.18);
+}
+.new-page-header .aui-title,
+.new-page-header .aui-pull-left,
+.new-page-header .aui-pull-right,
+.new-page-header .iconfont{
+	color: #fff !important;
+}
+.new-page-header .aui-btn-outlined{
+	color: #fff !important;
+	border: 1px solid rgba(255,255,255,0.45);
+	background: rgba(255,255,255,0.08);
+	border-radius: 0.25rem;
+}
+.new-page-header .aui-btn-outlined:active{
+	opacity: 0.85;
+}
+.new-page-skin .aui-btn.aui-btn-info,
+.new-page-skin .aui-btn.aui-btn-success{
+	background: linear-gradient(135deg, #2b6cb0 0%, #3d87d9 100%);
+	border-color: #2f75be;
+	color: #fff !important;
+	box-shadow: 0 0.18rem 0.55rem rgba(43, 108, 176, 0.18);
+}
+.new-page-skin .aui-btn.aui-btn-info:active,
+.new-page-skin .aui-btn.aui-btn-success:active{
+	opacity: 0.88;
+}
+.new-page-skin .aui-btn.aui-btn-outlined{
+	color: #2b6cb0;
+	border-color: #2b6cb0;
+}
 .picbox-md img{
 	width: 100%;
 }
