@@ -175,11 +175,9 @@
 			return false;
 		}
 		$(".search-ipt").val(code);
-		openWin("bangdan_mingxi", "bangdan-mingxi.html", {
+		openWinNormal("bangdan_mingxi", "widget://html/new/bangdan-mingxi.html", {
 			code: code,
-			url: "../new/bangdan-mingxi.html",
-			wintitle: "入库单明细",
-			bounces: false
+			wintitle: "入库单明细"
 		});
 	}
 

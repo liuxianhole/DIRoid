@@ -34,7 +34,7 @@
 			<div class="aui-title">
 				分站管理
 			</div>
-			<a class="aui-pull-right aui-btn aui-btn-outlined">
+			<a class="aui-pull-right aui-btn aui-btn-outlined j_add_btn">
 				<span class="aui-iconfont iconfont">&#xe606;</span> 创建
 			</a>
 		</header>
@@ -123,6 +123,19 @@
 		$(".j_search_btn").on("click", function () {
 			keyword = $(".search-ipt").val();
 			getinfo();
+		});
+		$(".j_add_btn").on("click", function () {
+			layer.open({
+				type: 1,
+				title: false,
+				skin: 'layui-pop-gy',
+				closeBtn: 1,
+				anim: 2,
+				area: ["90%", ""],
+				zIndex: 90,
+				shadeClose: true,
+				content: $(".pop-gy")
+			});
 		});
 		$(".list-box").on("click", ".j_bjbtn", function () {
 			layer.open({

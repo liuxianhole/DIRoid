@@ -191,11 +191,9 @@
 					hint("未识别到榜单编号");
 					return;
 				}
-				openWin("bangdan_jiesuan", "bangdan-jiesuan.html", {
+				openWinNormal("bangdan_jiesuan", "widget://html/new/bangdan-jiesuan.html", {
 					code: code,
-					url: "../new/bangdan-jiesuan.html",
-					wintitle: "磅单结算",
-					bounces: false
+					wintitle: "磅单结算"
 				});
 				if (FNScanner.closeView) {
 					FNScanner.closeView();
@@ -234,10 +232,10 @@
 			yearText: "年",
 			monthText: "月",
 			dayText: "日",
-			endYear: currYear + 2,
+			startYear: currYear - 5,
+			endYear: currYear + 5,
 			lang: "zh",
 			showNow: true,
-			minDate: new Date(),
 			nowText: "今天"
 		});
 	}

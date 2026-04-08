@@ -9,13 +9,16 @@
 	<title>磅单结算</title>
 	<link rel="stylesheet" type="text/css" href="../../css/aui2.1.css">
 	<style>
-		body {}
+		body {
+			background: #f4f7fb;
+		}
 
 		.qr-box {
 			padding: 0.75rem 0;
 			text-align: center;
 			background: #fff;
 			margin-bottom: 0.5rem;
+			box-shadow: 0 0.15rem 0.6rem rgba(43, 108, 176, 0.06);
 		}
 
 		.order-code {
@@ -57,6 +60,47 @@
 			padding: 0 0.75rem;
 			margin-top: 0.5rem;
 		}
+
+		.order-input-wrap .aui-input {
+			border: 1px solid #dbe7f3;
+			background: #f7fbff;
+			border-radius: 0.3rem;
+			font-size: 0.78rem;
+		}
+
+		.aui-content .aui-list {
+			background: transparent;
+		}
+
+		.aui-list .aui-list-item {
+			background: #fff;
+		}
+
+		.aui-list .aui-list-item:first-child {
+			border-top: 1px solid #eef3f8;
+		}
+
+		.aui-list-item-label {
+			color: #334155;
+			font-weight: 600;
+		}
+
+		.aui-list-item-input input,
+		.aui-list-item-input select {
+			color: #1f2937;
+		}
+
+		.aui-radio:checked {
+			background-color: #2f75be;
+			border-color: #2f75be;
+		}
+
+		.aui-list-item-btn .aui-btn {
+			min-width: 5.2rem;
+			height: 2.2rem;
+			line-height: 2.2rem;
+			padding: 0 1rem;
+		}
 	</style>
 </head>
 
@@ -71,9 +115,6 @@
 	</div>
 	<div class="qr-box">
 		<div>单号</div>
-		<div class="order-input-wrap">
-			<input type="text" class="aui-input order_code_input" placeholder="请输入订单号">
-		</div>
 		<div class="order-code" id="order_code_text"></div>
 		<div class="qrcode-wrap" id="order_qrcode"></div>
 	</div>
