@@ -104,9 +104,12 @@
     	var login_sn = UserInfo.has_login();
 		if (login_sn){
         	var url="../html/new/index.html";
+        	$(".myinfo").show();
         }else{
         	var url="../html/new/login.html";
+        	$(".myinfo").hide();
         }
+        var header = $api.byId('header');
         var headerPos = $api.offset(header);
         var main = $api.byId('wrap');
         var mainPos = $api.offset(main);

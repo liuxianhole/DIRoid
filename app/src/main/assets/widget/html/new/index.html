@@ -19,103 +19,265 @@
 	<link rel="stylesheet" type="text/css" href="../../css/aui-flex.css" />
 	<script type="text/javascript" src="../../script/layer/layer.js"></script>
 	<link rel="stylesheet" type="text/css" href="../../css/index.css">
+	<style>
+		body {
+			background: #f4f7fb;
+			color: #1f2937;
+		}
+
+		.home-header {
+			background: linear-gradient(135deg, #2b6cb0 0%, #3d87d9 100%);
+			color: #fff;
+			border-bottom: none;
+		}
+
+		.home-shell {
+			padding: 0.75rem 0.75rem 1rem;
+		}
+
+		.profile-card {
+			display: flex;
+			align-items: center;
+			padding: 0.95rem 1rem;
+			background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+			border-radius: 0.7rem;
+			box-shadow: 0 0.3rem 1rem rgba(43, 108, 176, 0.12);
+			margin-bottom: 0.85rem;
+		}
+
+		.profile-avatar {
+			width: 3rem;
+			height: 3rem;
+			border-radius: 50%;
+			margin-right: 0.8rem;
+			flex-shrink: 0;
+			border: 2px solid rgba(61, 135, 217, 0.18);
+		}
+
+		.profile-main {
+			flex: 1;
+			min-width: 0;
+		}
+
+		.profile-greeting {
+			font-size: 0.65rem;
+			color: #7b8794;
+			margin-bottom: 0.18rem;
+		}
+
+		.profile-name {
+			font-size: 0.95rem;
+			font-weight: 600;
+			color: #1f2937;
+			line-height: 1.2rem;
+		}
+
+		.profile-desc {
+			font-size: 0.65rem;
+			color: #94a3b8;
+			margin-top: 0.15rem;
+		}
+
+		.profile-link {
+			color: #2b6cb0;
+			font-size: 0.72rem;
+			font-weight: 600;
+			white-space: nowrap;
+		}
+
+		.section-card {
+			background: #fff;
+			border-radius: 0.7rem;
+			box-shadow: 0 0.25rem 0.9rem rgba(15, 23, 42, 0.06);
+			margin-bottom: 0.85rem;
+			overflow: hidden;
+		}
+
+		.section-head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0.85rem 0.9rem 0.5rem;
+		}
+
+		.section-title {
+			font-size: 0.82rem;
+			font-weight: 600;
+			color: #1f2937;
+		}
+
+		.section-desc {
+			font-size: 0.62rem;
+			color: #94a3b8;
+		}
+
+		.menu-grid {
+			padding: 0 0.35rem 0.45rem;
+		}
+
+		.menu-grid .aui-col-xs-6,
+		.menu-grid .aui-col-xs-3 {
+			padding: 0.35rem;
+		}
+
+		.menu-grid a {
+			position: relative;
+			display: block;
+			min-height: 5.4rem;
+			padding: 0.95rem 0.5rem 0.8rem;
+			background: linear-gradient(180deg, #f8fbff 0%, #eef5fc 100%);
+			border: 1px solid #e2ebf5;
+			border-radius: 0.65rem;
+			text-align: center;
+		}
+
+		.menu-grid .aui-iconfont {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 2.45rem;
+			height: 2.45rem;
+			border-radius: 0.7rem;
+			font-size: 1.15rem;
+			background: rgba(61, 135, 217, 0.12);
+			color: #2b6cb0 !important;
+			margin-bottom: 0.45rem;
+		}
+
+		.menu-grid .aui-grid-label {
+			font-size: 0.72rem;
+			line-height: 1rem;
+			font-weight: 500;
+			color: #334155;
+		}
+
+		.menu-grid .aui-badge {
+			min-width: 1rem;
+			height: 1rem;
+			line-height: 1rem;
+			padding: 0 0.28rem;
+			font-size: 0.58rem;
+			top: 0.45rem !important;
+			right: 0.45rem !important;
+			left: auto !important;
+			border-radius: 1rem;
+			box-shadow: 0 0.12rem 0.4rem rgba(239, 68, 68, 0.25);
+		}
+
+		.menu-grid.compact a {
+			min-height: 4.9rem;
+			padding-top: 0.85rem;
+		}
+	</style>
 </head>
 
 <body>
 	<div style="height:2.25rem;">
-		<header class="aui-bar aui-bar-nav  aui-border-b ">
+		<header class="aui-bar aui-bar-nav home-header">
 			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
 				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
 			</a>
 			<div class="aui-title">智慧农业收购管理系统</div>
 		</header>
 	</div>
-	<ul class="aui-list aui-media-list">
-		<a href="myiss.html">
-			<li class="aui-list-item aui-list-item-middle">
-				<div class="aui-media-list-item-inner">
-					<div class="aui-list-item-media" style="width: 3rem;">
-						<img src="../../script/man.png" class="aui-img-round aui-list-img-sm">
-					</div>
-					<div class="aui-list-item-inner aui-list-item-arrow">
-						<div class="aui-list-item-text">
-							<div class="aui-list-item-title aui-font-size-14 profile-name"></div>
-						</div>
-						<div class="aui-list-item-text">点击编辑个人资料</div>
-					</div>
-				</div>
-			</li>
+	<div class="home-shell">
+		<a href="myiss.html" class="profile-card">
+			<img src="../../script/man.png" class="profile-avatar">
+			<div class="profile-main">
+				<div class="profile-greeting">当前登录用户</div>
+				<div class="profile-name"></div>
+				<div class="profile-desc">查看并编辑个人资料</div>
+			</div>
+			<div class="profile-link">进入</div>
 		</a>
-	</ul>
 
-	<section class="aui-grid aui-margin-t-15 db-navbig">
-		<div class="aui-row">
-			<div class="aui-col-xs-6 j_dibang"><a href="bangdan-add.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
-					<div class="aui-grid-label aui-text-default">开单定价</div><span class="aui-badge aui-badge-danger"
-						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
-				</a></div>
-			<div class="aui-col-xs-6 j_scan"><a href="bangdan.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe657;</i>
-					<div class="aui-grid-label aui-text-default">扫码回皮</div><span
-						class="aui-badge aui-badge-danger bd_num"
-						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
-				</a></div>
-			<div class="aui-col-xs-6 j_buodan"><a href="bangdan-budan.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
-					<div class="aui-grid-label aui-text-default">补单</div><span class="aui-badge aui-badge-danger"
-						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
-				</a></div>
-			<div class="aui-col-xs-6 j_fukuan"><a href="check_main.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe604;</i>
-					<div class="aui-grid-label aui-text-default">付款审核</div><span
-						class="aui-badge aui-badge-danger bd_num"
-						style="right:10px;left:auto;top:10px;display:none;position:absolute;z-index:999;">0</span>
-				</a></div>
-			<div class="aui-col-xs-6 j_huizong"><a href="shuju.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe8a6;</i>
-					<div class="aui-grid-label aui-text-default">数据汇总</div>
-				</a></div>
-			<div class="aui-col-xs-6 j_mingxi"><a href="ruku.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe619;</i>
-					<div class="aui-grid-label aui-text-default">入库明细</div>
-				</a></div>
-		</div>
-	</section>
+		<section class="section-card">
+			<div class="section-head">
+				<div class="section-title">业务中心</div>
+				<div class="section-desc">常用业务快捷入口</div>
+			</div>
+			<div class="aui-grid db-navbig menu-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6 j_kaidan"><a href="bangdan-add.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
+							<div class="aui-grid-label aui-text-default">开单定价</div><span class="aui-badge aui-badge-danger"
+								style="display:none;position:absolute;z-index:999;">0</span>
+						</a></div>
+					<div class="aui-col-xs-6 j_scan"><a href="bangdan.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe657;</i>
+							<div class="aui-grid-label aui-text-default">扫码回皮</div><span
+								class="aui-badge aui-badge-danger bd_num"
+								style="display:none;position:absolute;z-index:999;">0</span>
+						</a></div>
+					<div class="aui-col-xs-6 j_buodan"><a href="bangdan-budan.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe683;</i>
+							<div class="aui-grid-label aui-text-default">补单</div><span class="aui-badge aui-badge-danger"
+								style="display:none;position:absolute;z-index:999;">0</span>
+						</a></div>
+					<div class="aui-col-xs-6 j_fukuan"><a href="check_main.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe604;</i>
+							<div class="aui-grid-label aui-text-default">付款审核</div><span
+								class="aui-badge aui-badge-danger bd_num"
+								style="display:none;position:absolute;z-index:999;">0</span>
+						</a></div>
+					<div class="aui-col-xs-6 j_huizong"><a href="shuju.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe8a6;</i>
+							<div class="aui-grid-label aui-text-default">数据汇总</div>
+						</a></div>
+					<div class="aui-col-xs-6 j_mingxi"><a href="ruku.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe619;</i>
+							<div class="aui-grid-label aui-text-default">入库明细</div>
+						</a></div>
+				</div>
+			</div>
+		</section>
 
-	<section class="aui-grid aui-margin-t-15 db-navbig">
-		<div class="aui-row">
-			<div class="aui-col-xs-3 j_gongying"><a href="gongying.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe646;</i>
-					<div class="aui-grid-label aui-text-default">供应商管理</div>
-				</a></div>
-			<div class="aui-col-xs-3 j_fenzhan"><a href="fengzhan.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe60a;</i>
-					<div class="aui-grid-label aui-text-default">分站管理</div>
-				</a></div>
-			<div class="aui-col-xs-3 j_chanping"><a href="canping.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe600;</i>
-					<div class="aui-grid-label aui-text-default">产品管理</div>
-				</a></div>
-			<div class="aui-col-xs-3 j_renyuan"><a href="renyuan.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe660;</i>
-					<div class="aui-grid-label aui-text-default">人员管理</div>
-				</a></div>
-		</div>
-	</section>
+		<section class="section-card">
+			<div class="section-head">
+				<div class="section-title">基础管理</div>
+				<div class="section-desc">资料与组织配置</div>
+			</div>
+			<div class="aui-grid db-navbig menu-grid compact">
+				<div class="aui-row">
+					<div class="aui-col-xs-3 j_gongying"><a href="gongying.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe646;</i>
+							<div class="aui-grid-label aui-text-default">供应商管理</div>
+						</a></div>
+					<div class="aui-col-xs-3 j_fenzhan"><a href="fengzhan.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe60a;</i>
+							<div class="aui-grid-label aui-text-default">分站管理</div>
+						</a></div>
+					<div class="aui-col-xs-3 j_chanping"><a href="canping.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe600;</i>
+							<div class="aui-grid-label aui-text-default">产品管理</div>
+						</a></div>
+					<div class="aui-col-xs-3 j_renyuan"><a href="renyuan.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe660;</i>
+							<div class="aui-grid-label aui-text-default">人员管理</div>
+						</a></div>
+				</div>
+			</div>
+		</section>
 
-	<section class="aui-grid aui-margin-t-15 db-navbig">
-		<div class="aui-row">
-			<div class="aui-col-xs-3 j_dibang"><a href="dibang-admin.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe646;</i>
-					<div class="aui-grid-label aui-text-default">地磅配置</div>
-				</a></div>
-			<div class="aui-col-xs-3 j_print"><a href="print-admin.html"><i
-						class="aui-iconfont iconfont aui-text-info">&#xe60a;</i>
-					<div class="aui-grid-label aui-text-default">打印机配置</div>
-				</a></div>
-		</div>
-	</section>
+		<section class="section-card">
+			<div class="section-head">
+				<div class="section-title">设备配置</div>
+				<div class="section-desc">终端与打印设置</div>
+			</div>
+			<div class="aui-grid db-navbig menu-grid compact">
+				<div class="aui-row">
+					<div class="aui-col-xs-3 j_dibang_admin"><a href="dibang-admin.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe646;</i>
+							<div class="aui-grid-label aui-text-default">地磅配置</div>
+						</a></div>
+					<div class="aui-col-xs-3 j_print"><a href="print-admin.html"><i
+								class="aui-iconfont iconfont aui-text-info">&#xe60a;</i>
+							<div class="aui-grid-label aui-text-default">打印机配置</div>
+						</a></div>
+				</div>
+			</div>
+		</section>
+	</div>
 </body>
 
 </html>
@@ -125,21 +287,17 @@
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
 	var sid = 0;
+	var BADGE_COUNT_KEY = "new_index_bd_num";
 
 	apiready = function () {
 		if (!UserInfo.has_login()) {
-			api.execScript({
-				name: "root",
-				script: "reloadapp();"
-			});
-			window.location.href = "login.html";
+			redirectToLogin();
 			return;
 		}
 		changeserverurl();
 		bindEvent();
-		getProfile();
-		getinfo();
-		getuserqx();
+		restoreBadgeCount();
+		refreshHomeData();
 		getsocketbandang();
 	};
 
@@ -151,14 +309,65 @@
 			textDown: '下拉刷新',
 			textUp: '释放刷新',
 		}, function () {
-			getinfo();
-			getuserqx();
+			refreshHomeData();
 			api.toast({
 				msg: '数据已是最新！',
 				duration: 3000,
 				location: 'bottom'
 			});
 		});
+		api.addEventListener({
+			name: 'viewappear'
+		}, function () {
+			refreshHomeData();
+		});
+		api.addEventListener({
+			name: 'resume'
+		}, function () {
+			refreshHomeData();
+		});
+		window.addEventListener("pageshow", function () {
+			restoreBadgeCount();
+			refreshHomeData();
+		});
+		document.addEventListener("visibilitychange", function () {
+			if (!document.hidden) {
+				restoreBadgeCount();
+				refreshHomeData();
+			}
+		});
+	}
+
+	function refreshHomeData() {
+		getProfile();
+		getinfo();
+		getuserqx();
+	}
+
+	function redirectToLogin() {
+		api.execScript({
+			name: "root",
+			script: "reloadapp();"
+		});
+		window.setTimeout(function () {
+			if (window.location.href.indexOf("index.html") > -1) {
+				window.location.replace("login.html");
+			}
+		}, 300);
+	}
+
+	function setBadgeCount(count) {
+		var value = parseInt(count, 10) || 0;
+		if (value > 0) {
+			$(".bd_num").html(value).show();
+		} else {
+			$(".bd_num").hide();
+		}
+		localStorage.setItem(BADGE_COUNT_KEY, value);
+	}
+
+	function restoreBadgeCount() {
+		setBadgeCount(localStorage.getItem(BADGE_COUNT_KEY) || 0);
 	}
 
 	function getProfile() {
@@ -171,13 +380,20 @@
 
 	function getuserqx() {
 		zzappajax("post", hosturl + "app/getuser_qx.html", '', function (ret) {
-			$(".j_bangdan,.j_huizong,.j_mingxi,.j_gongying,.j_fenzhan,.j_chanping,.j_renyuan,.j_baojia").show();
+			$(".j_kaidan,.j_scan,.j_buodan,.j_fukuan,.j_huizong,.j_mingxi,.j_gongying,.j_fenzhan,.j_chanping,.j_renyuan,.j_dibang_admin,.j_print").show();
 			if (ret.hasOwnProperty("tokenerr")) {
 				return false;
 			}
 			if (ret) {
 				if (ret.indexOf("price") < 0) {
-					$(".j_bangdan").hide();
+					$(".j_kaidan").hide();
+					$(".j_scan").hide();
+				}
+				if (ret.indexOf("price_bd") < 0) {
+					$(".j_buodan").hide();
+				}
+				if (ret.indexOf("price_sh") < 0) {
+					$(".j_fukuan").hide();
 				}
 				if (ret.indexOf("tong_ji_all") < 0) {
 					$(".j_huizong").hide();
@@ -212,11 +428,7 @@
 	function getinfo() {
 		zzappajax("post", hosturl + "app/get_num.html", '', function (ret) {
 			var utype = ret.utype;
-			if (parseInt(ret.count) > 0) {
-				$(".bd_num").html(ret.count).show();
-			} else {
-				$(".bd_num").hide();
-			}
+			setBadgeCount(ret.count);
 			if (utype == "1") {
 				$(".j_fenzhan").show();
 			}
