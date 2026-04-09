@@ -84,6 +84,12 @@
 			line-height: 2.2rem;
 			padding: 0 1rem;
 		}
+
+		.custom-radio-group label {
+			display: inline-block;
+			margin: 0 0.75rem 0.4rem 0;
+			white-space: nowrap;
+		}
 	</style>
 </head>
 
@@ -148,7 +154,8 @@
 					<div class="aui-list-item-input">
 						<div class="inline-input-wrap">
 							<input type="text" class="sznm_code" placeholder="请扫码输入数农码用户编号">
-							<div class="aui-btn aui-btn-info inline-scan-btn j_sznm_scan_btn"><i class="iconfont">&#xe657;</i>扫码</div>
+							<div class="aui-btn aui-btn-info inline-scan-btn j_sznm_scan_btn"><i
+									class="iconfont">&#xe657;</i>扫码</div>
 						</div>
 					</div>
 				</div>
@@ -198,6 +205,15 @@
 				</div>
 			</li>
 			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						卸货区
+					</div>
+					<div class="aui-list-item-input custom-radio-group" id="custom_id_list">
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
 				<div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
 					<div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">保存/打印</div>
 					<div class="aui-btn aui-btn-danger aui-margin-l-15 close-pop">取消</div>
@@ -220,7 +236,7 @@
 	var time_id = null;
 	var orderCode = "";
 	var LAST_PRODUCT_KEY = "new_bangdan_add_last_product";
-	var tare_check = 1;
+	var tare_check = 0;
 
 	apiready = function () {
 		changeserverurl();
@@ -312,6 +328,10 @@
 					return false;
 				}
 			}
+			if (!$("input[name='custom_id']:checked").val()) {
+				layer.msg("请选择卸货区！");
+				return false;
+			}
 			var data = {
 				code: $("#order_code").val(),
 				products_self_id: $("#proself_id").val(),
@@ -319,29 +339,28 @@
 				customer_type: $(".customer_type").val(),
 				sznm_code: $.trim($(".sznm_code").val()),
 				gw: $(".gw").val(),
-				tare: 0,
 				clasp: $(".clasp").val(),
 				point: $(".point").val() || 0,
 				price: $(".price").val(),
-				tare_check: tare_check,
-				is_pay: 1
+				custom_id: $("input[name='custom_id']:checked").val() || "",
+				tare_check: tare_check
 			}
 			canbtn = false;
 			api.showProgress({
 				title: '',
 				modal: false
 			});
-			zzappajax("post", hosturl + "app/storage_save.html", data, function (ret) {
+			zzappajax("post", hosturl + "app/storage_open.html", data, function (ret) {
 				if (ret.err == "false") {
-					var printResult = printSavedOrder();
-					if (!printResult.success) {
-						api.hideProgress();
-						canbtn = true;
-						hint(printResult.message || "订单已保存，但打印失败");
-						return;
-					}
-					refreshBangdanList();
-					hint(printResult.message || "订单已保存并已发送打印");
+					// var printResult = printSavedOrder();
+					// if (!printResult.success) {
+					// 	api.hideProgress();
+					// 	canbtn = true;
+					// 	hint(printResult.message || "订单已保存，但打印失败");
+					// 	return;
+					// }
+					// refreshBangdanList();
+					// hint(printResult.message || "订单已保存并已发送打印");
 					window.setTimeout(function () {
 						window.location.reload();
 					}, 500);
@@ -365,14 +384,7 @@
 		renderOrderQrcode(orderCode);
 	}
 	function createOrderCode() {
-		var now = new Date();
-		var month = ("0" + (now.getMonth() + 1)).slice(-2);
-		var day = ("0" + now.getDate()).slice(-2);
-		var hours = ("0" + now.getHours()).slice(-2);
-		var minutes = ("0" + now.getMinutes()).slice(-2);
-		var seconds = ("0" + now.getSeconds()).slice(-2);
-		var millis = ("00" + now.getMilliseconds()).slice(-3);
-		return "BD" + now.getFullYear() + month + day + hours + minutes + seconds + millis;
+		return String(Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 900000000) + 100000000);
 	}
 	function renderOrderQrcode(code) {
 		$("#order_qrcode").empty().qrcode({
@@ -644,6 +656,18 @@
 				htmls += "<option value='" + item.self_id + "'>" + item.name + "</option>"
 			})
 			$(".suppliers_self_id").html(htmls)
+			var customHtmls = "";
+			var customList = ret.custom_list || [];
+			var defaultCustomId = (api.pageParam && api.pageParam.custom_id) || "";
+			if (!defaultCustomId && customList.length) {
+				defaultCustomId = customList[customList.length - 1].custom_id || "";
+			}
+			$.each(customList, function (index, item) {
+				var checked = (item.custom_id || "").toString() == defaultCustomId.toString() ? " checked" : "";
+				var label = item.loading_area || item.name || "";
+				customHtmls += "<label><input class='aui-radio' type='radio' name='custom_id' value='" + item.custom_id + "'" + checked + "> " + label + "</label>";
+			});
+			$("#custom_id_list").html(customHtmls);
 			loadinghide();
 		}, function (err) {
 			if (err) {

@@ -66,6 +66,12 @@
 			line-height: 2.2rem;
 			padding: 0 1rem;
 		}
+
+		.custom-radio-group label {
+			display: inline-block;
+			margin: 0 0.75rem 0.4rem 0;
+			white-space: nowrap;
+		}
 	</style>
 </head>
 
@@ -157,22 +163,19 @@
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label">
-						是否0皮重
+						单价
 					</div>
 					<div class="aui-list-item-input">
-						<label><input class="aui-radio tare_check" type="radio" name="demo1" value="1"> 是</label>
-						<label><input class="aui-radio tare_check" type="radio" name="demo1" value="0" checked="">
-							否</label>
+						<input type="number" class="price" placeholder="输入单价">
 					</div>
 				</div>
 			</li>
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label">
-						单价
+						卸货区
 					</div>
-					<div class="aui-list-item-input">
-						<input type="number" class="price" placeholder="输入单价">
+					<div class="aui-list-item-input custom-radio-group" id="custom_id_list">
 					</div>
 				</div>
 			</li>
@@ -203,7 +206,6 @@
 <script type="text/javascript" src="../../script/qrcode.js"></script>
 <script type="text/javascript" src="../../script/jquery.qrcode.js"></script>
 <script type="text/javascript">
-	var tare_check = 0;
 	var MAGIC_NUM = 0x494154;
 	var ws = null;
 	var uart = "";
@@ -233,19 +235,7 @@
 		$(".gw, .tare, .clasp, .point, .price").on("input change", function () {
 			calcTotal();
 		});
-		$(".tare_check").on("click", function () {
-			if ($(this).val() == "1") {
-				$(".tare").val(0);
-				tare_check = 1;
-				calcTotal();
-			} else {
-				tare_check = 0
-				calcTotal();
-			}
-		})
-
 		var canbtn = true;
-		var tare_check = 0;
 		//确定提交
 		$(".j_btn").on("click", function () {
 			if (!canbtn) {
@@ -317,6 +307,10 @@
 					return false;
 				}
 			}
+			if (!$("input[name='custom_id']:checked").val()) {
+				layer.msg("请选择卸货区！");
+				return false;
+			}
 			var data = {
 				code: $("#order_code").val(),
 				products_self_id: $("#proself_id").val(),
@@ -327,7 +321,7 @@
 				point: $(".point").val() || 0,
 				price: $(".price").val(),
 				total: $(".total").val(),
-				tare_check: tare_check,
+				custom_id: $("input[name='custom_id']:checked").val() || "",
 			}
 			canbtn = false;
 			api.showProgress({
@@ -362,20 +356,17 @@
 		})
 	};
 	function initOrderCode() {
-		orderCode = (api.pageParam && api.pageParam.code) || createOrderCode();
+		var pageCode = $.trim((api.pageParam && api.pageParam.code) || "");
+		orderCode = isValidOrderCode(pageCode) ? pageCode : createOrderCode();
 		$("#order_code").val(orderCode);
 		$("#order_code_text").text(orderCode);
 		renderOrderQrcode(orderCode);
 	}
 	function createOrderCode() {
-		var now = new Date();
-		var month = ("0" + (now.getMonth() + 1)).slice(-2);
-		var day = ("0" + now.getDate()).slice(-2);
-		var hours = ("0" + now.getHours()).slice(-2);
-		var minutes = ("0" + now.getMinutes()).slice(-2);
-		var seconds = ("0" + now.getSeconds()).slice(-2);
-		var millis = ("00" + now.getMilliseconds()).slice(-3);
-		return "BD" + now.getFullYear() + month + day + hours + minutes + seconds + millis;
+		return String(Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 900000000) + 100000000);
+	}
+	function isValidOrderCode(code) {
+		return /^\d{10}$/.test(code || "");
 	}
 	function renderOrderQrcode(code) {
 		$("#order_qrcode").empty().qrcode({
@@ -621,6 +612,18 @@
 				htmls += "<option value='" + item.self_id + "'>" + item.name + "</option>"
 			})
 			$(".suppliers_self_id").html(htmls)
+			var customHtmls = "";
+			var customList = ret.custom_list || [];
+			var defaultCustomId = (api.pageParam && api.pageParam.custom_id) || "";
+			if (!defaultCustomId && customList.length) {
+				defaultCustomId = customList[customList.length - 1].custom_id || "";
+			}
+			$.each(customList, function (index, item) {
+				var checked = (item.custom_id || "").toString() == defaultCustomId.toString() ? " checked" : "";
+				var label = item.loading_area || item.name || "";
+				customHtmls += "<label><input class='aui-radio' type='radio' name='custom_id' value='" + item.custom_id + "'" + checked + "> " + label + "</label>";
+			});
+			$("#custom_id_list").html(customHtmls);
 			loadinghide();
 		}, function (err) {
 			if (err) {
