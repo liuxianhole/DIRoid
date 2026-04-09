@@ -90,6 +90,12 @@
 			color: #1f2937;
 		}
 
+		.aui-list-item-input input[readonly],
+		.aui-list-item-input select[disabled] {
+			background: #f8fbff;
+			color: #64748b;
+		}
+
 		.aui-radio:checked {
 			background-color: #2f75be;
 			border-color: #2f75be;
@@ -100,6 +106,11 @@
 			height: 2.2rem;
 			line-height: 2.2rem;
 			padding: 0 1rem;
+		}
+
+		.aui-list-item-btn {
+			flex-wrap: wrap;
+			row-gap: 0.6rem;
 		}
 	</style>
 </head>
@@ -126,7 +137,7 @@
 						产品名称
 					</div>
 					<div class="aui-list-item-input">
-						<select id="proself_id" class="products_self_id">
+						<select id="proself_id" class="products_self_id" disabled>
 							<option value="">请选择产品名称</option>
 						</select>
 					</div>
@@ -138,7 +149,7 @@
 						供应商
 					</div>
 					<div class="aui-list-item-input">
-						<select class="suppliers_self_id">
+						<select class="suppliers_self_id" disabled>
 						</select>
 					</div>
 				</div>
@@ -149,7 +160,7 @@
 						毛重
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="gw" placeholder="请输入毛重">
+						<input type="number" class="gw" placeholder="请输入毛重" readonly>
 					</div>
 				</div>
 			</li>
@@ -169,7 +180,7 @@
 						扣杂
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="clasp" placeholder="" value="0">
+						<input type="number" class="clasp" placeholder="" value="0" readonly>
 					</div>
 				</div>
 			</li>
@@ -180,7 +191,7 @@
 					</div>
 					<div class="aui-list-item-input">
 						<div class="percent-input-wrap">
-							<input type="number" class="point" placeholder="请输入扣点" value="0" min="0" max="100">
+							<input type="number" class="point" placeholder="请输入扣点" value="0" min="0" max="100" readonly>
 							<span class="percent-suffix">%</span>
 						</div>
 					</div>
@@ -192,7 +203,7 @@
 						单价
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="price" placeholder="输入单价">
+						<input type="number" class="price" placeholder="输入单价" readonly>
 					</div>
 				</div>
 			</li>
@@ -202,7 +213,7 @@
 						金额
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="total" placeholder="自动计算金额" readonly>
+						<input type="number" class="total" placeholder="请输入金额">
 					</div>
 				</div>
 			</li>
@@ -221,6 +232,7 @@
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
 					<div class="aui-btn aui-btn-info aui-margin-r-15 j_btn">保存/打印</div>
+					<div class="aui-btn aui-btn-success aui-margin-r-15 j_wechat_btn">微信支付</div>
 					<div class="aui-btn aui-btn-danger aui-margin-l-15 close-pop">取消</div>
 				</div>
 			</li>
@@ -264,6 +276,9 @@
 		});
 		$(".is_pay").on("click", function () {
 			is_pay = parseInt($(this).val() || 1, 10);
+		});
+		$(".j_wechat_btn").on("click", function () {
+			openWechatPayPage();
 		});
 		$(".j_btn").on("click", function () {
 			submitWeight();
@@ -371,7 +386,7 @@
 	}
 
 	function submitWeight() {
-		var code = $.trim($(".order_code_input").val() || "");
+		var code = getCurrentOrderCode();
 		if (!code) {
 			layer.msg("请输入订单号！");
 			return false;
@@ -462,6 +477,23 @@
 				saveerrlog(err.body);
 			}
 			api.hideProgress();
+		});
+	}
+
+	function getCurrentOrderCode() {
+		return $.trim(orderCode || $("#order_code_text").text() || "");
+	}
+
+	function openWechatPayPage() {
+		var code = getCurrentOrderCode();
+		if (!code) {
+			layer.msg("未查询到订单号！");
+			return false;
+		}
+		openWinNormal("wechat_pay", "widget://html/new/wechat-pay.html", {
+			code: code,
+			total: $(".total").val() || "0",
+			orderNo: code
 		});
 	}
 
