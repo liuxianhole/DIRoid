@@ -25,11 +25,11 @@
 			margin-bottom: 0.5rem;
 		}
 
-		.order-title {
+		.order-code {
 			font-size: 0.82rem;
 			font-weight: 700;
 			color: #333;
-			margin-bottom: 0.45rem;
+			margin-top: 0.25rem;
 		}
 
 		.qrcode-wrap {
@@ -60,9 +60,9 @@
 			font-size: 0.75rem;
 		}
 
-		.order-input-wrap {
-			padding: 0 0.75rem;
-			margin-top: 0.5rem;
+		.readonly-field {
+			background: #f5f5f5;
+			color: #666;
 		}
 
 		.aui-list-item-btn .aui-btn {
@@ -84,10 +84,8 @@
 		</header>
 	</div>
 	<div class="qr-box">
-		<div class="order-title">单号</div>
-		<div class="order-input-wrap">
-			<input type="text" class="aui-input order_code_input" placeholder="请输入订单号">
-		</div>
+		<div>单号</div>
+		<div class="order-code" id="order_code_text"></div>
 		<div class="qrcode-wrap" id="order_qrcode"></div>
 	</div>
 	<div class="aui-content aui-margin-b-15">
@@ -98,7 +96,7 @@
 						产品名称
 					</div>
 					<div class="aui-list-item-input">
-						<select id="proself_id" class="products_self_id">
+						<select id="proself_id" class="products_self_id readonly-field" disabled>
 							<option value="">请选择产品名称</option>
 						</select>
 					</div>
@@ -110,7 +108,7 @@
 						供应商
 					</div>
 					<div class="aui-list-item-input">
-						<select class="suppliers_self_id">
+						<select class="suppliers_self_id readonly-field" disabled>
 						</select>
 					</div>
 				</div>
@@ -121,7 +119,7 @@
 						毛重
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="gw" placeholder="请输入毛重">
+						<input type="number" class="gw readonly-field" placeholder="请输入毛重" readonly>
 					</div>
 				</div>
 			</li>
@@ -142,7 +140,7 @@
 						扣杂
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="clasp" placeholder="" value="0">
+						<input type="number" class="clasp readonly-field" placeholder="" value="0" readonly>
 					</div>
 				</div>
 			</li>
@@ -153,7 +151,7 @@
 					</div>
 					<div class="aui-list-item-input">
 						<div class="percent-input-wrap">
-							<input type="number" class="point" placeholder="请输入扣点" value="0" min="0" max="100">
+							<input type="number" class="point readonly-field" placeholder="请输入扣点" value="0" min="0" max="100" readonly>
 							<span class="percent-suffix">%</span>
 						</div>
 					</div>
@@ -165,7 +163,7 @@
 						单价
 					</div>
 					<div class="aui-list-item-input">
-						<input type="number" class="price" placeholder="输入单价">
+						<input type="number" class="price readonly-field" placeholder="输入单价" readonly>
 					</div>
 				</div>
 			</li>
@@ -218,16 +216,7 @@
 		$(".close-pop").on("click", function () {
 			api.closeWin({});
 		});
-		$(".order_code_input").on("change blur", function () {
-			var code = $.trim($(this).val());
-			if (!code) {
-				return;
-			}
-			orderCode = code;
-			renderOrderCode(code);
-			fetchOrderInfo(code);
-		});
-		$(".gw, .tare, .clasp, .point, .price").on("input change", function () {
+		$(".tare").on("input change", function () {
 			calcTotal();
 		});
 		$(".j_btn").on("click", function () {
@@ -238,7 +227,6 @@
 	function initOrderCode() {
 		orderCode = (api.pageParam && api.pageParam.code) || getQueryParam("code") || "";
 		if (orderCode) {
-			$(".order_code_input").val(orderCode);
 			renderOrderCode(orderCode);
 			fetchOrderInfo(orderCode);
 			return;
@@ -247,6 +235,7 @@
 	}
 
 	function renderOrderCode(code) {
+		$("#order_code_text").text(code || "未输入订单号");
 		$("#order_qrcode").empty();
 		if (!code) {
 			return;
@@ -400,7 +389,7 @@
 	}
 
 	function submitWeight() {
-		var code = $.trim($(".order_code_input").val() || "");
+		var code = $.trim(orderCode || $("#order_code_text").text() || "");
 		if (!code) {
 			layer.msg("请输入订单号！");
 			return false;
@@ -526,8 +515,8 @@
 		var weight = gw - tare - clasp;
 		return {
 			title: "订单小票",
-			orderNo: $.trim($(".order_code_input").val()) || orderCode,
-			qrText: $.trim($(".order_code_input").val()) || orderCode,
+			orderNo: orderCode || $.trim($("#order_code_text").text() || ""),
+			qrText: orderCode || $.trim($("#order_code_text").text() || ""),
 			productName: $("#proself_id option:selected").text() || "",
 			supplierName: $(".suppliers_self_id option:selected").text() || "",
 			grossWeight: (gw || 0) + " kg",

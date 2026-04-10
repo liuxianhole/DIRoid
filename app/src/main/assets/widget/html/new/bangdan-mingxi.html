@@ -338,9 +338,15 @@
 		var info = pendingOrderInfo || {};
 		if (info.products_self_id) {
 			$("#proself_id").val(info.products_self_id);
+			if ($("#proself_id").val() != info.products_self_id && info.product_name) {
+				$("#proself_id").html("<option value='" + info.products_self_id + "' selected>" + info.product_name + "</option>");
+			}
 		}
 		if (info.suppliers_self_id) {
 			$(".suppliers_self_id").val(info.suppliers_self_id);
+			if ($(".suppliers_self_id").val() != info.suppliers_self_id && info.supplier_name) {
+				$(".suppliers_self_id").html("<option value='" + info.suppliers_self_id + "' selected>" + info.supplier_name + "</option>");
+			}
 		}
 		$(".gw").val(info.gw || "");
 		$(".tare").val(info.tare || 0);
