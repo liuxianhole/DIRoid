@@ -153,7 +153,13 @@
 			$(".search-ipt").attr("placeholder", typeConfig[currentType].placeholder);
 			getinfo();
 		});
-		$(".j_search_btn, .j_refresh_btn").on("click", function () {
+		$(".j_search_btn").on("click", function () {
+			if (tryOpenByOrderCode()) {
+				return;
+			}
+			getinfo();
+		});
+		$(".j_refresh_btn").on("click", function () {
 			getinfo();
 		});
 		$(".j_scan_btn").on("click", function () {
@@ -191,10 +197,8 @@
 					hint("未识别到榜单编号");
 					return;
 				}
-				openWinNormal("bangdan_jiesuan", "widget://html/new/bangdan-jiesuan.html", {
-					code: code,
-					wintitle: "磅单结算"
-				});
+				$(".search-ipt").val(code);
+				openOrderPage(code);
 				if (FNScanner.closeView) {
 					FNScanner.closeView();
 				}
@@ -204,6 +208,32 @@
 				}
 			}
 		});
+	}
+
+	function looksLikeOrderCode(keyword) {
+		keyword = $.trim(keyword || "");
+		return /^\d{10}$/.test(keyword) || /^BD\d{17}$/i.test(keyword);
+	}
+
+	function openOrderPage(code) {
+		code = $.trim(code || "");
+		if (!code) {
+			hint("未识别到榜单编号");
+			return false;
+		}
+		openWinNormal("bangdan_jiesuan", "widget://html/new/bangdan-jiesuan.html", {
+			code: code,
+			wintitle: "磅单结算"
+		});
+		return true;
+	}
+
+	function tryOpenByOrderCode() {
+		var keyword = $.trim($(".search-ipt").val() || "");
+		if (!looksLikeOrderCode(keyword)) {
+			return false;
+		}
+		return openOrderPage(keyword);
 	}
 
 	function openCheckWin(suppliersSelfId) {

@@ -134,7 +134,13 @@
 			currentType = $(this).data("type");
 			getinfo();
 		});
-		$(".j_search_btn, .j_refresh_btn").on("click", function () {
+		$(".j_search_btn").on("click", function () {
+			if (tryOpenByOrderCode()) {
+				return;
+			}
+			getinfo();
+		});
+		$(".j_refresh_btn").on("click", function () {
 			getinfo();
 		});
 		$(".j_scan_btn").on("click", function () {
@@ -193,6 +199,20 @@
 		}
 		$(".search-ipt").val(code);
 		window.location.href = "bangdan-pizhong.html?code=" + encodeURIComponent(code);
+	}
+
+	function looksLikeOrderCode(keyword) {
+		keyword = $.trim(keyword || "");
+		return /^\d{10}$/.test(keyword) || /^BD\d{17}$/i.test(keyword);
+	}
+
+	function tryOpenByOrderCode() {
+		var keyword = $.trim($(".search-ipt").val() || "");
+		if (!looksLikeOrderCode(keyword)) {
+			return false;
+		}
+		goToTarePage(keyword);
+		return true;
 	}
 
 	function initDatePicker() {

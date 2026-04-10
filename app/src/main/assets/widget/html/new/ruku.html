@@ -122,6 +122,9 @@
 			$(".search-ipt").attr("placeholder", "请输入" + phList[index]);
 		});
 		$(".j_search_btn").on("click", function () {
+			if (tryOpenByOrderCode()) {
+				return;
+			}
 			getinfo();
 		});
 		$(".j_scan_btn").on("click", function () {
@@ -179,6 +182,21 @@
 			code: code,
 			wintitle: "入库单明细"
 		});
+	}
+
+	function looksLikeOrderCode(keyword) {
+		keyword = $.trim(keyword || "");
+		return /^\d{10}$/.test(keyword) || /^BD\d{17}$/i.test(keyword);
+	}
+
+	function tryOpenByOrderCode() {
+		var index = $(".phtype").index($(".aui-active"));
+		var keyword = $.trim($(".search-ipt").val() || "");
+		if (index !== 0 || !looksLikeOrderCode(keyword)) {
+			return false;
+		}
+		goToMingxiPage(keyword);
+		return true;
 	}
 
 	function getinfo() {
