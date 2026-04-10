@@ -182,7 +182,7 @@
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label">
-						实际支付
+						金额
 					</div>
 					<div class="aui-list-item-input">
 						<input type="number" class="total" placeholder="请输入实际付款">
@@ -506,7 +506,7 @@
 		var point = parseFloat($(".point").val()) || 0;
 		var weight = gw - tare - clasp;
 		return {
-			title: "订单小票",
+			title: "结算单",
 			orderNo: $("#order_code").val() || orderCode,
 			qrText: $("#order_code").val() || orderCode,
 			productName: $("#proself_id option:selected").text() || "",
@@ -520,8 +520,6 @@
 			price: ($(".price").val() || "0") + " 元/kg",
 			amount: ($(".total").val() || "0") + " 元",
 			actualPay: ($(".total").val() || "0") + " 元",
-			payType: "现场支付",
-			payTime: formatDateTime(new Date()),
 			remark: "补单保存后打印"
 		};
 	}

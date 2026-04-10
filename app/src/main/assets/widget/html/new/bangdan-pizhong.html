@@ -201,6 +201,7 @@
 	var time_id = null;
 	var orderCode = "";
 	var tare_check = 1;
+	var pendingOrderInfo = null;
 
 	apiready = function () {
 		changeserverurl();
@@ -375,11 +376,23 @@
 	}
 
 	function fillOrderInfo(info) {
+		pendingOrderInfo = info || {};
+		applyOrderInfo();
+	}
+
+	function applyOrderInfo() {
+		var info = pendingOrderInfo || {};
 		if (info.products_self_id) {
 			$("#proself_id").val(info.products_self_id);
+			if ($("#proself_id").val() != info.products_self_id && info.product_name) {
+				$("#proself_id").html("<option value='" + info.products_self_id + "' selected>" + info.product_name + "</option>");
+			}
 		}
 		if (info.suppliers_self_id) {
 			$(".suppliers_self_id").val(info.suppliers_self_id);
+			if ($(".suppliers_self_id").val() != info.suppliers_self_id && info.supplier_name) {
+				$(".suppliers_self_id").html("<option value='" + info.suppliers_self_id + "' selected>" + info.supplier_name + "</option>");
+			}
 		}
 		$(".gw").val(info.gw || "");
 		$(".clasp").val(info.clasp || 0);
@@ -514,7 +527,7 @@
 		var point = parseFloat($(".point").val()) || 0;
 		var weight = gw - tare - clasp;
 		return {
-			title: "订单小票",
+			title: "结算单",
 			orderNo: orderCode || $.trim($("#order_code_text").text() || ""),
 			qrText: orderCode || $.trim($("#order_code_text").text() || ""),
 			productName: $("#proself_id option:selected").text() || "",
@@ -526,8 +539,6 @@
 			weight: (weight > 0 ? weight.toFixed(2) : "0.00") + " kg",
 			price: ($(".price").val() || "0") + " 元/kg",
 			amount: ($(".total").val() || "0") + " 元",
-			payType: "现场支付",
-			payTime: formatDateTime(new Date()),
 			remark: "磅单回皮保存后打印"
 		};
 	}
@@ -575,6 +586,9 @@
 				htmls += "<option value='" + item.self_id + "'>" + item.name + "</option>";
 			});
 			$(".suppliers_self_id").html(htmls);
+			if (pendingOrderInfo) {
+				applyOrderInfo();
+			}
 		}, function (err) {
 			if (err) {
 				saveerrlog(err.body);

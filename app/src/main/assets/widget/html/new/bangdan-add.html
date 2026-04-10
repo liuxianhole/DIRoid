@@ -352,15 +352,15 @@
 			});
 			zzappajax("post", hosturl + "app/storage_open.html", data, function (ret) {
 				if (ret.err == "false") {
-					// var printResult = printSavedOrder();
-					// if (!printResult.success) {
-					// 	api.hideProgress();
-					// 	canbtn = true;
-					// 	hint(printResult.message || "订单已保存，但打印失败");
-					// 	return;
-					// }
-					// refreshBangdanList();
-					// hint(printResult.message || "订单已保存并已发送打印");
+					var printResult = printSavedOrder();
+					if (!printResult.success) {
+						api.hideProgress();
+						canbtn = true;
+						hint(printResult.message || "订单已保存，但打印失败");
+						return;
+					}
+					refreshBangdanList();
+					hint(printResult.message || "订单已保存并已发送打印");
 					window.setTimeout(function () {
 						window.location.reload();
 					}, 500);
@@ -508,7 +508,7 @@
 		var point = parseFloat($(".point").val()) || 0;
 		var weight = gw - clasp;
 		return {
-			title: "订单小票",
+			title: "定价卸货榜单",
 			orderNo: $("#order_code").val() || orderCode,
 			qrText: $("#order_code").val() || orderCode,
 			productName: $("#proself_id option:selected").text() || "",
@@ -518,8 +518,6 @@
 			pointPercent: point.toFixed(2) + "%",
 			weight: (weight > 0 ? weight.toFixed(2) : "0.00") + " kg",
 			price: ($(".price").val() || "0") + " 元/kg",
-			payType: "现场支付",
-			payTime: formatDateTime(new Date()),
 			remark: "新增磅单保存后打印"
 		};
 	}
