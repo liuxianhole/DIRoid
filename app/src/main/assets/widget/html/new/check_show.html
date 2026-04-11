@@ -90,7 +90,7 @@
 				</div>
 			</div>
 			<div class="aui-card-list-footer">
-				<div class="aui-text-99">榜单编号：{{d.code || d.iccode || ''}}</div>
+				<div class="aui-text-99">榜单编号：{{d.code || d.ic_code || ''}}</div>
 				<div class="aui-text-66">{{d.gmt_created || ''}}</div>
 			</div>
 		</div>
@@ -108,7 +108,7 @@
 	var page = 1;
 	var pagecount = 0;
 	var bdinfo = [];
-	var iccode = "";
+	var ic_code = "";
 	var sid = 0;
 	apiready = function () {
 		changeserverurl();
@@ -134,7 +134,7 @@
 			textDown: "下拉刷新",
 			textUp: "释放刷新"
 		}, function (ret, err) {
-			iccode = "";
+			ic_code = "";
 			page = 1;
 			getinfo();
 			api.toast({
@@ -309,7 +309,6 @@
 			}
 			api.execScript({
 				name: "paycheck",
-				frameName: "paycheck_",
 				script: "gettotal('" + ret.total_price + "')"
 			});
 			api.toast({

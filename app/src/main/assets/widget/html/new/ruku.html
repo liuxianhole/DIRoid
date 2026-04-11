@@ -42,7 +42,7 @@
 			<div class="rkitem aui-active zz-div-td3 phtype">榜单编号</div>
 			<div class="rkitem phtype zz-div-td2">品名</div>
 			<div class="rkitem zz-div-td2 phtype">分站</div>
-			<div class="rkitem phtype zz-div-td4">榜单编号</div>
+			<div class="rkitem phtype zz-div-td4">磅单编号</div>
 			<div class="rkitem phtype zz-div-td4">入场时间</div>
 			<div class="rkitem zz-div-td2 phtype">单价</div>
 		</div>
@@ -83,7 +83,7 @@
 					<div class="column-cnt aui-text-center">{{d.piclist ? '已拍照' : '未拍照'}}</div>
 				</div>
 				<div class="aui-card-list-content-padded aui-border-b zz-div-box aui-font-size-12 ruzm">
-					<div class="zz-div-td1 aui-text-99">磅单编号：{{d.iccode || ''}}</div>
+					<div class="zz-div-td1 aui-text-99">磅单编号：{{d.ic_code || ''}}</div>
 					<div class="zz-div-box cpmoery">
 						<div class="cpmoery-danjia column-cnt">单价：<span class="aui-text-danger">{{d.price || ''}}</span></div>
 						<div class="zz-div-td1 column-cnt">总额：<span class="aui-text-danger">{{d.total || ''}}</span></div>
@@ -106,7 +106,7 @@
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
 	var phList = ["榜单编号", "产品名称", "分站名称", "磅单编号", "入场时间", "产品单价"];
-	var searchTypes = ["iccode", "product_name", "company_name", "iccode", "gmt_created", "price"];
+	var searchTypes = ["code", "product_name", "company_name", "ic_code", "gmt_created", "price"];
 
 	apiready = function () {
 		changeserverurl();
@@ -199,6 +199,14 @@
 		return true;
 	}
 
+	function formatNumber(value, decimals) {
+		var num = parseFloat(value);
+		if (isNaN(num)) {
+			num = 0;
+		}
+		return num.toFixed(decimals);
+	}
+
 	function getinfo() {
 		var index = $(".phtype").index($(".aui-active"));
 		var data = {
@@ -216,8 +224,8 @@
 				});
 			});
 			$(".ruku").html(html);
-			$(".total_count").text(ret.listcount || "");
-			$(".total_price").text(ret.total_price || "");
+			$(".total_count").text(formatNumber(ret.storage_weight, 1));
+			$(".total_price").text(formatNumber(ret.total_price, 2));
 			$(".mxall").toggle(list.length > 0);
 			$(".nodata").toggle(list.length === 0);
 		}, function (err) {

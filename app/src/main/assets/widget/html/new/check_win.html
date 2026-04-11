@@ -165,7 +165,11 @@
 	}
 
 	function gettotal(total) {
-		$(".allje").html(total);
+		var num = parseFloat(total);
+		if (isNaN(num)) {
+			num = 0;
+		}
+		$(".allje").html(num.toFixed(2));
 	}
 
 	function closeWin() {

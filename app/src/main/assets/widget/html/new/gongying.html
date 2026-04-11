@@ -81,7 +81,7 @@
 			<li class="aui-list-item">
 				<div class="aui-list-item-inner">
 					<div class="aui-list-item-label ">供货人编码：</div>
-					<div class="aui-list-item-input"><input type="text" class="aui-font-size-14 supplier-iccode" placeholder="自动生成" readonly>
+					<div class="aui-list-item-input"><input type="text" class="aui-font-size-14 supplier-ic_code" placeholder="自动生成" readonly>
 					</div>
 				</div>
 			</li>
@@ -188,7 +188,7 @@
 	function resetSupplierForm() {
 		currentSupplierId = "";
 		$(".supplier-name").val("");
-		$(".supplier-iccode").val("");
+		$(".supplier-ic_code").val("");
 		$(".supplier-contact").val("");
 		$(".supplier-mobile").val("");
 		$("#city").val("");
@@ -203,7 +203,7 @@
 		}
 		info = info || {};
 		$(".supplier-name").val(info.name || "");
-		$(".supplier-iccode").val(info.iccode || info.ic_code || "");
+		$(".supplier-ic_code").val(info.ic_code || "");
 		$(".supplier-contact").val(info.contact || "");
 		$(".supplier-mobile").val(info.mobile || "");
 		$("#city").val("");

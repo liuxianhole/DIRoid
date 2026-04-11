@@ -104,9 +104,9 @@
 					</div>
 				</div>
 				<div class="aui-card-list-footer">
-					<div class="aui-text-99">榜单编号：{{d.code || d.iccode || ''}}</div>
+					<div class="aui-text-99">榜单编号：{{d.code || d.ic_code || ''}}</div>
 					<div>
-						<div class="aui-btn aui-btn-info j_tarebtn" data-code="{{d.code || d.iccode || ''}}">回皮</div>
+						<div class="aui-btn aui-btn-info j_tarebtn" data-code="{{d.code || d.ic_code || ''}}">回皮</div>
 					</div>
 				</div>
 			</div>
@@ -244,7 +244,7 @@
 		};
 		if (keyword) {
 			data.code = keyword;
-			data.iccode = keyword;
+			data.ic_code = keyword;
 			data.keyword = keyword;
 		}
 		if ($(".timeipt").eq(0).val()) {
