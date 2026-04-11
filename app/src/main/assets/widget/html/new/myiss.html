@@ -93,20 +93,48 @@
 			if (!canSave || !userId) {
 				return;
 			}
+			var contact = $.trim($(".contact").val() || "");
+			var mobile = $.trim($(".mobile").val() || "");
+			var sex = $(".sex:checked").val() || "男";
+			var pwd = $.trim($(".pwd").val() || "");
+			var isChangePwd = $(".ischange_pwd").is(":checked");
+			if (!contact) {
+				layer.msg("请输入姓名");
+				return;
+			}
+			if (!mobile) {
+				layer.msg("请输入手机号");
+				return;
+			}
+			if (isChangePwd && !pwd) {
+				layer.msg("请输入新密码");
+				return;
+			}
 			var data = {
 				user_id: userId,
-				mobile: $(".mobile").val(),
-				contact: $(".contact").val(),
-				sex: $(".sex:checked").val(),
-				pwd: $(".pwd").val()
+				mobile: mobile,
+				contact: contact,
+				sex: sex
 			};
-			if ($(".ischange_pwd").is(":checked") && $(".pwd").val()) {
+			if (isChangePwd) {
 				data.ischange_pwd = 1;
+				data.pwd = pwd;
 			}
 			canSave = false;
 			zzappajax("post", hosturl + "app/myinfo_save.html", data, function (ret) {
-				layer.msg(ret.errtext || "保存成功");
 				canSave = true;
+				if (ret && ret.err == "true") {
+					layer.msg(ret.errtext || "保存失败");
+					return;
+				}
+				$(".pwd").val("");
+				$(".ischange_pwd").prop("checked", false);
+				layer.msg(ret.errtext || "保存成功");
+				api.execScript({
+					name: "root",
+					frameName: "main",
+					script: "refreshHomeData && refreshHomeData();"
+				});
 			}, function (err) {
 				if (err) {
 					saveerrlog(err.body);
@@ -121,6 +149,10 @@
 
 	function getInfo() {
 		zzappajax("post", hosturl + "app/myinfo.html", {}, function (ret) {
+			if (ret && ret.err == "true") {
+				layer.msg(ret.msg || ret.errtext || "获取个人资料失败");
+				return;
+			}
 			$(".contact").val(ret.contact || "");
 			$(".mobile").val(ret.mobile || "");
 			$(".sex[value='" + (ret.sex || "男") + "']").prop("checked", true);

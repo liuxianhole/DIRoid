@@ -72,12 +72,6 @@
 			line-height: 1.2rem;
 		}
 
-		.profile-desc {
-			font-size: 0.65rem;
-			color: #94a3b8;
-			margin-top: 0.15rem;
-		}
-
 		.profile-link {
 			color: #2b6cb0;
 			font-size: 0.72rem;
@@ -186,7 +180,6 @@
 			<div class="profile-main">
 				<div class="profile-greeting">当前登录用户</div>
 				<div class="profile-name"></div>
-				<div class="profile-desc">查看并编辑个人资料</div>
 			</div>
 			<div class="profile-link">进入</div>
 		</a>
@@ -290,6 +283,9 @@
 <script type="text/javascript">
 	var sid = 0;
 	var BADGE_COUNT_KEY = "new_index_bd_num";
+	var USER_QX_CACHE_KEY = "new_index_user_qx";
+	var USER_UTYPE_CACHE_KEY = "new_index_user_utype";
+	var MENU_SELECTOR = ".j_kaidan,.j_scan,.j_buodan,.j_fukuan,.j_huizong,.j_mingxi,.j_gongying,.j_fenzhan,.j_chanping,.j_renyuan,.j_dibang_admin,.j_print";
 
 	apiready = function () {
 		if (!UserInfo.has_login()) {
@@ -299,6 +295,7 @@
 		changeserverurl();
 		bindEvent();
 		restoreBadgeCount();
+		restoreMenuState();
 		refreshHomeData();
 		getsocketbandang();
 	};
@@ -372,57 +369,105 @@
 		setBadgeCount(localStorage.getItem(BADGE_COUNT_KEY) || 0);
 	}
 
+	function safeRefreshHeaderDone() {
+		if (window.api && api.refreshHeaderLoadDone) {
+			api.refreshHeaderLoadDone();
+		}
+	}
+
 	function getProfile() {
 		zzappajax("post", hosturl + "app/myinfo.html", {}, function (ret) {
-			$(".profile-name").text(ret.contact || ret.mobile || "");
+			$(".profile-name").text(ret.username || UserInfo.username() || "");
 		}, function () {
-			$(".profile-name").text("");
+			$(".profile-name").text(UserInfo.username() || "");
 		});
+	}
+
+	function isValidQxList(ret) {
+		return ret && typeof ret.indexOf == "function" && ret.length > 0 && !ret.hasOwnProperty("tokenerr");
+	}
+
+	function applyUserQx(ret) {
+		if (!isValidQxList(ret)) {
+			return false;
+		}
+		$(MENU_SELECTOR).show();
+		if (ret.indexOf("price") < 0) {
+			$(".j_kaidan").hide();
+			$(".j_scan").hide();
+		}
+		if (ret.indexOf("price_bd") < 0) {
+			$(".j_buodan").hide();
+		}
+		if (ret.indexOf("price_sh") < 0) {
+			$(".j_fukuan").hide();
+		}
+		if (ret.indexOf("tong_ji_all") < 0) {
+			$(".j_huizong").hide();
+		}
+		if (ret.indexOf("tong_ji_ming_xi") < 0) {
+			$(".j_mingxi").hide();
+		}
+		if (ret.indexOf("gong_yin_shang") < 0) {
+			$(".j_gongying").hide();
+		}
+		if (ret.indexOf("feng_zhan") < 0) {
+			$(".j_fenzhan").hide();
+		}
+		if (ret.indexOf("products") < 0) {
+			$(".j_chanping").hide();
+		}
+		if (ret.indexOf("users") < 0) {
+			$(".j_renyuan").hide();
+		}
+		return true;
+	}
+
+	function applyUserType(utype) {
+		if (utype == "1") {
+			$(".j_fenzhan").show();
+		}
+		if (utype == "1" || utype == "4") {
+			$(".j_renyuan").show();
+		}
+	}
+
+	function restoreMenuState() {
+		var cachedQx = localStorage.getItem(USER_QX_CACHE_KEY);
+		var cachedUtype = localStorage.getItem(USER_UTYPE_CACHE_KEY);
+		if (!cachedQx) {
+			$(MENU_SELECTOR).show();
+			return;
+		}
+		try {
+			applyUserQx(JSON.parse(cachedQx));
+			applyUserType(cachedUtype);
+		} catch (e) {
+			localStorage.removeItem(USER_QX_CACHE_KEY);
+			$(MENU_SELECTOR).show();
+		}
 	}
 
 	function getuserqx() {
 		zzappajax("post", hosturl + "app/getuser_qx.html", '', function (ret) {
-			$(".j_kaidan,.j_scan,.j_buodan,.j_fukuan,.j_huizong,.j_mingxi,.j_gongying,.j_fenzhan,.j_chanping,.j_renyuan,.j_dibang_admin,.j_print").show();
-			if (ret.hasOwnProperty("tokenerr")) {
+			if (ret && ret.hasOwnProperty("tokenerr")) {
+				restoreMenuState();
+				safeRefreshHeaderDone();
 				return false;
 			}
-			if (ret) {
-				if (ret.indexOf("price") < 0) {
-					$(".j_kaidan").hide();
-					$(".j_scan").hide();
-				}
-				if (ret.indexOf("price_bd") < 0) {
-					$(".j_buodan").hide();
-				}
-				if (ret.indexOf("price_sh") < 0) {
-					$(".j_fukuan").hide();
-				}
-				if (ret.indexOf("tong_ji_all") < 0) {
-					$(".j_huizong").hide();
-				}
-				if (ret.indexOf("tong_ji_ming_xi") < 0) {
-					$(".j_mingxi").hide();
-				}
-				if (ret.indexOf("gong_yin_shang") < 0) {
-					$(".j_gongying").hide();
-				}
-				if (ret.indexOf("feng_zhan") < 0) {
-					$(".j_fenzhan").hide();
-				}
-				if (ret.indexOf("products") < 0) {
-					$(".j_chanping").hide();
-				}
-				if (ret.indexOf("users") < 0) {
-					$(".j_renyuan").hide();
-				}
+			if (applyUserQx(ret)) {
+				localStorage.setItem(USER_QX_CACHE_KEY, JSON.stringify(ret));
+			} else {
+				restoreMenuState();
 			}
-			api.refreshHeaderLoadDone();
+			safeRefreshHeaderDone();
 		}, function (err) {
 			if (err) {
 				saveerrlog(err.body);
 			}
 			api.hideProgress();
-			api.refreshHeaderLoadDone();
+			restoreMenuState();
+			safeRefreshHeaderDone();
 			return false;
 		});
 	}
@@ -431,19 +476,18 @@
 		zzappajax("post", hosturl + "app/get_num.html", '', function (ret) {
 			var utype = ret.utype;
 			setBadgeCount(ret.count);
-			if (utype == "1") {
-				$(".j_fenzhan").show();
+			if (utype) {
+				localStorage.setItem(USER_UTYPE_CACHE_KEY, utype);
+				applyUserType(utype);
 			}
-			if (utype == "1" || utype == "4") {
-				$(".j_renyuan").show();
-			}
-			api.refreshHeaderLoadDone();
+			safeRefreshHeaderDone();
 		}, function (err) {
 			if (err) {
 				saveerrlog(err.body);
 			}
 			api.hideProgress();
-			api.refreshHeaderLoadDone();
+			applyUserType(localStorage.getItem(USER_UTYPE_CACHE_KEY));
+			safeRefreshHeaderDone();
 			return false;
 		});
 	}

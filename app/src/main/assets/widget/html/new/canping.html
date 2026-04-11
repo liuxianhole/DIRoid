@@ -24,7 +24,7 @@
 <body class="new-page-skin">
 	<div style="height:2.25rem;">
 		<header class="aui-bar aui-bar-nav aui-border-b new-page-header">
-			<a class="aui-pull-left" href="javascript:void(0)" onclick="javascript :history.back(-1)">
+			<a class="aui-pull-left" href="index.html">
 				<span class="iconfont">&#xe611;</span>&nbsp;&nbsp;
 			</a>
 			<div class="aui-title">
@@ -73,7 +73,7 @@
 						产品名称：
 					</div>
 					<div class="aui-list-item-input">
-						<input type="text" class="aui-font-size-14" placeholder="请输入产品名称">
+						<input type="text" class="aui-font-size-14 product-name" placeholder="请输入产品名称">
 					</div>
 				</div>
 			</li>
@@ -83,7 +83,7 @@
 						规 格：
 					</div>
 					<div class="aui-list-item-input">
-						<input type="text" class="aui-font-size-14" placeholder="请输入规格">
+						<input type="text" class="aui-font-size-14 product-spec" placeholder="请输入规格">
 					</div>
 				</div>
 			</li>
@@ -93,8 +93,10 @@
 						计数单位：
 					</div>
 					<div class="aui-list-item-input">
-						<select name="" class="aui-font-size-14">
+						<select name="" class="aui-font-size-14 product-unit">
 							<option value="">请选择</option>
+							<option value="千克">千克</option>
+							<option value="吨">吨</option>
 						</select>
 					</div>
 				</div>
@@ -102,7 +104,7 @@
 		</ul>
 		<div class="aui-text-center aui-padded-15">
 			<botton class="aui-btn aui-btn-outlined j_delgy">删除</botton>&nbsp;&nbsp;&nbsp;&nbsp;
-			<botton class="aui-btn aui-btn-info">保存</botton>
+			<botton class="aui-btn aui-btn-info j_save_btn">保存</botton>
 		</div>
 	</div>
 </body>
@@ -113,6 +115,8 @@
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
 	var keyword = "";
+	var currentProductId = "";
+	var productLayerIndex = 0;
 
 	apiready = function () {
 		changeserverurl();
@@ -126,28 +130,19 @@
 			getinfo();
 		});
 		$(".j_add_btn").on("click", function () {
-			layer.open({
-				type: 1,
-				title: false,
-				skin: 'layui-pop-gy',
-				closeBtn: 1,
-				anim: 2,
-				area: ["90%", ""],
-				shadeClose: true,
-				content: $(".pop-gy")
-			});
+			openProductDialog();
 		});
 		$(".list-box").on("click", ".j_bjbtn", function () {
-			layer.open({
-				type: 1,
-				title: false,
-				skin: 'layui-pop-gy',
-				closeBtn: 1,
-				anim: 2,
-				area: ["90%", ""],
-				shadeClose: true,
-				content: $(".pop-gy")
-			});
+			openProductDialog($(this).attr("data-id") || "");
+		});
+		$(".list-box").on("click", ".aui-padded-15", function (e) {
+			if ($(e.target).closest(".j_bjbtn").length) {
+				return;
+			}
+			openProductDialog($(this).find(".j_bjbtn").attr("data-id") || "");
+		});
+		$(".j_save_btn").on("click", function () {
+			saveProduct();
 		});
 		$(".j_delgy").on("click", function () {
 			layer.confirm('确定删除信息？', {
@@ -157,6 +152,93 @@
 			}, function () {
 				layer.closeAll();
 			});
+		});
+	}
+
+	function resetProductForm() {
+		currentProductId = "";
+		$(".product-name").val("");
+		$(".product-spec").val("");
+		$(".product-unit").val("");
+		$(".j_delgy").hide();
+	}
+
+	function ensureUnitOption(unit) {
+		unit = unit || "";
+		if (unit && $(".product-unit option").filter(function () {
+			return $(this).val() == unit;
+		}).length === 0) {
+			$(".product-unit").append($("<option></option>").val(unit).text(unit));
+		}
+		$(".product-unit").val(unit);
+	}
+
+	function fillProductForm(info) {
+		if (info && info.result) {
+			info = info.result;
+		}
+		info = info || {};
+		$(".product-name").val(info.name || "");
+		$(".product-spec").val(info.spec || "");
+		ensureUnitOption(info.unit || "");
+	}
+
+	function openProductDialog(id) {
+		resetProductForm();
+		currentProductId = id || "";
+		$(".j_delgy").toggle(!!currentProductId);
+		productLayerIndex = layer.open({
+			type: 1,
+			title: false,
+			skin: 'layui-pop-gy',
+			closeBtn: 1,
+			anim: 2,
+			area: ["90%", ""],
+			shadeClose: true,
+			content: $(".pop-gy")
+		});
+		if (currentProductId) {
+			zzappajax("post", hosturl + "app/product_mod.html", {
+				id: currentProductId
+			}, function (ret) {
+				if (ret && ret.err == "false") {
+					fillProductForm(ret.result || ret);
+					return;
+				}
+				layer.msg((ret && ret.errtext) || "获取产品信息失败");
+			}, function (err) {
+				if (err) {
+					saveerrlog(err.body);
+				}
+			});
+		}
+	}
+
+	function saveProduct() {
+		var name = $.trim($(".product-name").val() || "");
+		var spec = $.trim($(".product-spec").val() || "");
+		var unit = $(".product-unit").val() || "";
+		if (!name) {
+			layer.msg("请输入产品名称");
+			return false;
+		}
+		zzappajax("post", hosturl + "app/product_save.html", {
+			id: currentProductId,
+			name: name,
+			spec: spec,
+			unit: unit
+		}, function (ret) {
+			if (ret && ret.err == "true") {
+				layer.msg(ret.errtext || "保存失败");
+				return;
+			}
+			layer.msg(ret.errtext || "保存成功");
+			layer.close(productLayerIndex);
+			getinfo();
+		}, function (err) {
+			if (err) {
+				saveerrlog(err.body);
+			}
 		});
 	}
 
