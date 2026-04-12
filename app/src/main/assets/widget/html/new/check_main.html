@@ -114,6 +114,11 @@
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
 	var currentType = "pending";
+	var page = 1;
+	var pagecount = 1;
+	var pageLimit = 20;
+	var isLoading = false;
+	var itemTplRender = null;
 	var typeConfig = {
 		pending: {
 			url: "app/pricing_nocheck_suppliers.html",
@@ -142,7 +147,16 @@
 		changeserverurl();
 		bindEvent();
 		initDatePicker();
-		getinfo();
+		getinfo(true);
+		api.addEventListener({
+			name: "scrolltobottom"
+		}, function () {
+			if (isLoading || page >= pagecount) {
+				return false;
+			}
+			page += 1;
+			getinfo(false);
+		});
 	};
 
 	function bindEvent() {
@@ -151,16 +165,16 @@
 			$(this).addClass("aui-active");
 			currentType = ($(this).data("type") || "pending").toString();
 			$(".search-ipt").attr("placeholder", typeConfig[currentType].placeholder);
-			getinfo();
+			getinfo(true);
 		});
 		$(".j_search_btn").on("click", function () {
 			if (tryOpenByOrderCode()) {
 				return;
 			}
-			getinfo();
+			getinfo(true);
 		});
 		$(".j_refresh_btn").on("click", function () {
-			getinfo();
+			getinfo(true);
 		});
 		$(".j_scan_btn").on("click", function () {
 			openScan();
@@ -168,6 +182,9 @@
 		$(".list-box").on("click", ".j_openbtn", function () {
 			var suppliersSelfId = $(this).attr("data-sid");
 			openCheckWin(suppliersSelfId);
+		});
+		$(".timeipt").on("change", function () {
+			getinfo(true);
 		});
 	}
 
@@ -291,19 +308,50 @@
 		return num.toFixed(2);
 	}
 
-	function getinfo() {
+	function getPageCount(ret) {
+		var count = parseInt(ret.page_listcount || ret.pagecount || ret.page_count || ret.total_page || 1, 10);
+		return isNaN(count) || count < 1 ? 1 : count;
+	}
+
+	function getItemTplRender() {
+		if (!itemTplRender) {
+			itemTplRender = laytpl($api.html($api.byId("itemTpl")));
+		}
+		return itemTplRender;
+	}
+
+	function getinfo(reset) {
+		if (isLoading) {
+			return false;
+		}
+		if (reset !== false) {
+			page = 1;
+		}
+		isLoading = true;
 		var conf = typeConfig[currentType] || typeConfig.pending;
 		var keyword = $.trim($(".search-ipt").val() || "");
+		var timeMin = $.trim($(".timeipt").eq(0).val() || "");
+		var timeMax = $.trim($(".timeipt").eq(1).val() || "");
 		zzappajax("get", hosturl + conf.url, {
-			page: 1,
-			supplier_name: keyword
+			page: page,
+			limit: pageLimit,
+			page_size: pageLimit,
+			supplier_name: keyword,
+			time_min: timeMin,
+			time_max: timeMax,
+			gmt_start: timeMin,
+			gmt_end: timeMax
 		}, function (ret) {
+			isLoading = false;
 			if (ret && ret.hasOwnProperty("err") && ret.err == "true") {
-				$(".list-box").html("");
+				if (page == 1) {
+					$(".list-box").html("");
+				}
 				$(".nodata").show();
 				hint(ret.errtext || "暂无相关数据");
 				return false;
 			}
+			pagecount = getPageCount(ret || {});
 			var list = $.grep(ret.listall || [], function (item) {
 				var ok = isInDateRange(item);
 				if (!ok) {
@@ -316,23 +364,30 @@
 				return name.indexOf(keyword) > -1;
 			});
 			var html = "";
+			var render = getItemTplRender();
 			$.each(list, function (index, item) {
 				item.audit_text = conf.title;
 				item.btn_text = conf.btnText;
 				item.total = formatMoney(item.total);
-				var tpl = $api.html($api.byId("itemTpl"));
-				laytpl(tpl).render(item, function (rendered) {
+				render.render(item, function (rendered) {
 					html += rendered;
 				});
 			});
-			$(".list-box").html(html);
-			$(".nodata").toggle(list.length === 0);
+			if (page == 1) {
+				$(".list-box").html(html);
+			} else {
+				$(".list-box").append(html);
+			}
+			$(".nodata").toggle(page == 1 && list.length === 0);
 		}, function (err) {
+			isLoading = false;
 			if (err) {
 				saveerrlog(err.body);
 			}
-			$(".list-box").html("");
-			$(".nodata").show();
+			if (page == 1) {
+				$(".list-box").html("");
+				$(".nodata").show();
+			}
 		});
 	}
 </script>

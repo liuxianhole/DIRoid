@@ -67,6 +67,8 @@
 	var timeMin = "";
 	var timeMax = "";
 	var isPayValue = 3;
+	var pageLimit = 20;
+	var itemTplRender = null;
 
 	apiready = function () {
 		changeserverurl();
@@ -125,7 +127,11 @@
 	function getinfo() {
 		var data = {
 			page: 1,
-			priced: 1
+			limit: pageLimit,
+			page_size: pageLimit,
+			priced: 1,
+			tare_check: 1,
+			is_pay: isPayValue
 		};
 		if (keyword) {
 			data.ic_code = keyword;
@@ -148,9 +154,11 @@
 				return tareCheck == "1" && itemIsPay == String(isPayValue) && isInDateRange(item);
 			});
 			var html = "";
+			if (!itemTplRender) {
+				itemTplRender = laytpl($api.html($api.byId("itemTpl")));
+			}
 			$.each(list, function (index, item) {
-				var tpl = $api.html($api.byId("itemTpl"));
-				laytpl(tpl).render(item, function (rendered) {
+				itemTplRender.render(item, function (rendered) {
 					html += rendered;
 				});
 			});

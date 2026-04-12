@@ -83,6 +83,10 @@
 <script type="text/javascript" src="../../script/laytpl.js"></script>
 <script type="text/javascript" src="../../script/common.js"></script>
 <script type="text/javascript">
+	var itemTplRender = null;
+	var searchTimer = null;
+	var isLoading = false;
+
 	apiready = function () {
 		changeserverurl();
 		bindEvent();
@@ -110,12 +114,29 @@
 			nowText: '今天'
 		});
 		$(".timeipt").on("change", function () {
-			getinfo();
+			clearTimeout(searchTimer);
+			searchTimer = setTimeout(function () {
+				getinfo();
+			}, 200);
 		});
 	}
 
+	function getItemTplRender() {
+		if (!itemTplRender) {
+			itemTplRender = laytpl($api.html($api.byId("itemTpl")));
+		}
+		return itemTplRender;
+	}
+
 	function getinfo() {
-		var data = {};
+		if (isLoading) {
+			return false;
+		}
+		isLoading = true;
+		var data = {
+			aggregate: 1,
+			summary_only: 1
+		};
 		if ($(".timeipt").eq(0).val()) {
 			data.time_min = $(".timeipt").eq(0).val();
 		}
@@ -123,11 +144,12 @@
 			data.time_max = $(".timeipt").eq(1).val();
 		}
 		zzappajax("post", hosturl + "app/alldata.html", data, function (ret) {
+			isLoading = false;
 			var list = ret.listall || [];
 			var html = "";
+			var render = getItemTplRender();
 			$.each(list, function (index, item) {
-				var tpl = $api.html($api.byId("itemTpl"));
-				laytpl(tpl).render(item, function (rendered) {
+				render.render(item, function (rendered) {
 					html += rendered;
 				});
 			});
@@ -137,6 +159,7 @@
 			$(".nodata").toggle(list.length === 0);
 			$(".total-row").toggle(list.length > 0);
 		}, function (err) {
+			isLoading = false;
 			if (err) {
 				saveerrlog(err.body);
 			}
