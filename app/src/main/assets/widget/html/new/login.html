@@ -209,6 +209,7 @@
 			redirectToHome();
 			return;
 		}
+		fillLastUsername();
 		$(".j_login_btn").on("click", function () {
 			submitLogin();
 		});
@@ -218,6 +219,14 @@
 			}
 		});
 	};
+
+	function fillLastUsername() {
+		var username = localStorage.getItem("last_username") || UserInfo.username() || "";
+		if (username) {
+			$(".username").val(username);
+			$(".pwd").focus();
+		}
+	}
 
 	function submitLogin() {
 			var username = $.trim($(".username").val());

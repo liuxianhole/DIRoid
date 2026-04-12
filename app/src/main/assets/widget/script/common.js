@@ -558,6 +558,10 @@ function UserInfo() {
 
 //清除登录信息
 UserInfo.clear = function() {
+	var username = UserInfo.username();
+	if (username) {
+		localStorage.setItem('last_username', username.toString());
+	}
 	localStorage.removeItem('username');
 	localStorage.removeItem('password');
 	localStorage.removeItem('token');
@@ -679,6 +683,9 @@ UserInfo.get_pwd_hash = function(pwd) {
 };
 UserInfo.onSuccess = function(token, username, pwd_hash, memberID,group_id,self_id) { //contact
 	UserInfo.username(username);
+	if (username) {
+		localStorage.setItem('last_username', username.toString());
+	}
 	UserInfo.memberID(memberID);
 	UserInfo.password(pwd_hash);
 	UserInfo.token(token);
